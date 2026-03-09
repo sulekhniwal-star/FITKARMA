@@ -15,7 +15,7 @@ See: `.planning/PROJECT.md` (updated 2026-03-09)
 | Phase | Goal | Status |
 |-------|------|--------|
 | 1 | Foundation & Architecture | ✅ Complete |
-| 2 | Theming & Brand Identity | 📋 Not started |
+| 2 | Theming & Brand Identity | 🚧 Planned |
 | 3 | Secure Local Storage | 📋 Not started |
 | ... | ... | ... |
 
