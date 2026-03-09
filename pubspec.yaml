@@ -16,6 +16,9 @@ dependencies:
   freezed_annotation: ^3.1.0
   json_annotation: ^4.11.0
   flutter_secure_storage: ^10.0.0
+  google_fonts: ^8.0.2
+  fitkarma_ui:
+    path: packages/fitkarma_ui
 
 dev_dependencies:
   flutter_test:
