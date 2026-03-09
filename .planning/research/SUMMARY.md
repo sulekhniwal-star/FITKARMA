@@ -31,6 +31,12 @@ The 2025 research confirms that an offline-first, Flutter-based architecture usi
 - **Typography**: Modern Sans (Outfit/Inter) paired with Heritage Serifs (Playfair) and Multilingual Noto Sans.
 - **Visual Gamification**: Glowing "Karma" seeds and Rive animations for feedback.
 
+### 🤖 AI & Support
+- **Karma Buddy**: 24/7 AI chatbot for NLP logging and health coaching.
+- **WhatsApp Escalation**: Intelligent handoff to human support if AI fails or user requests human help.
+- **Intelligent Recovery**: AI-driven "Readiness" scores based on wearable data and Ayurvedic state.
+- **Form Analysis**: On-device Pose Detection for real-time posture correction in Yoga/Workouts.
+
 ## Next Steps
 1.  Define Requirements in `REQUIREMENTS.md` leveraging these findings.
 2.  Design Phase 1 focused on Core Infrastructure and Step Tracking.
