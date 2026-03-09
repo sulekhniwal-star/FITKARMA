@@ -1,65 +1,53 @@
-# Phase 01: Foundation & Architecture - Research
+# Phase 01: Foundation & Architecture - Research (2025 Update)
 
 ## 1. Project Initialization & Architecture
 
-### Feature-First Clean Architecture (FFCA)
-In 2025, the industry standard for scalable Flutter apps has settled on **Feature-First Clean Architecture**. This approach optimizes for "Cognitive Locality"—keeping everything related to a feature in one place.
+### Dart 3.6+ Workspaces (The 2025 Standard)
+The biggest shift in 2025 is the move from manual path dependencies to **Dart Workspaces**. This simplifies monorepo management significantly.
 
-**Recommended Folder Structure:**
-```text
-lib/
-├── core/                  # Global shared code (theme, extensions, use_cases)
-├── features/
-│   └── feature_name/
-│       ├── data/         # Models, Data Sources, Repository Impl
-│       ├── domain/       # Entities, Use Cases, Repository Interfaces
-│       └── presentation/ # Widgets, Providers/Controllers
-├── packages/              # Internal local packages
-│   └── design_system/    # Branding, themes, Glassmorphic widgets
-└── main_development.dart
-└── main_production.dart
-```
+- **Root `pubspec.yaml`**: Defines the workspace members.
+- **Benefits**: Single `pubspec.lock` for the whole project, automatic resolution of internal packages, and better IDE performance.
+- **FitKarma Setup**:
+  ```yaml
+  workspace:
+    - .
+    - packages/fitkarma_ui
+  ```
 
-### Mason (Bricks) for Scaffolding
-Using `mason_cli` is the best practice for enforcing this structure.
-- **Goal**: Create a `feat` brick that generates the `data/domain/presentation` subfolders automatically.
-- **Reference Bricks**: `clean_architecture_feature` or `feature_brick`.
+### Clean Architecture (Feature-First)
+Matches the previous research, but with stricter enforcement of **Domain Layer Purity** (Pure Dart).
 
 ## 2. State Management (Riverpod 3.0)
 
-With the release of **Riverpod 3.0** (late 2025), several patterns are now mandatory for modern projects:
-
-### Code Generation
-- **Notifier/AsyncNotifier**: Replacing `StateNotifier`. Use `riverpod_generator` for type safety and automatic `autoDispose`.
-- **AsyncValue Pattern**: Mandatory for frontend. Use `.when()` or `.maybeWhen()` for handling Loading/Error/Data states in the UI.
-
-### Functional State & Freezed
-- **Immutability**: All State objects must be `freezed` classes.
-- **Side Effects**: All mutations happen via `Notifier` methods that emit a new state instance.
+Riverpod 3.0 is the baseline for 2025.
+- **AsyncNotifier**: The standard for anything hitting a database or API.
+- **Mutations (Experimental)**: Use for side-effects (logging food, tracking steps) to prevent UI glitches during async transitions.
+- **autoRetry**: Built-in exponential backoff for initialization failures.
+- **ref.mounted**: Essential check before triggering UI changes from Notifiers.
 
 ## 3. Environment & Configuration
 
-### Secrets & dart-define
-- **Security**: Move away from hardcoded strings. Use `String.fromEnvironment('KEY')` to inject secrets at compile time via `--dart-define`.
-- **from-file**: Use `launch.json` or `config.json` with `--dart-define-from-file` for local development to avoid long CLI commands.
+### dart-define-from-file
+Using `--dart-define-from-file` with JSON files (e.g., `config/dev.json`) is the preferred way to manage large sets of compile-time variables without polluting the terminal history.
 
-### Flavors (Dev/Prod)
-- **Identity**: Android `productFlavors` and iOS `Schemes` are used to differentiate `com.fitkarma.dev` from `com.fitkarma.app`.
-- **Entry points**: `main_development.dart` initializes with Dev logging/API URLs, while `main_production.dart` uses production credentials.
+### Security Note
+For high-security secrets (though out of scope for Phase 1), **Envied** with `obfuscate: true` is recommended over plain `dart-define` to prevent easy reverse-engineering of the binary.
 
-## 4. Design System Architecture
+## 4. Design System Architecture ( fitkarma_ui )
 
-### Package vs Folder
-For FitKarma's "Cultural Premium" look:
-- **Approach**: Internal local package (`packages/fitkarma_ui`).
-- **Rationale**: 
-  - **Decoupling**: Prevents UI components from accidentally importing business logic providers.
-  - **Reusability**: Makes it easier to spin up a separate "Pro" or "Admin" app sharing the same brand identity.
-  - **Visual Testing**: Easier to run `golden tests` or a manual "Gallery" app just for the UI package.
+- **Approach**: Internal Workspace Package.
+- **Structure**:
+  ```text
+  packages/fitkarma_ui/
+  ├── lib/
+  │   ├── src/            # Private widgets/logic
+  │   └── fitkarma_ui.dart # Public API exports
+  ```
+- **Rationale**: Strict boundary between the "Style" and "Logic" layers.
 
-## 5. Summary Implementation Path
-1.  Initialize standard Flutter project.
-2.  Setup `mason` and define a custom `feature` brick.
-3.  Configure `dart-define` secrets and `flutter_flavor` for Dev/Prod.
-4.  Scaffold the `packages/fitkarma_ui` local package.
-5.  Establish the Clean Architecture base classes in `lib/core`.
+## 5. Summary Implementation Path (Updated)
+1.  Initialize Flutter project with **Dart Workspace** support.
+2.  Setup `packages/fitkarma_ui` as a workspace member.
+3.  Configure `launch.json` and `config/*.json` for `dart-define-from-file`.
+4.  Setup Riverpod 3.0 with `custom_lint` and `riverpod_lint`.
+5.  Initialize `mason` for FFCA scaffolding.
