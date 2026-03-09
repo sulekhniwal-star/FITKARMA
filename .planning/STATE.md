@@ -14,14 +14,16 @@ See: `.planning/PROJECT.md` (updated 2026-03-09)
 ## Phase Tracking
 | Phase | Goal | Status |
 |-------|------|--------|
-| 1 | Foundation & Architecture | 📋 Not started |
+| 1 | Foundation & Architecture | 🚧 Context Gathered |
 | 2 | Theming & Brand Identity | 📋 Not started |
 | 3 | Secure Local Storage | 📋 Not started |
 | ... | ... | ... |
 
 ## Recent Decisions
-- **Local-First Strategy**: Deferred PocketBase setup to Phase 10 to ensure all collection requirements are captured from the frontend logic.
-- **Fine Granularity**: Sliced MVP into 12 focused phases for better tracking.
+- **Architecture**: Feature-First Clean Architecture with Mason for scaffolding.
+- **State**: Riverpod Generator + Freezed + AsyncValue.
+- **Config**: `dart-define` with Dev/Prod flavors.
+- **UI**: Standalone Design System package for Glassmorphic components.
 
 ## Next Step
-Run `/gsd:plan-phase 1` to start Phase 1: Foundation & Architecture.
+Run `/gsd:plan-phase 1` to generate implementation plans using these decisions.
