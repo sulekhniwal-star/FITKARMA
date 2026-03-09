@@ -5,7 +5,10 @@
 
 ## v1 Requirements (MVP)
 
-### Infrastructure & Core
+### Infrastructure & Core (Local First)
+> [!NOTE]
+> PocketBase and backend setup (CORE-03) will be handled after frontend features are solidified to ensure all collection requirements are captured.
+
 - [ ] **CORE-01**: Initialize Flutter 3.x project with Clean Architecture and Riverpod 2.x.
 - [ ] **CORE-02**: Setup Hive local storage with AES-256 encryption for sensitive boxes.
 - [ ] **CORE-03**: Self-host PocketBase on Railway with automated SSL and SQLite volume persistence.
@@ -72,8 +75,33 @@
 
 ## Traceability
 
-*To be populated during Roadmap creation.*
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| CORE-01 | Phase 1 | Pending |
+| CORE-05 | Phase 2 | Pending |
+| CORE-02 | Phase 3 | Pending |
+| STEP-01 | Phase 4 | Pending |
+| STEP-03 | Phase 4 | Pending |
+| FOOD-01 | Phase 5 | Pending |
+| FOOD-02 | Phase 5 | Pending |
+| FOOD-03 | Phase 6 | Pending |
+| FOOD-04 | Phase 6 | Pending |
+| AYUR-01 | Phase 7 | Pending |
+| AYUR-03 | Phase 7 | Pending |
+| CHAT-01 | Phase 8 | Pending |
+| CHAT-04 | Phase 8 | Pending |
+| KARM-01 | Phase 9 | Pending |
+| KARM-02 | Phase 9 | Pending |
+| CORE-03 | Phase 10 | Pending |
+| AUTH-01 | Phase 10 | Pending |
+| AUTH-02 | Phase 10 | Pending |
+| CORE-04 | Phase 11 | Pending |
+| STEP-02 | Phase 11 | Pending |
+| KARM-03 | Phase 11 | Pending |
+| CHAT-02 | Phase 12 | Pending |
+| CHAT-03 | Phase 12 | Pending |
 
----
-*Requirements defined: 2026-03-09*
-*Last updated: 2026-03-09 after initial definition*
+**Coverage:**
+- v1 requirements: 23 total
+- Mapped to phases: 23
+- Unmapped: 0 ✓
