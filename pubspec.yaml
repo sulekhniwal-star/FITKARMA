@@ -19,6 +19,8 @@ dependencies:
   google_fonts: ^8.0.2
   fitkarma_ui:
     path: packages/fitkarma_ui
+  hive_ce: ^2.19.3
+  hive_ce_flutter: ^2.3.4
 
 dev_dependencies:
   flutter_test:
@@ -28,6 +30,7 @@ dev_dependencies:
   riverpod_generator: ^4.0.3
   freezed: ^3.2.5
   json_serializable: ^6.13.0
+  hive_ce_generator: ^1.11.0
 
 flutter:
   uses-material-design: true

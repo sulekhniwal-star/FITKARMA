@@ -3,8 +3,29 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fitkarma_ui/fitkarma_ui.dart';
 import 'core/theme/theme_provider.dart';
 import 'core/theme/dosha_theme.dart';
+import 'core/storage/hive_service.dart';
+import 'core/security/encryption_service.dart';
+import 'core/providers/storage_providers.dart';
 
-void main() => runApp(const ProviderScope(child: FitKarmaApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Hive
+  await HiveService.init();
+
+  // Setup Encryption
+  final encryptionService = EncryptionService();
+  final encryptionKey = await encryptionService.getOrCreateKey();
+
+  runApp(
+    ProviderScope(
+      overrides: [
+        encryptionKeyProvider.overrideWithValue(encryptionKey),
+      ],
+      child: const FitKarmaApp(),
+    ),
+  );
+}
 
 class FitKarmaApp extends ConsumerWidget {
   const FitKarmaApp({super.key});
@@ -43,11 +64,17 @@ class FitKarmaApp extends ConsumerWidget {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: ElevatedButton(
-                        onPressed: () => ref.read(doshaThemeProvider.notifier).setDosha(d),
+                        onPressed: () =>
+                            ref.read(doshaThemeProvider.notifier).setDosha(d),
                         child: Text(d.name.toUpperCase()),
                       ),
                     );
                   }).toList(),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Privacy Shield Active',
+                  style: TextStyle(color: Colors.greenAccent, fontSize: 12),
                 ),
               ],
             ),
