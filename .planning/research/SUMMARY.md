@@ -25,6 +25,12 @@ The 2025 research confirms that an offline-first, Flutter-based architecture usi
 - **Sync Reliability**: Don't rely solely on `Workmanager`; implement "App-Start Sync" to handle OEM background process killing.
 - **Privacy**: PHI must be encrypted via Hive AES-256 before disk writes.
 
+### 🎨 UI & Brand
+- **Cultural Premium**: A fusion of Material 3 and Glassmorphism.
+- **Dosha-Adaptive Themes**: Color schemes that shift based on user constitution (e.g., Terracotta for Vata, Peacock Blue for Pitta).
+- **Typography**: Modern Sans (Outfit/Inter) paired with Heritage Serifs (Playfair) and Multilingual Noto Sans.
+- **Visual Gamification**: Glowing "Karma" seeds and Rive animations for feedback.
+
 ## Next Steps
 1.  Define Requirements in `REQUIREMENTS.md` leveraging these findings.
 2.  Design Phase 1 focused on Core Infrastructure and Step Tracking.
