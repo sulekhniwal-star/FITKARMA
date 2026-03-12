@@ -16,3 +16,7 @@
 | ADR-11 | 2026-03-12 | Dosha Quiz Initializer | Determine user constitution via a 5-question regionalized quiz | Accepted |
 | ADR-12 | 2026-03-12 | Karma Leveling Titles | Use Sanskrit/Hindi titles for levels (e.g., Level 1: Sadhaka, Level 10: Paramatma) | Accepted |
 | ADR-13 | 2026-03-12 | Joinable Challenges | Challenges modify dashboard goal state (e.g., "7-Day Satvik" adds a specific meal goal) | Accepted |
+| ADR-14 | 2026-03-12 | Device-Secure Keys | Store AES-256 encryption keys in Platform Secure Storage (Keychain/Keystore) | Accepted |
+| ADR-15 | 2026-03-12 | Full Encryption | Encrypt all Hive-stored user health data at rest before syncing | Accepted |
+| ADR-16 | 2026-03-12 | Timestamp Sync | Use record timestamps for conflict resolution; fallback to Last-Write-Wins | Accepted |
+| ADR-17 | 2026-03-12 | Standard i18n | Migrate to standard Flutter ARB files for localization | Accepted |
