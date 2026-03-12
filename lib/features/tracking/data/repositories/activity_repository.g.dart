@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dashboard_controller.dart';
+part of 'activity_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dashboardControllerHash() =>
-    r'13440366e4212d75a26c7e85928e865c7ce93c60';
+String _$activityRepositoryHash() =>
+    r'50795a751ce10cfb1c8d9c123aee4112e061eb85';
 
-/// See also [DashboardController].
-@ProviderFor(DashboardController)
-final dashboardControllerProvider = AutoDisposeAsyncNotifierProvider<
-    DashboardController, DashboardState>.internal(
-  DashboardController.new,
-  name: r'dashboardControllerProvider',
+/// See also [ActivityRepository].
+@ProviderFor(ActivityRepository)
+final activityRepositoryProvider =
+    AsyncNotifierProvider<ActivityRepository, void>.internal(
+  ActivityRepository.new,
+  name: r'activityRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$dashboardControllerHash,
+      : _$activityRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$DashboardController = AutoDisposeAsyncNotifier<DashboardState>;
+typedef _$ActivityRepository = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

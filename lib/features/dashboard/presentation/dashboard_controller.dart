@@ -1,4 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../tracking/data/repositories/activity_repository.dart';
+import '../../tracking/data/repositories/water_repository.dart';
 
 part 'dashboard_controller.g.dart';
 
@@ -54,25 +56,46 @@ class DashboardState {
 @riverpod
 class DashboardController extends _$DashboardController {
   @override
-  DashboardState build() {
-    // Initial mock data for Phase 2 UI development
+  FutureOr<DashboardState> build() async {
+    final activityRepo = await ref.watch(activityRepositoryProvider.future);
+    final waterRepo = await ref.watch(waterRepositoryProvider.future);
+    
+    final dailyActivity = await activityRepo.getDailyActivity(DateTime.now());
+    final dailyWater = await waterRepo.getDailyWater(DateTime.now());
+
     return DashboardState(
-      calories: 1200,
+      calories: dailyActivity.caloriesBurned,
       caloriesGoal: 2000,
-      steps: 8500,
+      steps: dailyActivity.steps,
       stepsGoal: 10000,
-      water: 4,
+      water: dailyWater.amountGlasses,
       waterGoal: 8,
-      minutes: 35,
+      minutes: dailyActivity.activeMinutes,
       minutesGoal: 60,
     );
   }
 
-  void updateSteps(int steps) {
-    state = state.copyWith(steps: steps);
+  Future<void> updateSteps(int steps) async {
+    final activityRepo = ref.read(activityRepositoryProvider).value;
+    if (activityRepo != null) {
+      await activityRepo.saveSteps(steps);
+      ref.invalidateSelf();
+    }
   }
 
-  void addWater() {
-    state = state.copyWith(water: state.water + 1);
+  Future<void> addWater() async {
+    final waterRepo = ref.read(waterRepositoryProvider).value;
+    if (waterRepo != null) {
+      await waterRepo.addGlass();
+      ref.invalidateSelf();
+    }
+  }
+
+  Future<void> addMinutes(int mins) async {
+    final activityRepo = ref.read(activityRepositoryProvider).value;
+    if (activityRepo != null) {
+      await activityRepo.saveActiveMinutes(mins);
+      ref.invalidateSelf();
+    }
   }
 }
