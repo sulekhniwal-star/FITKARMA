@@ -13,3 +13,6 @@
 | ADR-08 | 2026-03-12 | Functional Food Scanning | Quick-action chips (Scan/Upload) open camera/gallery via image_picker | Accepted |
 | ADR-09 | 2026-03-12 | Indian-Centric Portions | Use "Katori", "Piece", and "Ladle" units for food logging | Accepted |
 | ADR-10 | 2026-03-12 | Premium Food Imagery | Use placeholders/network images for Indian staples in search results | Accepted |
+| ADR-11 | 2026-03-12 | Dosha Quiz Initializer | Determine user constitution via a 5-question regionalized quiz | Accepted |
+| ADR-12 | 2026-03-12 | Karma Leveling Titles | Use Sanskrit/Hindi titles for levels (e.g., Level 1: Sadhaka, Level 10: Paramatma) | Accepted |
+| ADR-13 | 2026-03-12 | Joinable Challenges | Challenges modify dashboard goal state (e.g., "7-Day Satvik" adds a specific meal goal) | Accepted |
