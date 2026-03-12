@@ -31,7 +31,7 @@ class AppTheme {
         selectedLabelStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
         unselectedLabelStyle: TextStyle(fontSize: 10),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColors.surfaceWhite,
         elevation: 2,
         shape: RoundedRectangleBorder(
