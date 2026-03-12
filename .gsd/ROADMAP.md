@@ -1,4 +1,4 @@
-﻿# ROADMAP.md
+# ROADMAP.md
 
 > **Current Phase**: Not started
 > **Milestone**: v1.0 (MVP)
@@ -13,12 +13,12 @@
 ## Phases
 
 ### Phase 1: Foundation & Architecture
-**Status**: â¬œ Not Started
+**Status**: ✅ Complete
 **Objective**: Establish the core folder structure, theme (orange/purple), navigation (GoRouter), and Hive initialization.
 **Requirements**: REQ-01, REQ-09, REQ-12
 
 ### Phase 2: Shell & Dashboard UI
-**Status**: â¬œ Not Started
+**Status**: ✅ Complete
 **Objective**: Implement the Dashboard layout with custom Concentric Activity Rings, Bilingually-labelled Bottom Nav, and the Amber Insight Card.
 **Requirements**: REQ-04, REQ-07, REQ-08
 
