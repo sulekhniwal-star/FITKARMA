@@ -1,3 +1,4 @@
+import 'package:fitkarma/features/gamification/data/repositories/progress_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,31 +16,35 @@ class ActivityRepository extends _$ActivityRepository {
   }
 
   Future<ActivityLog> getDailyActivity(DateTime date) async {
-    final dateKey = _getDateKey(date);
-    return _activityBox.get(dateKey) ?? ActivityLog(
-      id: dateKey,
+    final key = '${date.year}-${date.month}-${date.day}';
+    return _activityBox.get(key) ?? ActivityLog(
+      id: key,
       date: date,
       steps: 0,
-      activeMinutes: 0,
       caloriesBurned: 0,
+      activeMinutes: 0,
     );
   }
 
-  Future<void> saveSteps(int steps) async {
-    final now = DateTime.now();
-    final log = await getDailyActivity(now);
-    final updatedLog = log.copyWith(steps: steps);
-    await _activityBox.put(updatedLog.id, updatedLog);
+  Future<void> updateSteps(int steps) async {
+    final today = DateTime.now();
+    final activity = await getDailyActivity(today);
+    final updated = activity.copyWith(steps: activity.steps + steps);
+    await _activityBox.put(activity.id, updated);
+    
+    // Trigger XP: 1 XP per 100 steps
+    if (steps >= 100) {
+      await ref.read(progressRepositoryProvider.notifier).addXp(steps ~/ 100);
+    }
   }
 
-  Future<void> saveActiveMinutes(int minutes) async {
-    final now = DateTime.now();
-    final log = await getDailyActivity(now);
-    final updatedLog = log.copyWith(activeMinutes: log.activeMinutes + minutes);
-    await _activityBox.put(updatedLog.id, updatedLog);
-  }
+  Future<void> addActiveMinutes(int minutes) async {
+    final today = DateTime.now();
+    final activity = await getDailyActivity(today);
+    final updated = activity.copyWith(activeMinutes: activity.activeMinutes + minutes);
+    await _activityBox.put(activity.id, updated);
 
-  String _getDateKey(DateTime date) {
-    return "${date.year}-${date.month}-${date.day}";
+    // Trigger XP: 5 XP per active minute
+    await ref.read(progressRepositoryProvider.notifier).addXp(minutes * 5);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../tracking/data/repositories/activity_repository.dart';
 import '../../tracking/data/repositories/water_repository.dart';
+import '../../food/data/repositories/food_repository.dart';
 
 part 'dashboard_controller.g.dart';
 
@@ -59,12 +60,14 @@ class DashboardController extends _$DashboardController {
   FutureOr<DashboardState> build() async {
     final activityRepo = await ref.watch(activityRepositoryProvider.future);
     final waterRepo = await ref.watch(waterRepositoryProvider.future);
+    final foodRepo = await ref.watch(foodRepositoryProvider.future);
     
     final dailyActivity = await activityRepo.getDailyActivity(DateTime.now());
     final dailyWater = await waterRepo.getDailyWater(DateTime.now());
+    final dailyCalories = await foodRepo.getTodayTotalCalories();
 
     return DashboardState(
-      calories: dailyActivity.caloriesBurned,
+      calories: dailyCalories,
       caloriesGoal: 2000,
       steps: dailyActivity.steps,
       stepsGoal: 10000,

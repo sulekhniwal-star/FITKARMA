@@ -1,3 +1,4 @@
+import 'package:fitkarma/features/gamification/data/repositories/progress_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,22 +16,21 @@ class WaterRepository extends _$WaterRepository {
   }
 
   Future<WaterLog> getDailyWater(DateTime date) async {
-    final dateKey = _getDateKey(date);
-    return _waterBox.get(dateKey) ?? WaterLog(
-      id: dateKey,
+    final key = 'water-${date.year}-${date.month}-${date.day}';
+    return _waterBox.get(key) ?? WaterLog(
+      id: key,
       date: date,
       amountGlasses: 0,
     );
   }
 
-  Future<void> addGlass() async {
-    final now = DateTime.now();
-    final log = await getDailyWater(now);
-    final updatedLog = log.copyWith(amountGlasses: log.amountGlasses + 1);
-    await _waterBox.put(updatedLog.id, updatedLog);
-  }
+  Future<void> addWater(int glasses) async {
+    final today = DateTime.now();
+    final water = await getDailyWater(today);
+    final updated = water.copyWith(amountGlasses: water.amountGlasses + glasses);
+    await _waterBox.put(water.id, updated);
 
-  String _getDateKey(DateTime date) {
-    return "water-${date.year}-${date.month}-${date.day}";
+    // Trigger XP: 5 XP per glass
+    await ref.read(progressRepositoryProvider.notifier).addXp(glasses * 5);
   }
 }

@@ -6,7 +6,7 @@ part of 'water_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$waterRepositoryHash() => r'8c93b09453f6af2702e1d022c982f60e83098215';
+String _$waterRepositoryHash() => r'317531965ef793e09661876ac5e7317937908555';
 
 /// See also [WaterRepository].
 @ProviderFor(WaterRepository)

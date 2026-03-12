@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fitkarma/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:fitkarma/features/food/presentation/food_logging_screen.dart';
 import 'package:fitkarma/shared/theme/app_theme.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -22,7 +23,7 @@ final router = GoRouter(
         ),
         GoRoute(
           path: '/food',
-          builder: (context, state) => const PlaceholderScreen(title: 'Food / भोजन'),
+          builder: (context, state) => const FoodLoggingScreen(),
         ),
         GoRoute(
           path: '/workout',

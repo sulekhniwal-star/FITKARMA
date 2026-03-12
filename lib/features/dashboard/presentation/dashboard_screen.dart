@@ -5,9 +5,14 @@ import '../../../shared/widgets/activity_rings.dart';
 import '../../../shared/widgets/bilingual_label.dart';
 import '../../../shared/widgets/insight_card.dart';
 import '../../../shared/widgets/meal_tab_bar.dart';
+import 'package:fitkarma/features/ayurveda/presentation/ayurveda_section.dart';
+import 'package:fitkarma/features/challenges/presentation/widgets/challenge_carousel.dart';
+import 'package:fitkarma/features/gamification/domain/models/user_progress.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'dashboard_controller.dart';
 import 'greeting_provider.dart';
 import 'widgets/add_metric_dialog.dart';
+import 'widgets/karma_level_badge.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -46,35 +51,20 @@ class DashboardScreen extends ConsumerWidget {
                               hindi: '${greeting.hindi}, सुरेश 🙏',
                               englishSize: 18,
                             ),
-                            const Text(
-                              'Level 12 Warrior',
-                              style: TextStyle(fontSize: 12, color: AppColors.textGrey),
+                            ValueListenableBuilder(
+                              valueListenable: Hive.box<UserProgress>('user_progress').listenable(),
+                              builder: (context, box, _) {
+                                final progress = box.get('current') ?? UserProgress.initial();
+                                return Text(
+                                  'Level ${progress.level} ${progress.title}',
+                                  style: const TextStyle(fontSize: 12, color: AppColors.textGrey),
+                                );
+                              },
                             ),
                           ],
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: AppColors.accentAmber.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(Icons.monetization_on, color: AppColors.accentAmber, size: 16),
-                            SizedBox(width: 4),
-                            Text(
-                              '1,250 XP',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textBlack,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      const KarmaLevelBadge(),
                     ],
                   ),
                 ),
@@ -140,7 +130,27 @@ class DashboardScreen extends ConsumerWidget {
                 ),
 
                 const Padding(
-                  padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
+                  child: BilingualLabel(
+                    english: "Ayurvedic Balance",
+                    hindi: "आयुर्वेदिक संतुलन",
+                    englishSize: 18,
+                  ),
+                ),
+                const AyurvedaSection(),
+
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(16, 24, 16, 12),
+                  child: BilingualLabel(
+                    english: "Active Challenges",
+                    hindi: "सक्रिय चुनौतियां",
+                    englishSize: 18,
+                  ),
+                ),
+                const ChallengeCarousel(),
+
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
                   child: BilingualLabel(
                     english: "Today's Meals",
                     hindi: "आज का भोजन",
