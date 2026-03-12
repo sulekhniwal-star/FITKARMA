@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fitkarma/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fitkarma/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:fitkarma/features/food/presentation/food_logging_screen.dart';
 import 'package:fitkarma/shared/theme/app_theme.dart';
+import 'package:fitkarma/core/l10n/l10n_helper.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -66,31 +68,31 @@ class AppShell extends StatelessWidget {
             case 4: context.go('/me'); break;
           }
         },
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home\nमुख्यपृष्ठ',
+            icon: const Icon(Icons.home_outlined),
+            activeIcon: const Icon(Icons.home),
+            label: '${L10n.en.dashboard}\n${L10n.hi.dashboard}',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.restaurant_outlined),
-            activeIcon: Icon(Icons.restaurant),
-            label: 'Food\nभोजन',
+            icon: const Icon(Icons.restaurant_outlined),
+            activeIcon: const Icon(Icons.restaurant),
+            label: '${L10n.en.logFood}\n${L10n.hi.logFood}',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.fitness_center_outlined),
-            activeIcon: Icon(Icons.fitness_center),
-            label: 'Workout\nव्यायाम',
+            icon: const Icon(Icons.fitness_center_outlined),
+            activeIcon: const Icon(Icons.fitness_center),
+            label: '${L10n.en.activeMinutes}\n${L10n.hi.activeMinutes}',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.directions_walk_outlined),
-            activeIcon: Icon(Icons.directions_walk),
-            label: 'Steps\nकदम',
+            icon: const Icon(Icons.directions_walk_outlined),
+            activeIcon: const Icon(Icons.directions_walk),
+            label: '${L10n.en.steps}\n${L10n.hi.steps}',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outlined),
-            activeIcon: Icon(Icons.person),
-            label: 'Me\nमैं',
+            icon: const Icon(Icons.person_outlined),
+            activeIcon: const Icon(Icons.person),
+            label: 'Me\nमैं', // Placeholder for "Me" as it's not in ARB yet
           ),
         ],
       ),
@@ -130,6 +132,9 @@ class FitKarmaApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       routerConfig: router,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('en'), // Default to English for now, can be dynamic later
     );
   }
 }

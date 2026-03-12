@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fitkarma/shared/theme/app_colors.dart';
 import 'package:fitkarma/shared/widgets/bilingual_label.dart';
 import 'package:fitkarma/features/challenges/domain/models/challenge.dart';
+import 'package:fitkarma/l10n/app_localizations.dart';
 
 class ChallengeCarousel extends ConsumerWidget {
   const ChallengeCarousel({super.key});
@@ -90,7 +91,9 @@ class _ChallengeCard extends StatelessWidget {
                 minimumSize: const Size(100, 36),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               ),
-              child: Text(challenge.isJoined ? 'Joined' : 'Join Now'),
+              child: Text(challenge.isJoined 
+                ? AppLocalizations.of(context)!.joined 
+                : AppLocalizations.of(context)!.joinNow),
             ),
           ],
         ),

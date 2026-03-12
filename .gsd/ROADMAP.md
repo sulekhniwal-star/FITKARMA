@@ -1,4 +1,4 @@
-﻿# ROADMAP.md
+# ROADMAP.md
 
 > **Current Phase**: Not started
 > **Milestone**: v1.0 (MVP)
@@ -33,7 +33,7 @@
 **Requirements**: REQ-03, REQ-04
 
 ### Phase 5: Ayurveda & Gamification
-**Status**: ÃƒÆ’Ã‚Â¢Ãƒâ€šÃ‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ Not Started
+**Status**: ✅ Complete
 **Objective**: Implement the Karma Level card (XP system), Dosha Profile (Donut Chart), and the Challenges Carousel (Navratri Challenge).
 **Requirements**: REQ-05, REQ-08
 

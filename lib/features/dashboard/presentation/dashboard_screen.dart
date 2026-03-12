@@ -9,6 +9,7 @@ import 'package:fitkarma/features/ayurveda/presentation/ayurveda_section.dart';
 import 'package:fitkarma/features/challenges/presentation/widgets/challenge_carousel.dart';
 import 'package:fitkarma/features/gamification/domain/models/user_progress.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:fitkarma/l10n/app_localizations.dart';
 import 'dashboard_controller.dart';
 import 'greeting_provider.dart';
 import 'widgets/add_metric_dialog.dart';
@@ -20,7 +21,6 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboardAsync = ref.watch(dashboardControllerProvider);
-    final greeting = ref.watch(randomGreetingProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -47,8 +47,8 @@ class DashboardScreen extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             BilingualLabel(
-                              english: '${greeting.english}, Suresh',
-                              hindi: '${greeting.hindi}, सुरेश 🙏',
+                              english: '${AppLocalizations.of(context)!.dashboard}, Suresh',
+                              hindi: '${AppLocalizations.of(context)!.dashboard}, सुरेश 🙏',
                               englishSize: 18,
                             ),
                             ValueListenableBuilder(

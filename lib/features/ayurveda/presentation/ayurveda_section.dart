@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../shared/theme/app_colors.dart';
 import '../../../shared/widgets/bilingual_label.dart';
+import 'package:fitkarma/l10n/app_localizations.dart';
 import '../domain/models/dosha_profile.dart';
 import 'quiz/dosha_quiz_screen.dart';
 import 'widgets/dosha_donut_chart.dart';
@@ -37,9 +38,9 @@ class AyurvedaSection extends ConsumerWidget {
           children: [
             const Icon(Icons.self_improvement, size: 48, color: Colors.indigo),
             const SizedBox(height: 12),
-            const BilingualLabel(
-              english: 'Discover Your Dosha',
-              hindi: 'अपने दोष को जानें',
+            BilingualLabel(
+              english: AppLocalizations.of(context)!.discoverDosha,
+              hindi: 'अपने दोष को जानें', // Hindi is already in L10n.hi but for now manual or placeholders
               englishSize: 18,
               crossAxisAlignment: CrossAxisAlignment.center,
             ),
@@ -56,7 +57,7 @@ class AyurvedaSection extends ConsumerWidget {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
               ),
-              child: const Text('Start Quiz'),
+              child: Text(AppLocalizations.of(context)!.startQuiz),
             ),
           ],
         ),
@@ -83,7 +84,7 @@ class AyurvedaSection extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                    BilingualLabel(
-                    english: 'Your Dosha: ${profile.dominantDosha}',
+                    english: '${AppLocalizations.of(context)!.yourDosha}: ${profile.dominantDosha}',
                     hindi: 'आपका दोष: ${profile.dominantDosha}',
                     englishSize: 18,
                   ),

@@ -7,11 +7,18 @@ import '../../features/food/domain/models/meal_log.dart';
 import '../../features/ayurveda/domain/models/dosha_profile.dart';
 import '../../features/gamification/domain/models/user_progress.dart';
 import '../../features/challenges/domain/models/challenge.dart';
+import '../security/encryption_service.dart';
 
 class HiveService {
+  static HiveAesCipher? _cipher;
+
   static Future<void> init() async {
     await Hive.initFlutter();
     
+    // Setup Encryption
+    final key = await EncryptionService.getOrCreateMasterKey();
+    _cipher = HiveAesCipher(key);
+
     // Register Adapters
     Hive.registerAdapter(SyncQueueItemAdapter());
     Hive.registerAdapter(ActivityLogAdapter());
@@ -22,9 +29,9 @@ class HiveService {
     Hive.registerAdapter(UserProgressAdapter());
     Hive.registerAdapter(ChallengeAdapter());
 
-    await Hive.openBox<UserProgress>('user_progress');
-    await Hive.openBox<DoshaProfile>('dosha_profile');
-    await Hive.openBox<Challenge>('challenges');
+    await openBox<UserProgress>('user_progress');
+    await openBox<DoshaProfile>('dosha_profile');
+    await openBox<Challenge>('challenges');
 
     await _seedFoodData();
     await _seedChallenges();
@@ -124,8 +131,11 @@ class HiveService {
     }
   }
 
-  // Helper method to open a box (example)
+  // Helper method to open a box with global encryption cipher
   static Future<Box<T>> openBox<T>(String boxName) async {
-    return await Hive.openBox<T>(boxName);
+    return await Hive.openBox<T>(
+      boxName,
+      encryptionCipher: _cipher,
+    );
   }
 }

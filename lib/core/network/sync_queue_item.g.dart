@@ -22,13 +22,14 @@ class SyncQueueItemAdapter extends TypeAdapter<SyncQueueItem> {
       collectionId: fields[2] as String,
       data: (fields[3] as Map).cast<String, dynamic>(),
       createdAt: fields[4] as DateTime,
+      updatedAt: fields[5] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, SyncQueueItem obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class SyncQueueItemAdapter extends TypeAdapter<SyncQueueItem> {
       ..writeByte(3)
       ..write(obj.data)
       ..writeByte(4)
-      ..write(obj.createdAt);
+      ..write(obj.createdAt)
+      ..writeByte(5)
+      ..write(obj.updatedAt);
   }
 
   @override

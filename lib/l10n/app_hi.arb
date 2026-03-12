@@ -1,0 +1,19 @@
+{
+  "@@locale": "hi",
+  "dashboard": "डैशबोर्ड",
+  "logFood": "भोजन दर्ज करें",
+  "ayurvedaBalance": "आयुर्वेदिक संतुलन",
+  "activeChallenges": "सक्रिय चुनौतियां",
+  "todaysMeals": "आज का भोजन",
+  "calories": "कैलोरी",
+  "steps": "कदम",
+  "water": "पानी",
+  "activeMinutes": "सक्रिय मिनट",
+  "discoverDosha": "अपने दोष को जानें",
+  "startQuiz": "प्रश्नोत्तरी शुरू करें",
+  "yourDosha": "आपका दोष",
+  "navratriChallenge": "7-Day सात्विक चुनौती",
+  "yogaChallenge": "सुबह का योगाभ्यास",
+  "joinNow": "अभी शामिल हों",
+  "joined": "शामिल हो गए"
+}

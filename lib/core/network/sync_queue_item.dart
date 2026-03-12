@@ -19,11 +19,15 @@ class SyncQueueItem extends HiveObject {
   @HiveField(4)
   final DateTime createdAt;
 
+  @HiveField(5)
+  final DateTime updatedAt;
+
   SyncQueueItem({
     required this.id,
     required this.action,
     required this.collectionId,
     required this.data,
     required this.createdAt,
+    required this.updatedAt,
   });
 }
