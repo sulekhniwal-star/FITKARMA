@@ -7,6 +7,7 @@ import '../../features/auth/providers/auth_providers.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/register_screen.dart';
 import '../../features/auth/screens/onboarding_screen.dart';
+import '../../features/dashboard/screens/dashboard_screen.dart';
 import '../security/biometric_service.dart';
 
 /// Navigation route paths
@@ -137,7 +138,7 @@ class AppRouter {
             path: AppRoutes.dashboard,
             name: 'dashboard',
             pageBuilder: (context, state) =>
-                const NoTransitionPage(child: _DashboardScreen()),
+                const NoTransitionPage(child: DashboardScreen()),
           ),
 
           // Food routes
@@ -498,20 +499,7 @@ class _SplashScreenState extends ConsumerState<_SplashScreen> {
 
 // Onboarding screen is now in features/auth/screens/
 
-// Login and Register screens are now in features/auth/screens/
-
-class _DashboardScreen extends StatelessWidget {
-  const _DashboardScreen();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard')),
-      body: const Center(child: Text('Dashboard Screen')),
-    );
-  }
-}
-
+// Food screen placeholder
 class _FoodScreen extends StatelessWidget {
   const _FoodScreen();
 
