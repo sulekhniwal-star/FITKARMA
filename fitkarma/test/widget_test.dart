@@ -2,7 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:fitkarma/main.dart';
+import 'package:fitkarma/app.dart';
 
 void main() {
   testWidgets('FitKarma app smoke test', (WidgetTester tester) async {
@@ -10,6 +10,6 @@ void main() {
     await tester.pumpWidget(const FitKarmaApp());
 
     // Verify that the placeholder text is shown
-    expect(find.text('FitKarma - Placeholder'), findsOneWidget);
+    expect(find.text('FitKarma - Loading...'), findsOneWidget);
   });
 }
