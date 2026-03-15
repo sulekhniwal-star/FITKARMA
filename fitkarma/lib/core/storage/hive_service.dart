@@ -2,6 +2,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import '../constants/hive_boxes.dart';
 import '../security/key_manager.dart';
+import '../../features/steps/domain/step_log_model.dart';
 
 /// Service for initializing and managing Hive local storage boxes.
 ///
@@ -26,6 +27,12 @@ class HiveService {
   /// Initializes Hive and opens all non-encrypted boxes.
   static Future<void> init() async {
     await Hive.initFlutter();
+
+    // Register adapters
+    if (!Hive.isAdapterRegistered(10)) {
+      Hive.registerAdapter(StepLogAdapter());
+    }
+
     await _openNonEncryptedBoxes();
   }
 

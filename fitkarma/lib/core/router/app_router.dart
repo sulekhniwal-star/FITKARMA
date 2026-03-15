@@ -8,6 +8,7 @@ import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/register_screen.dart';
 import '../../features/auth/screens/onboarding_screen.dart';
 import '../../features/dashboard/screens/dashboard_screen.dart';
+import '../../features/steps/screens/steps_screen.dart';
 import '../security/biometric_service.dart';
 
 /// Navigation route paths
@@ -664,10 +665,7 @@ class _StepsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Steps')),
-      body: const Center(child: Text('Steps Screen')),
-    );
+    return const StepsScreen();
   }
 }
 

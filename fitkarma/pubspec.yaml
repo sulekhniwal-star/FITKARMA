@@ -55,6 +55,7 @@ dependencies:
   
   # Health Platforms
   pedometer: ^4.0.1
+  health: ^13.1.4
   
   # Charts & UI
   fl_chart: ^1.2.0
