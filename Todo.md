@@ -89,8 +89,8 @@
 - [x] 🟡 `meal_tab_bar.dart` — Breakfast / Lunch / Dinner / Snacks tab bar
 
 ### 2.3 Navigation
-- [] ⚡🟡 Create `lib/app.dart` with `GoRouter` — add all routes from the Route Map in Section 19
-- [] 🟡 Add the 5-tab `BottomNavigationBar` (Home · Food · Workout · Steps · Me) with bilingual labels
+- [x] ⚡🟡 Create `lib/app.dart` with `GoRouter` — add all routes from the Route Map in Section 19
+- [x] 🟡 Add the 5-tab `BottomNavigationBar` (Home · Food · Workout · Steps · Me) with bilingual labels
 
 ---
 
