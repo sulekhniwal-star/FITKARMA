@@ -77,16 +77,16 @@
 
 ### 2.2 Shared Widgets
 > Build each widget in `lib/shared/widgets/` — test each one in isolation before moving on
-- [] 🟡 `shimmer_loader.dart` — loading placeholder (build this first, used everywhere)
-- [] 🟡 `bilingual_label.dart` — stacked English + Hindi `Text` widget
-- [] 🟡 `activity_rings.dart` — four concentric rings (orange, green, teal, purple)
-- [] 🟡 `insight_card.dart` — amber card with lightbulb icon and 👍/👎 buttons
-- [] 🟡 `food_item_card.dart` — photo, name, portion, kcal, `+` button
-- [] 🔴 `karma_level_card.dart` — dark purple gradient card with progress bar
-- [] 🔴 `dosha_chart.dart` — three-segment donut using `fl_chart`
-- [] 🟡 `challenge_card.dart` — horizontally scrollable challenge card
-- [] 🟡 `quick_log_fab.dart` — speed-dial orange FAB
-- [] 🟡 `meal_tab_bar.dart` — Breakfast / Lunch / Dinner / Snacks tab bar
+- [x] 🟡 `shimmer_loader.dart` — loading placeholder (build this first, used everywhere)
+- [x] 🟡 `bilingual_label.dart` — stacked English + Hindi `Text` widget
+- [x] 🟡 `activity_rings.dart` — four concentric rings (orange, green, teal, purple)
+- [x] 🟡 `insight_card.dart` — amber card with lightbulb icon and 👍/👎 buttons
+- [x] 🟡 `food_item_card.dart` — photo, name, portion, kcal, `+` button
+- [x] 🔴 `karma_level_card.dart` — dark purple gradient card with progress bar
+- [x] 🔴 `dosha_chart.dart` — three-segment donut using `fl_chart`
+- [x] 🟡 `challenge_card.dart` — horizontally scrollable challenge card
+- [x] 🟡 `quick_log_fab.dart` — speed-dial orange FAB
+- [x] 🟡 `meal_tab_bar.dart` — Breakfast / Lunch / Dinner / Snacks tab bar
 
 ### 2.3 Navigation
 - [] ⚡🟡 Create `lib/app.dart` with `GoRouter` — add all routes from the Route Map in Section 19

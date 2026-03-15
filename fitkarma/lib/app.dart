@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'shared/theme/app_theme.dart';
+import 'core/router/app_router.dart';
 
 /// FitKarma Application Root Widget
 ///
 /// This is the main application widget that sets up:
 /// - Theme configuration with custom colors and typography
+/// - GoRouter with all routes from Section 19
 /// - System UI overlay style
-/// - MaterialApp with routing configuration placeholder
+/// - 5-tab BottomNavigationBar with bilingual labels
 class FitKarmaApp extends StatelessWidget {
   const FitKarmaApp({super.key});
 
@@ -24,7 +26,7 @@ class FitKarmaApp extends StatelessWidget {
       ),
     );
 
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'FitKarma',
       debugShowCheckedModeBanner: false,
 
@@ -33,8 +35,8 @@ class FitKarmaApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.light,
 
-      // Placeholder for home screen - will be replaced with actual dashboard
-      home: const Scaffold(body: Center(child: Text('FitKarma - Loading...'))),
+      // GoRouter configuration
+      routerConfig: AppRouter.router,
     );
   }
 }
