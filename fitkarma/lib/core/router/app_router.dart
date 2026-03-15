@@ -9,6 +9,9 @@ import '../../features/auth/screens/register_screen.dart';
 import '../../features/auth/screens/onboarding_screen.dart';
 import '../../features/dashboard/screens/dashboard_screen.dart';
 import '../../features/steps/screens/steps_screen.dart';
+import '../../features/karma/screens/karma_hub_screen.dart';
+import '../../features/karma/screens/karma_store_screen.dart';
+import '../../features/karma/screens/leaderboard_screen.dart';
 import '../security/biometric_service.dart';
 
 /// Navigation route paths
@@ -45,6 +48,8 @@ class AppRoutes {
 
   // Feature routes
   static const String karma = '/karma';
+  static const String karmaStore = '/karma/store';
+  static const String leaderboard = '/karma/leaderboard';
   static const String profile = '/profile';
   static const String sleep = '/sleep';
   static const String mood = '/mood';
@@ -268,11 +273,23 @@ class AppRouter {
         ],
       ),
 
-      // Feature routes outside home shell
+      // Karma routes
       GoRoute(
         path: AppRoutes.karma,
         name: 'karma',
-        builder: (context, state) => const _KarmaScreen(),
+        builder: (context, state) => const KarmaHubScreen(),
+        routes: [
+          GoRoute(
+            path: 'store',
+            name: 'karmaStore',
+            builder: (context, state) => const KarmaStoreScreen(),
+          ),
+          GoRoute(
+            path: 'leaderboard',
+            name: 'leaderboard',
+            builder: (context, state) => const LeaderboardScreen(),
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.profile,
