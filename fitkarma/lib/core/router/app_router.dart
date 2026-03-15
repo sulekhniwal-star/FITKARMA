@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../shared/widgets/app_navigation_shell.dart';
+import '../../shared/theme/app_colors.dart';
+import '../../features/auth/providers/auth_providers.dart';
+import '../../features/auth/screens/login_screen.dart';
+import '../../features/auth/screens/register_screen.dart';
+import '../../features/auth/screens/onboarding_screen.dart';
+import '../security/biometric_service.dart';
 
 /// Navigation route paths
 class AppRoutes {
@@ -105,17 +112,17 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.onboarding,
         name: 'onboarding',
-        builder: (context, state) => const _OnboardingScreen(),
+        builder: (context, state) => const OnboardingScreen(),
       ),
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
-        builder: (context, state) => const _LoginScreen(),
+        builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
         path: AppRoutes.register,
         name: 'register',
-        builder: (context, state) => const _RegisterScreen(),
+        builder: (context, state) => const RegisterScreen(),
       ),
 
       // Home shell with bottom navigation
@@ -439,50 +446,59 @@ class _HomeShellState extends State<_HomeShell> {
 
 // ==================== Placeholder Screens ====================
 
-class _SplashScreen extends StatelessWidget {
+class _SplashScreen extends ConsumerStatefulWidget {
   const _SplashScreen();
 
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('Splash Screen')));
-  }
+  ConsumerState<_SplashScreen> createState() => _SplashScreenState();
 }
 
-class _OnboardingScreen extends StatelessWidget {
-  const _OnboardingScreen();
+class _SplashScreenState extends ConsumerState<_SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkAuth();
+  }
+
+  Future<void> _checkAuth() async {
+    // Wait for a brief moment for the app to initialize
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Check if user is authenticated
+    final authService = ref.read(authServiceProvider);
+    final isAuthenticated = await authService.isAuthenticated();
+
+    if (mounted) {
+      if (isAuthenticated) {
+        // Navigate to Dashboard if authenticated
+        context.go(AppRoutes.dashboard);
+      } else {
+        // Navigate to Login if not authenticated
+        context.go(AppRoutes.login);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Onboarding')),
-      body: const Center(child: Text('Onboarding Screen')),
+    return const Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading...'),
+          ],
+        ),
+      ),
     );
   }
 }
 
-class _LoginScreen extends StatelessWidget {
-  const _LoginScreen();
+// Onboarding screen is now in features/auth/screens/
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: const Center(child: Text('Login Screen')),
-    );
-  }
-}
-
-class _RegisterScreen extends StatelessWidget {
-  const _RegisterScreen();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
-      body: const Center(child: Text('Register Screen')),
-    );
-  }
-}
+// Login and Register screens are now in features/auth/screens/
 
 class _DashboardScreen extends StatelessWidget {
   const _DashboardScreen();
@@ -951,12 +967,161 @@ class _ReferralScreen extends StatelessWidget {
   }
 }
 
-class _SettingsScreen extends StatelessWidget {
+class _SettingsScreen extends ConsumerStatefulWidget {
   const _SettingsScreen();
 
   @override
+  ConsumerState<_SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<_SettingsScreen> {
+  final BiometricService _biometricService = BiometricService();
+  bool _biometricAvailable = false;
+  bool _biometricEnabled = false;
+  String _biometricType = 'Biometric';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBiometricSettings();
+  }
+
+  Future<void> _loadBiometricSettings() async {
+    final available = await _biometricService.isBiometricAvailable();
+    final enabled = await _biometricService.isBiometricEnabled();
+    final type = await _biometricService.getBiometricTypeName();
+
+    if (mounted) {
+      setState(() {
+        _biometricAvailable = available;
+        _biometricEnabled = enabled;
+        _biometricType = type;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('Settings Screen')));
+    return Scaffold(
+      appBar: AppBar(title: const Text('Settings')),
+      body: ListView(
+        children: [
+          // Security Section
+          const _SettingsSection(title: 'Security'),
+          if (_biometricAvailable)
+            _SettingsTile(
+              icon: Icons.fingerprint,
+              title: '$_biometricType Lock',
+              subtitle: 'Require $_biometricType to unlock the app',
+              trailing: Switch(
+                value: _biometricEnabled,
+                onChanged: (value) async {
+                  if (value) {
+                    // Verify biometric before enabling
+                    final authenticated = await _biometricService.authenticate(
+                      reason: 'Verify $_biometricType to enable lock',
+                    );
+                    if (authenticated) {
+                      await _biometricService.enableBiometric();
+                    }
+                  } else {
+                    await _biometricService.disableBiometric();
+                  }
+                  setState(() {
+                    _biometricEnabled = value;
+                  });
+                },
+              ),
+            )
+          else
+            const _SettingsTile(
+              icon: Icons.fingerprint,
+              title: 'Biometric Lock',
+              subtitle: 'Not available on this device',
+            ),
+          const Divider(),
+
+          // Account Section
+          const _SettingsSection(title: 'Account'),
+          _SettingsTile(
+            icon: Icons.person,
+            title: 'Profile',
+            subtitle: 'View and edit your profile',
+            onTap: () {},
+          ),
+          _SettingsTile(
+            icon: Icons.logout,
+            title: 'Logout',
+            subtitle: 'Sign out of your account',
+            onTap: () {},
+          ),
+          const Divider(),
+
+          // App Section
+          const _SettingsSection(title: 'App'),
+          _SettingsTile(
+            icon: Icons.language,
+            title: 'Language',
+            subtitle: 'English',
+            onTap: () {},
+          ),
+          _SettingsTile(
+            icon: Icons.info,
+            title: 'About',
+            subtitle: 'Version 1.0.0',
+            onTap: () {},
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SettingsSection extends StatelessWidget {
+  final String title;
+
+  const _SettingsSection({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: Text(
+        title.toUpperCase(),
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          color: AppColors.textSecondary,
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+
+  const _SettingsTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    this.trailing,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors.primary),
+      title: Text(title),
+      subtitle: Text(subtitle),
+      trailing: trailing ?? const Icon(Icons.chevron_right),
+      onTap: onTap,
+    );
   }
 }
 

@@ -30,6 +30,7 @@ class HiveBoxes {
 
   // User data
   static const String userPrefs = 'user_prefs_box';
+  static const String userProfile = 'user_profile_box';
   static const String karma = 'karma_box';
   static const String nutritionGoals = 'nutrition_goals_box';
 
