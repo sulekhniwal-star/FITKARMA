@@ -41,27 +41,27 @@
 
 ### 1.2 Folder Structure
 > Create these folders inside `lib/` — they can be empty for now
-- [] 🟢 Create `lib/core/constants/`
-- [] 🟢 Create `lib/core/di/`
-- [] 🟢 Create `lib/core/errors/`
-- [] 🟢 Create `lib/core/network/`
-- [] 🟢 Create `lib/core/security/`
-- [] 🟢 Create `lib/core/storage/`
-- [] 🟢 Create `lib/core/utils/`
-- [] 🟢 Create `lib/features/` (all feature subfolders come later — add them as you build)
-- [] 🟢 Create `lib/shared/widgets/` and `lib/shared/theme/`
-- [] 🟢 Create `lib/l10n/` for language files
+- [x] 🟢 Create `lib/core/constants/`
+- [x] 🟢 Create `lib/core/di/`
+- [x] 🟢 Create `lib/core/errors/`
+- [x] 🟢 Create `lib/core/network/`
+- [x] 🟢 Create `lib/core/security/`
+- [x] 🟢 Create `lib/core/storage/`
+- [x] 🟢 Create `lib/core/utils/`
+- [x] 🟢 Create `lib/features/` (all feature subfolders come later — add them as you build)
+- [x] 🟢 Create `lib/shared/widgets/` and `lib/shared/theme/`
+- [x] 🟢 Create `lib/l10n/` for language files
 
 ### 1.3 Dependencies
 > Add these to `pubspec.yaml` — copy from Section 23 of the docs
-- [] ⚡🟡 Add all packages listed in the `pubspec.yaml` section of the docs to your `pubspec.yaml`
-- [] 🟢 Run `flutter pub get` — fix any version conflicts shown in the terminal
-- [] 🟡 Run `flutter pub run build_runner build` — generates Hive and Riverpod code (you'll re-run this often)
+- [x] ⚡🟡 Add all packages listed in the `pubspec.yaml` section of the docs to your `pubspec.yaml`
+- [x] 🟢 Run `flutter pub get` — fix any version conflicts shown in the terminal
+- [ ] 🟡 Run `flutter pub run build_runner build` — generates Hive and Riverpod code (you'll re-run this often)
 
 ### 1.4 App Config
-- [] 🟡 Create `lib/core/constants/app_config.dart` — copy the `AppConfig` class from the docs (Section 23)
-- [] 🟡 Create `lib/core/constants/api_endpoints.dart` — copy the `AW` constants class from the docs (Section 5.3)
-- [] 🟡 Create `lib/core/constants/hive_boxes.dart` — add string constants for every box name from Section 7
+- [x] 🟡 Create `lib/core/constants/app_config.dart` — copy the `AppConfig` class from the docs (Section 23)
+- [x] 🟡 Create `lib/core/constants/api_endpoints.dart` — copy the `AW` constants class from the docs (Section 5.3)
+- [x] 🟡 Create `lib/core/constants/hive_boxes.dart` — add string constants for every box name from Section 7
 
 ---
 
