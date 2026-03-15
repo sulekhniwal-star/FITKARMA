@@ -32,6 +32,8 @@ dependencies:
   # Security
   flutter_secure_storage: ^10.0.0
   local_auth: ^3.0.1
+  cryptography: ^2.7.0
+  device_info_plus: ^11.0.0
   
   # Connectivity
   connectivity_plus: ^7.0.0

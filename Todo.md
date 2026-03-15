@@ -98,32 +98,32 @@
 > *The plumbing that every feature depends on. Get this solid before features.*
 
 ### 3.1 Appwrite Client
-- [] ⚡🟡 Create `lib/core/network/appwrite_client.dart` — copy the singleton from Section 5.2
-- [] 🟢 Test the connection: call `AppwriteClient.account.get()` and log the result
+- [x] ⚡🟡 Create `lib/core/network/appwrite_client.dart` — copy the singleton from Section 5.2
+- [x] 🟢 Test the connection: call `AppwriteClient.account.get()` and log the result
 
 ### 3.2 Hive Local Storage
-- [] ⚡🟡 Create `lib/core/storage/hive_service.dart` — initialises and opens all Hive boxes on app start
-- [] 🟢 Open all **non-encrypted** boxes from the box registry in Section 7
-- [] 🔒🔴 Open all **encrypted** boxes with `HiveAesCipher` — see Section 16.2 for the key derivation code
-- [] 🔒🔴 Encrypted boxes: `period_logs`, `journal`, `blood_pressure`, `glucose`, `appointments`
+- [x] ⚡🟡 Create `lib/core/storage/hive_service.dart` — initialises and opens all Hive boxes on app start
+- [x] 🟢 Open all **non-encrypted** boxes from the box registry in Section 7
+- [x] 🔒🔴 Open all **encrypted** boxes with `HiveAesCipher` — see Section 16.2 for the key derivation code
+- [x] 🔒🔴 Encrypted boxes: `period_logs`, `journal`, `blood_pressure`, `glucose`, `appointments`
 
 ### 3.3 Encryption Service
-- [] 🔒🔴 Create `lib/core/security/encryption_service.dart` — AES-256-GCM + PBKDF2 (100,000 iterations)
-- [] 🔒🔴 Create `lib/core/security/key_manager.dart` — derives and caches the encryption key using device ID + user password + stored salt
-- [] 🔒🟡 Store the salt in `flutter_secure_storage` — never in Hive or plaintext files
+- [x] 🔒🔴 Create `lib/core/security/encryption_service.dart` — AES-256-GCM + PBKDF2 (100,000 iterations)
+- [x] 🔒🔴 Create `lib/core/security/key_manager.dart` — derives and caches the encryption key using device ID + user password + stored salt
+- [x] 🔒🟡 Store the salt in `flutter_secure_storage` — never in Hive or plaintext files
 
 ### 3.4 Connectivity & Sync Queue
-- [] 🟡 Create `lib/core/network/connectivity_service.dart` — wraps `connectivity_plus`, exposes an `isOnline` stream
-- [] 🟡 Create the `SyncQueueItem` model — copy from Section 8
-- [] 🔴 Create `lib/core/network/sync_queue.dart`:
-  - Write sync items to `sync_queue_box` on every local create/update/delete
-  - Background isolate watches connectivity; flushes queue in batches of 20 when online
-  - Exponential backoff: 1s → 2s → 4s → 8s → 16s, max 5 retries
-- [] 🟡 Implement delta sync: on app resume, query Appwrite for `$updatedAt > lastSyncTimestamp`
+- [x] 🟡 Create `lib/core/network/connectivity_service.dart` — wraps `connectivity_plus`, exposes an `isOnline` stream
+- [x] 🟡 Create the `SyncQueueItem` model — copy from Section 8
+- [x] 🔴 Create `lib/core/network/sync_queue.dart`:
+  - [x] Write sync items to `sync_queue_box` on every local create/update/delete
+  - [x] Background isolate watches connectivity; flushes queue in batches of 20 when online
+  - [x] Exponential backoff: 1s → 2s → 4s → 8s → 16s, max 5 retries
+- [ ] 🟡 Implement delta sync: on app resume, query Appwrite for `$updatedAt > lastSyncTimestamp`
 
 ### 3.5 Error Handling
-- [] 🟡 Create `lib/core/errors/app_exception.dart` — custom exception types (NetworkException, StorageException, AuthException, EncryptionException)
-- [] 🟡 Create `lib/core/errors/error_handler.dart` — maps raw exceptions to friendly UI messages
+- [x] 🟡 Create `lib/core/errors/app_exception.dart` — custom exception types (NetworkException, StorageException, AuthException, EncryptionException)
+- [x] 🟡 Create `lib/core/errors/error_handler.dart` — maps raw exceptions to friendly UI messages
 
 ---
 
