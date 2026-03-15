@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../constants/hive_boxes.dart';
 import '../security/key_manager.dart';
 import '../../features/steps/domain/step_log_model.dart';
+import '../../features/food/domain/nutrition_goal_model.dart';
 
 /// Service for initializing and managing Hive local storage boxes.
 ///
@@ -31,6 +32,9 @@ class HiveService {
     // Register adapters
     if (!Hive.isAdapterRegistered(10)) {
       Hive.registerAdapter(StepLogAdapter());
+    }
+    if (!Hive.isAdapterRegistered(11)) {
+      Hive.registerAdapter(NutritionGoalAdapter());
     }
 
     await _openNonEncryptedBoxes();
@@ -77,6 +81,7 @@ class HiveService {
 
     // User data
     await Hive.openBox(HiveBoxes.userPrefs);
+    await Hive.openBox(HiveBoxes.userProfile);
     await Hive.openBox(HiveBoxes.karma);
     await Hive.openBox(HiveBoxes.nutritionGoals);
 
