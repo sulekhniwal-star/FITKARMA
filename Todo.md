@@ -69,11 +69,11 @@
 > *Build the shared UI components once so you never have to repeat styling.*
 
 ### 2.1 Colours & Typography
-- [] ⚡🟢 Create `lib/shared/theme/app_colors.dart` — add all colour constants from Section 2.2 of the docs
+- [x] ⚡🟢 Create `lib/shared/theme/app_colors.dart` — add all colour constants from Section 2.2 of the docs
   - Primary orange `#FF5722`, Indigo `#3F3D8F`, Amber `#FFC107`, Background `#FDF6EC`
-- [] 🟢 Create `lib/shared/theme/app_text_styles.dart` — define heading, body, caption text styles
-- [] 🟢 Create `lib/shared/theme/app_theme.dart` — wire colours and fonts into a `ThemeData`
-- [] 🟢 Apply the theme in `lib/app.dart`
+- [x] 🟢 Create `lib/shared/theme/app_text_styles.dart` — define heading, body, caption text styles
+- [x] 🟢 Create `lib/shared/theme/app_theme.dart` — wire colours and fonts into a `ThemeData`
+- [x] 🟢 Apply the theme in `lib/app.dart`
 
 ### 2.2 Shared Widgets
 > Build each widget in `lib/shared/widgets/` — test each one in isolation before moving on
