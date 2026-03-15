@@ -33,6 +33,7 @@ class HiveBoxes {
   static const String userProfile = 'user_profile_box';
   static const String karma = 'karma_box';
   static const String nutritionGoals = 'nutrition_goals_box';
+  static const String insightFeedback = 'insight_feedback_box';
 
   // Extended features
   static const String mealPlans = 'meal_plans_box';

@@ -84,6 +84,7 @@ class HiveService {
     await Hive.openBox(HiveBoxes.userProfile);
     await Hive.openBox(HiveBoxes.karma);
     await Hive.openBox(HiveBoxes.nutritionGoals);
+    await Hive.openBox(HiveBoxes.insightFeedback);
 
     // Extended features
     await Hive.openBox(HiveBoxes.mealPlans);
