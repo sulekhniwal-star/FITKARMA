@@ -1,32 +1,20 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/theme/app_colors.dart';
 import '../../shared/widgets/logo_reveal.dart';
-import '../../core/providers/core_providers.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'splash_screen.g.dart';
+import 'onboarding_providers.dart';
 
 /// SplashScreen — Logo reveal animation → auto-redirect based on auth.
 /// Shows LogoReveal for 1.5s with spring animation, then navigates.
-@riverpod
-class SplashScreen extends _$SplashScreen {
-  @override
-  Widget build() {
-    // Splash screen logic handled by the widget below.
-    // This provider exists to watch auth state if needed.
-    return const _SplashScreenContent();
-  }
-}
-
-class _SplashScreenContent extends ConsumerStatefulWidget {
-  const _SplashScreenContent();
+class SplashScreen extends ConsumerStatefulWidget {
+  const SplashScreen({super.key});
 
   @override
-  ConsumerState<_SplashScreenContent> createState() => _SplashScreenContentState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenContentState extends ConsumerState<_SplashScreenContent> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -34,22 +22,28 @@ class _SplashScreenContentState extends ConsumerState<_SplashScreenContent> {
   }
 
   Future<void> _handleNavigation() async {
-    // Wait for logo animation to complete (1.5s total)
-    await Future.delayed(const Duration(milliseconds: 1500));
+    // 1. Wait for the core logo animation to complete (1.5s)
+    final stopwatch = Stopwatch()..start();
+    
+    // 2. Concurrently ensure auth state is resolved
+    // We use ref.read(authProvider.future) to wait if it's still loading
+    try {
+      await ref.read(authProvider.future);
+    } catch (e) {
+      // Ignore errors here, we'll check the value below
+    }
 
-    if (!mounted) return;
-
-    // Check auth state
-    final authState = ref.read(authProvider);
-
-    // If auth state is still loading, wait briefly
-    if (authState.isLoading) {
-      await Future.delayed(const Duration(milliseconds: 500));
+    // 3. Ensure at least 1.5s has passed for the animation
+    final elapsed = stopwatch.elapsedMilliseconds;
+    if (elapsed < 1500) {
+      await Future.delayed(Duration(milliseconds: 1500 - elapsed));
     }
 
     if (!mounted) return;
 
-    final user = authState.valueOrNull;
+    // 4. Final check of auth state
+    final user = ref.read(authProvider).value;
+    
     if (user != null) {
       // User is logged in → go to dashboard
       context.go('/home/dashboard');
@@ -62,7 +56,7 @@ class _SplashScreenContentState extends ConsumerState<_SplashScreenContent> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColorsDark.bg0,
       body: Center(
         child: LogoReveal(),
       ),

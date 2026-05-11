@@ -364,28 +364,28 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 7.1 Splash / Logo Reveal (`/splash`)
 
-- [ ] `LogoReveal` animation — 1.5s spring reveal (Implemented in `lib/shared/widgets/logo_reveal.dart`)
-- [ ] Check auth state → redirect to `/onboarding/welcome` or `/home/dashboard` (Implemented in `lib/features/onboarding/splash_screen.dart`)
+- [x] `LogoReveal` animation — 1.5s spring reveal (Implemented in `lib/shared/widgets/logo_reveal.dart`)
+- [x] Check auth state → redirect to `/onboarding/welcome` or `/home/dashboard` (Implemented in `lib/features/onboarding/splash_screen.dart`)
 
 ### 7.2 Welcome Screen (`/onboarding/welcome`)
 
-- [ ] Pattern C scaffold, heroDeep gradient (Implemented in `WelcomeScreen`)
-- [ ] App logo + tagline + CTA "Get Started" (Generated logo + `WelcomeScreen`)
-- [ ] "Already have an account? Sign in" link (Added to `WelcomeScreen`)
+- [x] Pattern C scaffold, heroDeep gradient (Implemented in `WelcomeScreen`)
+- [x] App logo + tagline + CTA "Get Started" (Generated logo + `WelcomeScreen`)
+- [x] "Already have an account? Sign in" link (Added to `WelcomeScreen`)
 
 ### 7.3 Sign Up / Sign In
 
-- [ ] Email + password form with validation (Implemented in `AuthScreen`)
-- [ ] Call `AuthNotifier.login()` / `AuthNotifier.createAccount()` (Integrated in `AuthScreen`)
-- [ ] Error states: invalid email, weak password, account exists (Handled via UI feedback in `AuthScreen`)
+- [x] Email + password form with validation (Implemented in `AuthScreen`)
+- [x] Call `AuthNotifier.login()` / `AuthNotifier.createAccount()` (Integrated in `AuthScreen`)
+- [x] Error states: invalid email, weak password, account exists (Handled via UI feedback in `AuthScreen`)
 
 ### 7.4 Dosha Quiz (`/onboarding/dosha`) — §17
 
-- [ ] 10-question quiz (body frame, skin, energy, sleep, digestion, memory, speech, emotional nature, temperature, appetite)
-- [ ] Each question: 3 options (Vata/Pitta/Kapha-leaning answers)
-- [ ] Progress indicator (1 of 10)
-- [ ] `computeDosha()` result → `DoshaResult` with percentages + dominant dosha
-- [ ] Store result in Drift users table, sync to Appwrite
+- [x] 10-question quiz (body frame, skin, energy, sleep, digestion, memory, speech, emotional nature, temperature, appetite)
+- [x] Each question: 3 options (Vata/Pitta/Kapha-leaning answers)
+- [x] Progress indicator (1 of 10)
+- [x] `computeDosha()` result → `DoshaResult` with percentages + dominant dosha
+- [x] Store result in Drift users table, sync to Appwrite
 
 ### 7.5 Health Goals Setup (`/onboarding/goals`) — §17A
 

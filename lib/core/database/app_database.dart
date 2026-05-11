@@ -89,6 +89,16 @@ class Users extends Table with SyncableColumns {
   TextColumn get email => text()();
   TextColumn get name => text()();
   TextColumn get uxStage => text().withDefault(const Constant('onboarding'))(); // onboarding, firstWeek, established
+  
+  // Dosha Data
+  TextColumn get dominantDosha => text().nullable()();
+  RealColumn get vataPercentage => real().nullable()();
+  RealColumn get pittaPercentage => real().nullable()();
+  RealColumn get kaphaPercentage => real().nullable()();
+
+  // Goals (Stored as comma-separated strings or JSON)
+  TextColumn get goals => text().nullable()();
+
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
 
@@ -110,7 +120,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openDatabase());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(

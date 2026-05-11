@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/onboarding/onboarding_providers.dart';
+import '../../features/onboarding/welcome_screen.dart';
+import '../../features/onboarding/auth_screen.dart';
+import '../../features/onboarding/dosha_quiz_screen.dart';
 import '../../features/onboarding/splash_screen.dart';
 import '../../shared/widgets/bottom_nav_bar.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
@@ -14,7 +17,7 @@ part 'app_router.g.dart';
 @riverpod
 GoRouter appRouter(Ref ref) {
   final authState = ref.watch(authProvider);
-  final bool isAuthenticated = authState.valueOrNull != null;
+  final bool isAuthenticated = authState.value != null;
 
   return GoRouter(
     initialLocation: '/splash',
@@ -38,11 +41,19 @@ GoRouter appRouter(Ref ref) {
       // Onboarding Branch
       GoRoute(
         path: '/onboarding/welcome',
-        builder: (context, state) => const _PlaceholderScreen(title: 'Welcome'),
+        builder: (context, state) => const WelcomeScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding/signup',
+        builder: (context, state) => const AuthScreen(isInitialSignUp: true),
+      ),
+      GoRoute(
+        path: '/onboarding/login',
+        builder: (context, state) => const AuthScreen(isInitialSignUp: false),
       ),
       GoRoute(
         path: '/onboarding/dosha',
-        builder: (context, state) => const _PlaceholderScreen(title: 'Dosha Quiz'),
+        builder: (context, state) => const DoshaQuizScreen(),
       ),
       GoRoute(
         path: '/onboarding/goals',
