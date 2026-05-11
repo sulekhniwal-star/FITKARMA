@@ -9,6 +9,7 @@ import '../../features/onboarding/dosha_quiz_screen.dart';
 import '../../features/onboarding/goals_screen.dart';
 import '../../features/onboarding/permissions_screen.dart';
 import '../../features/onboarding/splash_screen.dart';
+import '../../features/dashboard/dashboard_screen.dart';
 import '../../shared/widgets/bottom_nav_bar.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
 import '../security/biometric_lock.dart';
@@ -93,7 +94,7 @@ GoRouter appRouter(Ref ref) {
           );
         },
         routes: [
-          GoRoute(path: '/home/dashboard', builder: (context, state) => const _PlaceholderScreen(title: 'Dashboard')),
+          GoRoute(path: '/home/dashboard', builder: (context, state) => const DashboardScreen()),
           GoRoute(path: '/home/food', builder: (context, state) => const _PlaceholderScreen(title: 'Food Log')),
           GoRoute(path: '/home/workout', builder: (context, state) => const _PlaceholderScreen(title: 'Workouts')),
           GoRoute(path: '/home/steps', builder: (context, state) => const _PlaceholderScreen(title: 'Steps')),

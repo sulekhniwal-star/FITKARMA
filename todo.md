@@ -406,14 +406,14 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 8.1 Dashboard (`/home/dashboard`) — Pattern A
 
-- [ ] AppBar: circular avatar → `/profile`, "Good morning, {Name}" h1, notification bell
-- [ ] Activity Rings card (GlassCard, xl radius, primaryGlow border) — steps/calories/active minutes, center metricLg steps count
-- [ ] 2-column bento grid (12px gap): Calories card → `/food`, Water card → `/water`, Streak card (full width, StreakFlame), Karma XP card (full width) → `/karma`
-- [ ] Today's Meals — horizontal scroll of food entries
-- [ ] AI Insight card (if ≥7 days data + aiInsights flag ON) — `InsightCard` with 👍👎
-- [ ] Quick Stats bento: last BP reading, last glucose, sleep score
-- [ ] Challenges / Active Program card
-- [ ] `QuickLogFab` persistent
+- [x] AppBar: circular avatar → `/profile`, "Good morning, {Name}" h1, notification bell
+- [x] Activity Rings card (GlassCard, xl radius, primaryGlow border) — steps/calories/active minutes, center metricLg steps count
+- [x] 2-column bento grid (12px gap): Calories card → `/food`, Water card → `/water`, Streak card (full width, StreakFlame), Karma XP card (full width) → `/karma`
+- [x] Today's Meals — horizontal scroll of food entries
+- [x] AI Insight card (if ≥7 days data + aiInsights flag ON) — `InsightCard` with 👍👎
+- [x] Quick Stats bento: last BP reading, last glucose, sleep score
+- [x] Challenges / Active Program card
+- [x] `QuickLogFab` persistent
 
 ### 8.2 Food Home (`/home/food`) — Pattern A
 
