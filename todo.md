@@ -172,26 +172,26 @@ Build all 18 shared widgets per §10:
 
 ### 5.1 Router (`lib/core/router/`)
 
-- [ ] Implement `AppRouter` with GoRouter — all routes listed below
-- [ ] Implement custom page transitions (`transitions.dart`) — slide + fade, spring-based
-- [ ] 7.1 Splash / Logo Reveal (`/splash`)
-- [ ] 7.2 Welcome Screen (`/onboarding/welcome`)
-- [ ] 7.3 Sign Up / Sign In
-- [ ] 7.4 Dosha Quiz (`/onboarding/dosha`)
-- [ ] 7.5 Health Goals (`/onboarding/goals`)
-- [ ] 7.6 Privacy / Permissions (`/onboarding/permissions`)
-- [ ] Define all routes:
+- [x] Implement `AppRouter` with GoRouter — all routes listed below
+- [x] Implement custom page transitions (`transitions.dart`) — slide + fade, spring-based
+- [x] 7.1 Splash / Logo Reveal (`/splash`)
+- [x] 7.2 Welcome Screen (`/onboarding/welcome`)
+- [x] 7.3 Sign Up / Sign In
+- [x] 7.4 Dosha Quiz (`/onboarding/dosha`)
+- [x] 7.5 Health Goals (`/onboarding/goals`)
+- [x] 7.6 Privacy / Permissions (`/onboarding/permissions`)
+- [x] Define all routes:
   - `/home/dashboard`, `/home/food`, `/home/workout`, `/home/steps`, `/karma`
   - `/blood-pressure`, `/glucose`, `/sleep`, `/journal`, `/mental-health`
   - `/workout/active/{workoutId}`, `/profile`, `/emergency`, `/lab-reports`
   - `/ai-coach`, `/subscription`, `/settings`
   - `/water`, `/medication`, `/festival`, `/wedding`, `/social`
-- [ ] Add redirect guard: unauthenticated → `/onboarding/welcome`
+- [x] Add redirect guard: unauthenticated → `/onboarding/welcome`
 
 ### 5.2 Appwrite Client (`lib/core/providers/core_providers.dart`)
 
-- [ ] Implement `appwriteClientProvider` — reads `APPWRITE_ENDPOINT` + `APPWRITE_PROJECT_ID` from `--dart-define`
-- [ ] Implement `appwriteDatabasesProvider`, `appwriteStorageProvider`, `appwriteFunctionsProvider`
+- [x] Implement `appwriteClientProvider` — reads `APPWRITE_ENDPOINT` + `APPWRITE_PROJECT_ID` from `--dart-define`
+- [x] Implement `appwriteDatabasesProvider`, `appwriteStorageProvider`, `appwriteFunctionsProvider`
 
 ### 5.3 Authentication (`lib/features/onboarding/`)
 
