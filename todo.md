@@ -202,9 +202,9 @@ Build all 18 shared widgets per §10:
 
 ### 5.4 Biometric Lock (`lib/core/security/biometric_lock.dart`)
 
-- [ ] Implement `BiometricLock.authenticate()` using `local_auth`
-- [ ] Apply on first-enter per session for: Journal, Period Tracker, BP/Glucose, Lab Reports
-- [ ] Implement `SensitiveScreenGuard` widget wrapper
+- [x] Implement `BiometricLock.authenticate()` using `local_auth`
+- [x] Apply on first-enter per session for: Journal, Period Tracker, BP/Glucose, Lab Reports
+- [x] Implement `SensitiveScreenGuard` widget wrapper
 
 ### 5.5 Encrypted Database (`lib/core/database/app_database.dart`)
 

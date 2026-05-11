@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/onboarding/onboarding_providers.dart';
 import '../../shared/widgets/bottom_nav_bar.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
+import '../security/biometric_lock.dart';
 import 'transitions.dart';
 
 part 'app_router.g.dart';
@@ -85,14 +86,50 @@ GoRouter appRouter(AppRouterRef ref) {
       ),
 
       // Standalone Feature Routes
-      GoRoute(path: '/blood-pressure', builder: (context, state) => const _PlaceholderScreen(title: 'Blood Pressure')),
-      GoRoute(path: '/glucose', builder: (context, state) => const _PlaceholderScreen(title: 'Glucose')),
-      GoRoute(path: '/sleep', builder: (context, state) => const _PlaceholderScreen(title: 'Sleep')),
-      GoRoute(path: '/journal', builder: (context, state) => const _PlaceholderScreen(title: 'Journal')),
-      GoRoute(path: '/mental-health', builder: (context, state) => const _PlaceholderScreen(title: 'Mental Health')),
+      GoRoute(
+        path: '/blood-pressure',
+        builder: (context, state) => const SensitiveScreenGuard(
+          screenId: 'blood-pressure',
+          child: _PlaceholderScreen(title: 'Blood Pressure'),
+        ),
+      ),
+      GoRoute(
+        path: '/glucose',
+        builder: (context, state) => const SensitiveScreenGuard(
+          screenId: 'glucose',
+          child: _PlaceholderScreen(title: 'Glucose'),
+        ),
+      ),
+      GoRoute(
+        path: '/sleep',
+        builder: (context, state) => const SensitiveScreenGuard(
+          screenId: 'sleep',
+          child: _PlaceholderScreen(title: 'Sleep'),
+        ),
+      ),
+      GoRoute(
+        path: '/journal',
+        builder: (context, state) => const SensitiveScreenGuard(
+          screenId: 'journal',
+          child: _PlaceholderScreen(title: 'Journal'),
+        ),
+      ),
+      GoRoute(
+        path: '/mental-health',
+        builder: (context, state) => const SensitiveScreenGuard(
+          screenId: 'mental-health',
+          child: _PlaceholderScreen(title: 'Mental Health'),
+        ),
+      ),
       GoRoute(path: '/profile', builder: (context, state) => const _PlaceholderScreen(title: 'Profile')),
       GoRoute(path: '/emergency', builder: (context, state) => const _PlaceholderScreen(title: 'Emergency')),
-      GoRoute(path: '/lab-reports', builder: (context, state) => const _PlaceholderScreen(title: 'Lab Reports')),
+      GoRoute(
+        path: '/lab-reports',
+        builder: (context, state) => const SensitiveScreenGuard(
+          screenId: 'lab-reports',
+          child: _PlaceholderScreen(title: 'Lab Reports'),
+        ),
+      ),
       GoRoute(path: '/ai-coach', builder: (context, state) => const _PlaceholderScreen(title: 'AI Coach')),
       GoRoute(path: '/subscription', builder: (context, state) => const _PlaceholderScreen(title: 'Subscription')),
       GoRoute(path: '/settings', builder: (context, state) => const _PlaceholderScreen(title: 'Settings')),
