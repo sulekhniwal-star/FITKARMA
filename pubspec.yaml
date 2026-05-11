@@ -112,3 +112,11 @@ flutter:
         - asset: assets/fonts/OpenDyslexic-Regular.ttf
         - asset: assets/fonts/OpenDyslexic-Bold.ttf
           weight: 700
+
+    - family: NotoSansDevanagari
+      fonts:
+        - asset: assets/fonts/NotoSansDevanagari-Regular.ttf
+        - asset: assets/fonts/NotoSansDevanagari-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansDevanagari-Bold.ttf
+          weight: 700
