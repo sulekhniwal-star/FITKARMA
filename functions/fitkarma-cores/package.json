@@ -1,0 +1,12 @@
+{
+  "name": "fitkarma-cores",
+  "version": "1.0.0",
+  "description": "Consolidated core function for FitKarma",
+  "main": "src/main.js",
+  "type": "module",
+  "dependencies": {
+    "node-appwrite": "^14.1.0",
+    "axios": "^1.6.7",
+    "crypto": "^1.0.1"
+  }
+}

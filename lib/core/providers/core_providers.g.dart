@@ -265,3 +265,36 @@ final class AppwriteAccountProvider
 }
 
 String _$appwriteAccountHash() => r'e40c83404bb3689a262bde501d894c3c8ac1787b';
+
+@ProviderFor(isPro)
+final isProProvider = IsProProvider._();
+
+final class IsProProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
+  IsProProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'isProProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$isProHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<bool> create(Ref ref) {
+    return isPro(ref);
+  }
+}
+
+String _$isProHash() => r'8297031fc0a08356b4b8c37f2c268607f4b320a9';

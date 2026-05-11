@@ -1,0 +1,2307 @@
+{
+    "projectId": "fitkarma",
+    "projectName": "Fitkarma",
+    "endpoint": "https://sgp.cloud.appwrite.io/v1",
+    "settings": {
+        "services": {
+            "account": true,
+            "avatars": true,
+            "databases": true,
+            "locale": true,
+            "health": true,
+            "storage": true,
+            "teams": true,
+            "users": true,
+            "sites": true,
+            "functions": true,
+            "graphql": true,
+            "messaging": true
+        },
+        "protocols": {
+            "rest": true,
+            "graphql": true,
+            "websocket": true
+        },
+        "auth": {
+            "methods": {
+                "jwt": true,
+                "phone": true,
+                "invites": true,
+                "anonymous": true,
+                "email-otp": true,
+                "magic-url": true,
+                "email-password": true
+            },
+            "security": {
+                "duration": 31536000,
+                "limit": 0,
+                "sessionsLimit": 0,
+                "passwordHistory": 0,
+                "passwordDictionary": false,
+                "personalDataCheck": false,
+                "sessionAlerts": false,
+                "mockNumbers": []
+            }
+        }
+    },
+    "functions": [
+        {
+            "$id": "fitkarma-cores",
+            "name": "fitkarma-cores",
+            "runtime": "node-22",
+            "path": "functions/fitkarma-cores",
+            "entrypoint": "src/main.js",
+            "execute": [
+                "users"
+            ],
+            "enabled": true,
+            "logging": true,
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "commands": "npm install",
+            "scopes": [],
+            "buildSpecification": "s-0.5vcpu-512mb",
+            "runtimeSpecification": "s-0.5vcpu-512mb",
+            "deploymentRetention": 0
+        }
+    ],
+    "tablesDB": [
+        {
+            "$id": "fitkarma-db",
+            "name": "FitKarma DB",
+            "enabled": true
+        }
+    ],
+    "tables": [
+        {
+            "$id": "users",
+            "$permissions": [
+                "read(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Users",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "email",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 254,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "gender",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "dob",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "heightCm",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "weightKg",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "bloodGroup",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 5,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "fitnessGoal",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 30,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "activityLevel",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "dominantDosha",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "language",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "en",
+                    "encrypt": false
+                },
+                {
+                    "key": "karmaLevel",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "karmaXP",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "conditions",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "firstLaunchTs",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "weddingDate",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "targetWeightKg",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "isPro",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "revenueCatId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "userId_idx",
+                    "type": "unique",
+                    "status": "available",
+                    "columns": [
+                        "userId"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "food_logs",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Food Logs",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "localId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "foodName",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 200,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "foodNameLocal",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 200,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "mealType",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "loggedAt",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "calories",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "proteinG",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "carbsG",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "fatG",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "fiberG",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "portionUnit",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 30,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "portionQty",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "source",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "foodDbId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "imageUrl",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 300,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "isDeleted",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "deletedAt",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "synced",
+                    "encrypt": false
+                },
+                {
+                    "key": "failedAttempts",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "updatedAt",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "localId_idx",
+                    "type": "unique",
+                    "status": "available",
+                    "columns": [
+                        "localId"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "user_date_idx",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "userId",
+                        "loggedAt"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "food_database",
+            "$permissions": [
+                "read(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Food Database",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 200,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "nameHindi",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 200,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "nameRegional",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 200,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "category",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "cuisine",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "caloriesPer100g",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "proteinPer100g",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "carbsPer100g",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "fatPer100g",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "fiberPer100g",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "barcode",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "servingSizes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "emoji",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 4,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "source",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "name_idx",
+                    "type": "fulltext",
+                    "status": "available",
+                    "columns": [
+                        "name"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "barcode_idx",
+                    "type": "unique",
+                    "status": "available",
+                    "columns": [
+                        "barcode"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "bp_readings",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Blood Pressure Readings",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "localId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "systolic",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "diastolic",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "pulse",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "measuredAt",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "classification",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 30,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "measuredArm",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "isDeleted",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "synced",
+                    "encrypt": false
+                },
+                {
+                    "key": "failedAttempts",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "updatedAt",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "localId_idx",
+                    "type": "unique",
+                    "status": "available",
+                    "columns": [
+                        "localId"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "user_time_idx",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "userId",
+                        "measuredAt"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "glucose_readings",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Glucose Readings",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "localId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "valueMgDl",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "readingType",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "measuredAt",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "classification",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "linkedFoodLogId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 300,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "isDeleted",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "synced",
+                    "encrypt": false
+                },
+                {
+                    "key": "failedAttempts",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "updatedAt",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_time_idx",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "userId",
+                        "measuredAt"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "sleep_logs",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Sleep Logs",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "localId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "sleepStart",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "sleepEnd",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "totalMinutes",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "remMinutes",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "deepMinutes",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "lightMinutes",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "qualityScore",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "avgSpO2",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "avgHeartRate",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "source",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "isDeleted",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "synced",
+                    "encrypt": false
+                },
+                {
+                    "key": "failedAttempts",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_night_idx",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "userId",
+                        "sleepStart"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "workouts",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Workouts",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "localId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "workoutType",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 30,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "startedAt",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "endedAt",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "durationSeconds",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "caloriesBurned",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "avgHeartRate",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "maxHeartRate",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "distanceKm",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "exercisesJson",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 5000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "gpsRouteJson",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 5000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "isDeleted",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "synced",
+                    "encrypt": false
+                },
+                {
+                    "key": "failedAttempts",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_date_idx",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "userId",
+                        "startedAt"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "workout_sets",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Workout Sets",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "localId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "workoutId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "exerciseName",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "reps",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "weight",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308
+                },
+                {
+                    "key": "setOrder",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "synced",
+                    "encrypt": false
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "habits",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Habits",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "localId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "icon",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 5,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "frequency",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "completedDates",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 3000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "currentStreak",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "longestStreak",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "isActive",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": true
+                },
+                {
+                    "key": "isDeleted",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "synced",
+                    "encrypt": false
+                },
+                {
+                    "key": "updatedAt",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "journal",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Journal",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "localId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "title",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 200,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "body",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 5000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "moodScore",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "moodEmoji",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 4,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "tags",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 200,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "createdAt",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "isDeleted",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "synced",
+                    "encrypt": false
+                },
+                {
+                    "key": "failedAttempts",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "updatedAt",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_date_idx",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "userId",
+                        "createdAt"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "karma_events",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Karma Events",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "eventType",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "xpAwarded",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "occurredAt",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "resourceId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "synced",
+                    "encrypt": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_time_idx",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "userId",
+                        "occurredAt"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "festivals",
+            "$permissions": [
+                "read(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Festivals",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "nameHindi",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "date",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "type",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "dietaryNotes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "region",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "isFastingDay",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "date_idx",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "date"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "medications",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Medications",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "localId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 200,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "dosage",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "scheduleJson",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "isActive",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": true
+                },
+                {
+                    "key": "isDeleted",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "synced",
+                    "encrypt": false
+                },
+                {
+                    "key": "failedAttempts",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "updatedAt",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "water_logs",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Water Logs",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "localId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "amountMl",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "loggedAt",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "source",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "synced",
+                    "encrypt": false
+                },
+                {
+                    "key": "failedAttempts",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_date_idx",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "userId",
+                        "loggedAt"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "lab_reports",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Lab Reports",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "localId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "reportName",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 200,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "reportDate",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "labName",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "valuesJson",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 5000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "fileId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "isDeleted",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "syncStatus",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "synced",
+                    "encrypt": false
+                },
+                {
+                    "key": "failedAttempts",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "default": 0,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_date_idx",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "userId",
+                        "reportDate"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "social_posts",
+            "$permissions": [
+                "read(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Social Posts",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "groupId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "content",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "postType",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "reactions",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "createdAt",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "isDeleted",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "group_time_idx",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "groupId",
+                        "createdAt"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "groups",
+            "$permissions": [
+                "read(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Groups",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "createdBy",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "members",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "groupType",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 300,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "createdAt",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "share_tokens",
+            "$permissions": [
+                "read(\"users\")"
+            ],
+            "databaseId": "fitkarma-db",
+            "name": "Share Tokens",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "reportId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "token",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 64,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "expiresAt",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "default": null,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807
+                },
+                {
+                    "key": "reportType",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "token_idx",
+                    "type": "unique",
+                    "status": "available",
+                    "columns": [
+                        "token"
+                    ],
+                    "orders": []
+                }
+            ]
+        }
+    ],
+    "buckets": [
+        {
+            "$id": "fitkarma-vault",
+            "$permissions": [
+                "read(\"users\")",
+                "create(\"users\")",
+                "delete(\"users\")"
+            ],
+            "fileSecurity": true,
+            "name": "FitKarma Vault",
+            "enabled": true,
+            "maximumFileSize": 50000000,
+            "allowedFileExtensions": [],
+            "compression": "none",
+            "encryption": true,
+            "antivirus": true
+        }
+    ],
+    "platform": "dart"
+}

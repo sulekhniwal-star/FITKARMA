@@ -1,5 +1,6 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../features/onboarding/onboarding_providers.dart';
 import '../database/app_database.dart';
 
 part 'core_providers.g.dart';
@@ -49,4 +50,24 @@ Functions appwriteFunctions(AppwriteFunctionsRef ref) {
 Account appwriteAccount(AppwriteAccountRef ref) {
   final client = ref.watch(appwriteClientProvider);
   return Account(client);
+}
+
+@riverpod
+Future<bool> isPro(IsProRef ref) async {
+  final auth = ref.watch(authProvider);
+  final user = auth.value;
+  if (user == null) return false;
+
+  final databases = ref.watch(appwriteDatabasesProvider);
+  try {
+    final doc = await databases.getDocument(
+      databaseId: 'fitkarma-db',
+      collectionId: 'users',
+      documentId: user.$id,
+    );
+    return doc.data['isPro'] ?? false;
+  } catch (e) {
+    // If user document doesn't exist yet, they are not pro
+    return false;
+  }
 }

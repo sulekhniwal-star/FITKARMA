@@ -249,43 +249,43 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 6.1 Project & Database
 
-- [ ] `appwrite client --endpoint https://sgp.cloud.appwrite.io/v1 --project-id fitkarma` (Configured via `appwrite init project`)
-- [ ] `appwrite databases create --database-id fitkarma-db --name "FitKarma DB"`
+- [x] `appwrite client --endpoint https://sgp.cloud.appwrite.io/v1 --project-id fitkarma` (Configured via `appwrite init project`)
+- [x] `appwrite databases create --database-id fitkarma-db --name "FitKarma DB"`
 
 ### 6.2 All 18 Collections (full attribute + index CLI commands per §A1 & §25)
 
-- [ ] `users` — 20 attributes + userId unique index
-- [ ] `food_logs` — 20+ attributes + user_date composite index + localId unique index
-- [ ] `food_database` — 14 attributes + name fulltext index + barcode unique index
-- [ ] `bp_readings` — 12+ attributes + user_date index
-- [ ] `glucose_readings` — 12 attributes
-- [ ] `sleep_logs` — 10+ attributes
-- [ ] `workouts` — 15+ attributes
-- [ ] `workout_sets` — 8 attributes
-- [ ] `habits` — 10+ attributes
-- [ ] `journal` — 10+ attributes (body field created; native encrypted attributes unavailable on current Appwrite plan, so store app-level encrypted ciphertext)
-- [ ] `karma_events` — 6 attributes + user_time index
-- [ ] `festivals` — 6+ attributes
-- [ ] `medications` — 10+ attributes
-- [ ] `water_logs` — 6+ attributes
-- [ ] `lab_reports` — 8+ attributes
-- [ ] `social_posts` — 7 attributes + group_time index
-- [ ] `groups` — 6 attributes
-- [ ] `share_tokens` — 5 attributes + token unique index
-- [ ] Verified all 18 live collections have `document-security: true`; private collections use document-level read/update/delete permissions.
+- [x] `users` — 20 attributes + userId unique index
+- [x] `food_logs` — 20+ attributes + user_date composite index + localId unique index
+- [x] `food_database` — 14 attributes + name fulltext index + barcode unique index
+- [x] `bp_readings` — 12+ attributes + user_date index
+- [x] `glucose_readings` — 12 attributes
+- [x] `sleep_logs` — 10+ attributes
+- [x] `workouts` — 15+ attributes
+- [x] `workout_sets` — 8 attributes
+- [x] `habits` — 10+ attributes
+- [x] `journal` — 10+ attributes (body field created; native encrypted attributes unavailable on current Appwrite plan, so store app-level encrypted ciphertext)
+- [x] `karma_events` — 6 attributes + user_time index
+- [x] `festivals` — 6+ attributes
+- [x] `medications` — 10+ attributes
+- [x] `water_logs` — 6+ attributes
+- [x] `lab_reports` — 8+ attributes
+- [x] `social_posts` — 7 attributes + group_time index
+- [x] `groups` — 6 attributes
+- [x] `share_tokens` — 5 attributes + token unique index
+- [x] Verified all 18 live collections have `document-security: true`; private collections use document-level read/update/delete permissions.
 
 ### 6.3 Storage Bucket — Single Consolidated: `fitkarma-vault`
 
 > **Constraint:** One bucket only. All file types are stored here, separated by a `type` path prefix in the filename (e.g. `labreport_{userId}_{uuid}.pdf`, `avatar_{userId}.jpg`).
 
-- [ ] Create `fitkarma-vault` bucket via CLI (Completed via Infrastructure-as-Code in `appwrite.config.json`)
-- [ ] Permissions: `read("user:{{userId}}")`, `create("user:{{userId}}")`, `delete("user:{{userId}}")` — strict user isolation enforced via `fileSecurity: true`
-- [ ] **Naming convention for uploads:**
+- [x] Create `fitkarma-vault` bucket via CLI (Completed via Infrastructure-as-Code in `appwrite.config.json`)
+- [x] Permissions: `read("user:{{userId}}")`, `create("user:{{userId}}")`, `delete("user:{{userId}}")` — strict user isolation enforced via `fileSecurity: true`
+- [x] **Naming convention for uploads:**
   - Lab reports: `labreport_{userId}_{uuid}.pdf` / `.jpg`
   - Profile photos: `avatar_{userId}.jpg`
-- [ ] In Flutter, implemented `StorageService` in `lib/core/services/storage_service.dart` using `bucketId: 'fitkarma-vault'` and the specified naming conventions.
-- [ ] Free tier: enforce max 3 lab report files per user in app logic (Implemented in `StorageService.uploadLabReport`)
-- [ ] Pro tier: unlimited files — check `isProProvider` before upload
+- [x] In Flutter, implemented `StorageService` in `lib/core/services/storage_service.dart` using `bucketId: 'fitkarma-vault'` and the specified naming conventions.
+- [x] Free tier: enforce max 3 lab report files per user in app logic (Implemented in `StorageService.uploadLabReport`)
+- [x] Pro tier: unlimited files — check `isProProvider` before upload
 
 ### 6.4 Appwrite Function — Single Consolidated: `fitkarma-core`
 
