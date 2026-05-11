@@ -1,24 +1,32 @@
 import 'package:flutter/physics.dart';
 
-abstract class AppSprings {
-  // Standard: damping 20, stiffness 300
-  static const SpringDescription standard = SpringDescription(
+/// AppSprings — Spring physics presets for FitKarma.
+///
+/// Ensures fluid, physics-based motion throughout the app.
+class AppSprings {
+  AppSprings._();
+
+  /// Standard spring for most UI transitions.
+  /// damping: 20, stiffness: 300
+  static const standard = SpringDescription(
     mass: 1.0,
-    stiffness: 300.0,
-    damping: 20.0,
+    stiffness: 300,
+    damping: 20,
   );
 
-  // Dramatic: damping 15, stiffness 400
-  static const SpringDescription dramatic = SpringDescription(
+  /// Dramatic spring for hero elements and accent animations.
+  /// damping: 15, stiffness: 400
+  static const dramatic = SpringDescription(
     mass: 1.0,
-    stiffness: 400.0,
-    damping: 15.0,
+    stiffness: 400,
+    damping: 15,
   );
 
-  // Gentle: damping 25, stiffness 200
-  static const SpringDescription gentle = SpringDescription(
+  /// Gentle spring for subtle feedback and secondary motions.
+  /// damping: 25, stiffness: 200
+  static const gentle = SpringDescription(
     mass: 1.0,
-    stiffness: 200.0,
-    damping: 25.0,
+    stiffness: 200,
+    damping: 25,
   );
 }

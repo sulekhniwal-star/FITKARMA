@@ -98,24 +98,24 @@ assets/fonts/           assets/data/            functions/
 
 ### 3.1 Color Tokens (`lib/core/theme/app_colors.dart`)
 
-- [ ] Implement `AppColorsDark` (all 22 color constants — bg0→bg2, surface0→2, glass, glassBorder, primary, accent, secondary, teal, success, warning, error, rose, purple, text variants, divider)
-- [ ] Implement `AppColorsLight` (warm inversion — 14 constants)
-- [ ] Write unit test: verify no hardcoded hex values leak outside this file
+- [x] Implement `AppColorsDark` (all 22 color constants — bg0→bg2, surface0→2, glass, glassBorder, primary, accent, secondary, teal, success, warning, error, rose, purple, text variants, divider)
+- [x] Implement `AppColorsLight` (warm inversion — 14 constants)
+- [x] Write unit test: verify no hardcoded hex values leak outside this file
 
 ### 3.2 Spacing & Radius (`lib/core/theme/app_spacing.dart`)
 
-- [ ] Implement `AppSpacing` (screenH=20, cardH=16, fabClearance=120, bentoGap=12)
-- [ ] Implement `AppRadius` (sm=10, md=16, lg=20, xl=28, full=9999, bentoInner=14, bentoOuter=20, bentoHero=28)
+- [x] Implement `AppSpacing` (screenH=20, cardH=16, fabClearance=120, bentoGap=12)
+- [x] Implement `AppRadius` (sm=10, md=16, lg=20, xl=28, full=9999, bentoInner=14, bentoOuter=20, bentoHero=28)
 
 ### 3.3 Typography (`lib/core/theme/app_typography.dart`)
 
-- [ ] Implement `AppTypography`: `heroDisplay` (72sp), `displayLg` (56sp), `metricXL` (48sp), `metricLg` (36sp), `h1`–`h4`, `bodyLg`/`Md`/`Sm`, `labelLg`/`Md`/`Sm`, `monoLg`/`Md` (JetBrainsMono), `hindi()` (Noto Sans Devanagari)
-- [ ] Connect fonts in `pubspec.yaml` and verify rendering on device (Added Noto Sans Devanagari)
+- [x] Implement `AppTypography`: `heroDisplay` (72sp), `displayLg` (56sp), `metricXL` (48sp), `metricLg` (36sp), `h1`–`h4`, `bodyLg`/`Md`/`Sm`, `labelLg`/`Md`/`Sm`, `monoLg`/`Md` (JetBrainsMono), `hindi()` (Noto Sans Devanagari)
+- [x] Connect fonts in `pubspec.yaml` and verify rendering on device (Added Noto Sans Devanagari)
 
 ### 3.4 Gradients & Springs (`lib/core/theme/app_gradients.dart`, `app_springs.dart`)
 
-- [ ] Implement `AppGradients`: `heroDeep`, `heroSleep`, `heroWorkout`, `cardSubtle`, `overlayBottom`
-- [ ] Implement `AppSprings`: `standard` (damping 20, stiffness 300), `dramatic` (damping 15, stiffness 400), `gentle` (damping 25, stiffness 200)
+- [x] Implement `AppGradients`: `heroDeep`, `heroSleep`, `heroWorkout`, `cardSubtle`, `overlayBottom`
+- [x] Implement `AppSprings`: `standard` (damping 20, stiffness 300), `dramatic` (damping 15, stiffness 400), `gentle` (damping 25, stiffness 200)
 
 ### 3.5 ThemeData Builder (`lib/core/theme/app_theme.dart`)
 

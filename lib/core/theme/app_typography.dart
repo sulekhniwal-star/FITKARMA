@@ -1,48 +1,169 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
-abstract class AppTypography {
-  static const String primaryFont = 'PlusJakartaSans';
-  static const String monoFont = 'JetBrainsMono';
-  static const String hindiFont = 'NotoSansDevanagari';
-  static const String dyslexicFont = 'OpenDyslexic';
+/// AppTypography — Typography system for FitKarma.
+///
+/// Uses PlusJakartaSans for body/headings and JetBrainsMono for metrics.
+/// Supports NotoSansDevanagari for Hindi labels.
+class AppTypography {
+  AppTypography._();
 
-  static TextStyle _base(double size, FontWeight weight, {bool isMono = false, bool isHindi = false, double? height}) {
-    return TextStyle(
-      fontFamily: isMono ? monoFont : (isHindi ? hindiFont : primaryFont),
-      fontSize: size,
-      fontWeight: weight,
-      height: height,
-      color: AppColors.darkTextPrimary,
-    );
-  }
+  static const _bodyFont = 'PlusJakartaSans';
+  static const _monoFont = 'JetBrainsMono';
+  static const _hindiFont = 'NotoSansDevanagari';
 
-  // ─── Displays & Metrics ───────────────────────────────────────────────────
-  static final TextStyle heroDisplay = _base(72, FontWeight.w700, height: 1.1);
-  static final TextStyle displayLg = _base(56, FontWeight.w700, height: 1.1);
-  static final TextStyle metricXL = _base(48, FontWeight.w600, isMono: true);
-  static final TextStyle metricLg = _base(36, FontWeight.w600, isMono: true);
+  // ─── Hero & Metrics ────────────────────────────────────────────────────────
+
+  static TextStyle heroDisplay({Color color = AppColorsDark.textPrimary}) =>
+      TextStyle(
+        fontFamily: _bodyFont,
+        fontSize: 72,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -2.0,
+        height: 1.0,
+        color: color,
+      );
+
+  static TextStyle displayLg({Color color = AppColorsDark.textPrimary}) =>
+      TextStyle(
+        fontFamily: _bodyFont,
+        fontSize: 56,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -1.5,
+        height: 1.1,
+        color: color,
+      );
+
+  static TextStyle metricXL({Color color = AppColorsDark.textPrimary}) =>
+      TextStyle(
+        fontFamily: _monoFont,
+        fontSize: 48,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -1.0,
+        color: color,
+      );
+
+  static TextStyle metricLg({Color color = AppColorsDark.textPrimary}) =>
+      TextStyle(
+        fontFamily: _monoFont,
+        fontSize: 36,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.5,
+        color: color,
+      );
 
   // ─── Headings ─────────────────────────────────────────────────────────────
-  static final TextStyle h1 = _base(32, FontWeight.w700, height: 1.2);
-  static final TextStyle h2 = _base(24, FontWeight.w700, height: 1.2);
-  static final TextStyle h3 = _base(20, FontWeight.w600, height: 1.3);
-  static final TextStyle h4 = _base(18, FontWeight.w600, height: 1.3);
+
+  static TextStyle h1({Color color = AppColorsDark.textPrimary}) => TextStyle(
+        fontFamily: _bodyFont,
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.3,
+        color: color,
+      );
+
+  static TextStyle h2({Color color = AppColorsDark.textPrimary}) => TextStyle(
+        fontFamily: _bodyFont,
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.2,
+        color: color,
+      );
+
+  static TextStyle h3({Color color = AppColorsDark.textPrimary}) => TextStyle(
+        fontFamily: _bodyFont,
+        fontSize: 17,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.1,
+        color: color,
+      );
+
+  static TextStyle h4({Color color = AppColorsDark.textPrimary}) => TextStyle(
+        fontFamily: _bodyFont,
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+        color: color,
+      );
 
   // ─── Body ─────────────────────────────────────────────────────────────────
-  static final TextStyle bodyLg = _base(16, FontWeight.w500, height: 1.5);
-  static final TextStyle bodyMd = _base(14, FontWeight.w500, height: 1.5);
-  static final TextStyle bodySm = _base(12, FontWeight.w500, height: 1.4);
+
+  static TextStyle bodyLg({Color color = AppColorsDark.textPrimary}) =>
+      TextStyle(
+        fontFamily: _bodyFont,
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        color: color,
+      );
+
+  static TextStyle bodyMd({Color color = AppColorsDark.textSecondary}) =>
+      TextStyle(
+        fontFamily: _bodyFont,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: color,
+      );
+
+  static TextStyle bodySm({Color color = AppColorsDark.textMuted}) => TextStyle(
+        fontFamily: _bodyFont,
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.1,
+        color: color,
+      );
 
   // ─── Labels ───────────────────────────────────────────────────────────────
-  static final TextStyle labelLg = _base(14, FontWeight.w600, height: 1.2);
-  static final TextStyle labelMd = _base(12, FontWeight.w600, height: 1.2);
-  static final TextStyle labelSm = _base(10, FontWeight.w700, height: 1.1);
+
+  static TextStyle labelLg({Color color = AppColorsDark.textSecondary}) =>
+      TextStyle(
+        fontFamily: _bodyFont,
+        fontSize: 13,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.1,
+        color: color,
+      );
+
+  static TextStyle labelMd({Color color = AppColorsDark.textSecondary}) =>
+      TextStyle(
+        fontFamily: _bodyFont,
+        fontSize: 11,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.2,
+        color: color,
+      );
+
+  static TextStyle labelSm({Color color = AppColorsDark.textMuted}) => TextStyle(
+        fontFamily: _bodyFont,
+        fontSize: 10,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.3,
+        color: color,
+      );
 
   // ─── Mono ─────────────────────────────────────────────────────────────────
-  static final TextStyle monoLg = _base(14, FontWeight.w500, isMono: true);
-  static final TextStyle monoMd = _base(12, FontWeight.w500, isMono: true);
+
+  static TextStyle monoLg({Color color = AppColorsDark.textPrimary}) =>
+      TextStyle(
+        fontFamily: _monoFont,
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+        color: color,
+      );
+
+  static TextStyle monoMd({Color color = AppColorsDark.textSecondary}) =>
+      TextStyle(
+        fontFamily: _monoFont,
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        color: color,
+      );
 
   // ─── Hindi Utility ────────────────────────────────────────────────────────
-  static TextStyle hindi(double size, FontWeight weight) => _base(size, weight, isHindi: true);
+
+  static TextStyle hindi({Color color = AppColorsDark.textSecondary}) =>
+      TextStyle(
+        fontFamily: _hindiFont,
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        color: color,
+      );
 }
