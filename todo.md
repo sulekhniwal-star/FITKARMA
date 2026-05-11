@@ -27,7 +27,7 @@
 - [x] Install Xcode 15+ (Required for iOS builds — skip on Windows)
 - [x] Install CocoaPods (Required for iOS builds — skip on Windows)
 - [x] Install `melos` or `fvm` for Flutter version management (Installed melos 7.7.0)
-- [ ] Set up GitHub repository with `main` and `develop` branches
+- [x] Set up GitHub repository with `main` and `develop` branches (github.com/sulekhniwal-star/Fitkarma — `main` protected, `develop` branched from Phase 0-2 bootstrap commit)
 - [x] Create `.env` and `.gitignore` (ensure secrets never committed)
 
 ### 0.2 Third-Party Accounts
