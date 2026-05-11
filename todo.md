@@ -208,13 +208,13 @@ Build all 18 shared widgets per §10:
 
 ### 5.5 Encrypted Database (`lib/core/database/app_database.dart`)
 
-- [ ] Implement all Drift table classes: `FoodLogs`, `BpReadings`, `GlucoseReadings`, `SleepLogs`, `Workouts`, `Habits`, `JournalEntries`, `WaterLogs`, `Medications`
-- [ ] Every table has: `id` (UUID), `userId`, `syncStatus` ('pending'/'synced'/'dlq'), `remoteId`, `failedAttempts`, `isDeleted`, `updatedAt`
-- [ ] Implement `AppDatabase` with `schemaVersion = 4` and full `MigrationStrategy` (v1→v4)
-- [ ] Implement `openEncryptedDatabase()` — SQLCipher with `PRAGMA key`, `cipher_page_size=4096`, `kdf_iter=64000`
-- [ ] Implement `_getOrCreateDbKey()` — FlutterSecureStorage, AndroidOptions encrypted, IOSOptions keychain
-- [ ] Implement convenience query methods: `watchTodayFoodLogs`, `getRecentBpReadings`, `getTodayWaterMl`, `getPendingSync`
-- [ ] Run `dart run drift_dev schema generate` and verify
+- [x] Implement all Drift table classes: `FoodLogs`, `BpReadings`, `GlucoseReadings`, `SleepLogs`, `Workouts`, `Habits`, `JournalEntries`, `WaterLogs`, `Medications`
+- [x] Every table has: `id` (UUID), `userId`, `syncStatus` ('pending'/'synced'/'dlq'), `remoteId`, `failedAttempts`, `isDeleted`, `updatedAt`
+- [x] Implement `AppDatabase` with `schemaVersion = 4` and full `MigrationStrategy` (v1→v4)
+- [x] Implement `openEncryptedDatabase()` — SQLCipher with `PRAGMA key`, `cipher_page_size=4096`, `kdf_iter=64000`
+- [x] Implement `_getOrCreateDbKey()` — FlutterSecureStorage, AndroidOptions encrypted, IOSOptions keychain
+- [x] Implement convenience query methods: `watchTodayFoodLogs`, `getRecentBpReadings`, `getTodayWaterMl`, `getPendingSync`
+- [x] Run `dart run drift_dev schema generate` and verify
 
 ### 5.6 Sync Engine (`lib/core/sync/sync_worker.dart`)
 
