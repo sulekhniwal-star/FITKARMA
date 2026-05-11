@@ -64,6 +64,7 @@ dependencies:
 
 # ─── Dev Dependencies ─────────────────────────────────────────────────────────
   sqlite3: any
+  json_annotation: 4.11.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -76,7 +77,6 @@ dev_dependencies:
   freezed: ^3.2.5
   freezed_annotation: ^3.1.0
   json_serializable: ^6.8.0
-  json_annotation: ^4.9.0
 
   # ── Testing ────────────────────────────────────────────────────────────────────
   mocktail: ^1.0.4

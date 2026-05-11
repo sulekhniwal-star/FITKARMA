@@ -228,8 +228,8 @@ Build all 18 shared widgets per §10:
 
 ### 5.7 Feature Flags (`lib/core/providers/feature_flags_provider.dart`)
 
-- [ ] Implement `FeatureFlags` Freezed model with all flags (see §58 — aiInsights, wearableSync, periodTracker, socialFeed, weddingPlanner, doshaQuiz, festivalCalendar, proSubscription, fhirExport, voiceLogging, cgmIntegration, pharmacySearch)
-- [ ] Implement `featureFlagsProvider` — calls Appwrite Function `feature-flags`, falls back to `FeatureFlags.defaults` on error
+- [x] Implement `FeatureFlags` Freezed model with all flags (see §58 — aiInsights, wearableSync, periodTracker, socialFeed, weddingPlanner, doshaQuiz, festivalCalendar, proSubscription, fhirExport, voiceLogging, cgmIntegration, pharmacySearch)
+- [x] Implement `featureFlagsProvider` — calls Appwrite Function `feature-flags`, falls back to `FeatureFlags.defaults` on error
 
 ### 5.8 Low Data Mode (`lib/core/providers/low_data_mode_provider.dart`)
 
