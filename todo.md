@@ -125,10 +125,10 @@ assets/fonts/           assets/data/            functions/
 
 ### 3.6 Device Tier (`lib/core/config/device_tier.dart`)
 
-- [ ] Define `DeviceTier` enum: `low` (<2GB), `mid` (2–4GB), `high` (>4GB)
-- [ ] Implement `DeviceTierDetector` using `device_info_plus` RAM detection
-- [ ] Create `deviceTierProvider` (Riverpod)
-- [ ] Gate: blur only on mid/high; spring physics off on low; glow reduced on mid (Implementation in Phase 4 widgets)
+- [x] Define `DeviceTier` enum: `low` (<2GB), `mid` (2–4GB), `high` (>4GB)
+- [x] Implement `DeviceTierDetector` using `device_info_plus` RAM detection
+- [x] Create `deviceTierProvider` (Riverpod)
+- [x] Gate: blur only on mid/high; spring physics off on low; glow reduced on mid (Implementation in Phase 4 widgets)
 
 ---
 
@@ -136,28 +136,28 @@ assets/fonts/           assets/data/            functions/
 
 Build all 18 shared widgets per §10:
 
-- [ ] **`GlassCard`** (`bento_card.dart`) — tier-aware backdrop blur, glassBorder, optional glowColor, configurable radius & padding. Fallback to solid surface1 on DeviceTier.low
-- [ ] **`ActivityRings`** (`activity_rings.dart`) — 3-ring CustomPainter (steps/calories/active minutes), `RepaintBoundary` wrapper, `Semantics` label
-- [ ] **`GlowingMetric`** (`glowing_metric.dart`) — hero text + ambient glow, only one per scroll area
-- [ ] **`InsightCard`** (`insight_card.dart`) — title + body + 👍👎 feedback buttons
-- [ ] **`QuickLogFab`** (`quick_log_fab.dart`) — persistent bottom-right FAB, opens Quick Log bottom sheet (3×2 grid: Food, Water, Workout, Medication, Mood, BP)
-- [ ] **`BilingualLabel`** (`bilingual_label.dart`) — English + Hindi, use only on: category headers, empty states, crisis helplines, festival headers
-- [ ] **`EncryptionBadge`** (`encryption_badge.dart`) — teal lock icon + "AES-256" label
-- [ ] **`ShimmerLoader`** (`shimmer_loader.dart`) — first-load placeholder, configurable height
-- [ ] **`TrendChip`** (`trend_chip.dart`) — ↑↓ with color-coded text (success/error)
-- [ ] **`PulseRing`** (`pulse_ring.dart`) — animated glow ring
-- [ ] **`StreakFlame`** (`streak_flame.dart`) — animated amber flame with streak count
-- [ ] **`BottomNavBar`** (`bottom_nav_bar.dart`) — 5 tabs (Home, Food, Workout, Steps, Karma), glass bg, active tab gets primary glow dot
-- [ ] **`EmptyState`** (`empty_state.dart`) — animated icon + message, `contextKey`-based copy
-- [ ] **`ErrorRetryWidget`** (`animation_widgets.dart`) — animated error with retry button
-- [ ] **`LevelUpAnimation`** (`level_up_animation.dart`) — burst overlay on XP level-up
-- [ ] **`BreathingCircle`** (`breathing_circle.dart`) — inhale/hold/exhale animated circle, `RepaintBoundary`
-- [ ] **`DLQAlertBanner`** (`sync_status_banner.dart`) — shows after 3 consecutive sync failures
-- [ ] **`LogoReveal`** (`logo_reveal.dart`) — splash screen logo animation
+- [x] **`GlassCard`** (`bento_card.dart`) — tier-aware backdrop blur, glassBorder, optional glowColor, configurable radius & padding. Fallback to solid surface1 on DeviceTier.low
+- [x] **`ActivityRings`** (`activity_rings.dart`) — 3-ring CustomPainter (steps/calories/active minutes), `RepaintBoundary` wrapper, `Semantics` label
+- [x] **`GlowingMetric`** (`glowing_metric.dart`) — hero text + ambient glow, only one per scroll area
+- [x] **`InsightCard`** (`insight_card.dart`) — title + body + 👍👎 feedback buttons
+- [x] **`QuickLogFab`** (`quick_log_fab.dart`) — persistent bottom-right FAB, opens Quick Log bottom sheet (3×2 grid: Food, Water, Workout, Medication, Mood, BP)
+- [x] **`BilingualLabel`** (`bilingual_label.dart`) — English + Hindi, use only on: category headers, empty states, crisis helplines, festival headers
+- [x] **`EncryptionBadge`** (`encryption_badge.dart`) — teal lock icon + "AES-256" label
+- [x] **`ShimmerLoader`** (`shimmer_loader.dart`) — first-load placeholder, configurable height
+- [x] **`TrendChip`** (`trend_chip.dart`) — ↑↓ with color-coded text (success/error)
+- [x] **`PulseRing`** (`pulse_ring.dart`) — animated glow ring
+- [x] **`StreakFlame`** (`streak_flame.dart`) — animated amber flame with streak count
+- [x] **`BottomNavBar`** (`bottom_nav_bar.dart`) — 5 tabs (Home, Food, Workout, Steps, Karma), glass bg, active tab gets primary glow dot
+- [x] **`EmptyState`** (`empty_state.dart`) — animated icon + message, `contextKey`-based copy
+- [x] **`ErrorRetryWidget`** (`animation_widgets.dart`) — animated error with retry button
+- [x] **`LevelUpAnimation`** (`level_up_animation.dart`) — burst overlay on XP level-up
+- [x] **`BreathingCircle`** (`breathing_circle.dart`) — inhale/hold/exhale animated circle, `RepaintBoundary`
+- [x] **`DLQAlertBanner`** (`sync_status_banner.dart`) — shows after 3 consecutive sync failures
+- [x] **`LogoReveal`** (`logo_reveal.dart`) — splash screen logo animation
 
 ### 4.1 Ambient Blobs
 
-- [ ] Implement `AmbientBlobs` widget — soft gradient circles used in Scaffold background (Pattern A/B only, never Calm Zone)
+- [x] Implement `AmbientBlobs` widget — soft gradient circles used in Scaffold background (Pattern A/B only, never Calm Zone)
 
 ### 4.2 Scaffold Patterns
 
