@@ -389,9 +389,9 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 7.5 Health Goals Setup (`/onboarding/goals`) — §17A
 
-- [ ] Pattern C scaffold
-- [ ] Multi-select bento grid for health goals
-- [ ] `GoalsState` persisted to Drift
+- [x] Pattern C scaffold
+- [x] Multi-select bento grid for health goals
+- [x] `GoalsState` persisted to Drift
 
 ### 7.6 Permissions & Privacy (`/onboarding/permissions`) — §17B/19
 

@@ -93,7 +93,37 @@ class Auth extends _$Auth {
     }
   }
 
+  Future<void> saveGoals(List<String> goals) async {
+    final user = state.value;
+    if (user == null) return;
+
+    final db = ref.read(appDatabaseProvider);
+    await (db.update(db.users)..where((t) => t.id.equals(user.$id))).write(
+      UsersCompanion(
+        goals: Value(goals.join(',')),
+        uxStage: const Value('goals_completed'),
+      ),
+    );
+
+    // Sync to Appwrite
+    final databases = ref.read(appwriteDatabasesProvider);
+    try {
+      await databases.updateDocument(
+        databaseId: 'fitkarma-db',
+        collectionId: 'users',
+        documentId: user.$id,
+        data: {
+          'goals': goals.join(','),
+          'uxStage': 'goals_completed',
+        },
+      );
+    } catch (e) {
+      print('Error syncing goals to Appwrite: $e');
+    }
+  }
+
   Future<void> loginAnonymous() async {
+    // ... existing loginAnonymous ...
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final account = ref.read(appwriteAccountProvider);
@@ -115,6 +145,7 @@ class Auth extends _$Auth {
 /// DoshaQuizNotifier — Manages the state of the 10-question quiz.
 @riverpod
 class DoshaQuiz extends _$DoshaQuiz {
+  // ... existing DoshaQuiz ...
   @override
   Map<int, DoshaType> build() => {};
 
@@ -145,5 +176,20 @@ class DoshaQuiz extends _$DoshaQuiz {
       pittaPercentage: (pitta / total) * 100,
       kaphaPercentage: (kapha / total) * 100,
     );
+  }
+}
+
+/// GoalsNotifier — Manages the multi-selection of health goals.
+@riverpod
+class Goals extends _$Goals {
+  @override
+  List<String> build() => [];
+
+  void toggleGoal(String goalId) {
+    if (state.contains(goalId)) {
+      state = state.where((id) => id != goalId).toList();
+    } else {
+      state = [...state, goalId];
+    }
   }
 }

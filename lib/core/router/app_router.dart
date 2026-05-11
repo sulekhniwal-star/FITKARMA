@@ -6,6 +6,7 @@ import '../../features/onboarding/onboarding_providers.dart';
 import '../../features/onboarding/welcome_screen.dart';
 import '../../features/onboarding/auth_screen.dart';
 import '../../features/onboarding/dosha_quiz_screen.dart';
+import '../../features/onboarding/goals_screen.dart';
 import '../../features/onboarding/splash_screen.dart';
 import '../../shared/widgets/bottom_nav_bar.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
@@ -57,7 +58,7 @@ GoRouter appRouter(Ref ref) {
       ),
       GoRoute(
         path: '/onboarding/goals',
-        builder: (context, state) => const _PlaceholderScreen(title: 'Health Goals'),
+        builder: (context, state) => const GoalsScreen(),
       ),
       GoRoute(
         path: '/onboarding/permissions',
