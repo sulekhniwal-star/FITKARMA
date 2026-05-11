@@ -161,10 +161,10 @@ Build all 18 shared widgets per §10:
 
 ### 4.2 Scaffold Patterns
 
-- [ ] Implement **Pattern A** (Standard Scroll) — transparent AppBar, Stack with AmbientBlobs + SafeArea + SingleChildScrollView, padding (screenH, fabClearance), QuickLogFab
-- [ ] Implement **Pattern B** (Hero + Overlapping Body) — extendBodyBehindAppBar, 320px hero gradient, body panel overlaps by 28px
-- [ ] Implement **Pattern C** (Full Bleed) — bg0, full-bleed gradient, hero content fills viewport
-- [ ] Implement **Calm Zone** — solid bg2, NO blobs/glow/blur/animations (Journal, Settings, Lab Reports, Emergency Card, Subscription)
+- [x] Implement **Pattern A** (Standard Scroll) — transparent AppBar, Stack with AmbientBlobs + SafeArea + SingleChildScrollView, padding (screenH, fabClearance), QuickLogFab
+- [x] Implement **Pattern B** (Hero + Overlapping Body) — extendBodyBehindAppBar, 320px hero gradient, body panel overlaps by 28px
+- [x] Implement **Pattern C** (Full Bleed) — bg0, full-bleed gradient, hero content fills viewport
+- [x] Implement **Calm Zone** — solid bg2, NO blobs/glow/blur/animations (Journal, Settings, Lab Reports, Emergency Card, Subscription)
 
 ---
 
