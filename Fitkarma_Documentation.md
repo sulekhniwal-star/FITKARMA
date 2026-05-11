@@ -1266,7 +1266,7 @@ class AppConfig {
       String.fromEnvironment('APPWRITE_DB_ID', defaultValue: 'fitkarma-db');
 
   // Consolidated Appwrite Resources
-  static const String coreFunctionId = 'fitkarma-core';
+  static const String coreFunctionId = 'fitkarma-cores';
   static const String mainBucketId   = 'fitkarma-vault';
 
   // Collection IDs
@@ -1349,7 +1349,7 @@ appwrite storage createBucket \
 ```bash
 # Unified function for all server-side logic
 appwrite functions create \
-  --functionId "fitkarma-core" \
+  --functionId "fitkarma-cores" \
   --name "FitKarma Core" \
   --runtime node-20.0 --timeout 60
 ```
@@ -4925,7 +4925,7 @@ Future<FeatureFlags> featureFlags(FeatureFlagsRef ref) async {
   try {
     final functions = Functions(ref.read(appwriteClientProvider));
     final result = await functions.createExecution(
-      functionId: 'fitkarma-core',
+      functionId: 'fitkarma-cores',
       body: jsonEncode({ 'action': 'FETCH_FEATURE_FLAGS' }),
     );
     final json = jsonDecode(result.responseBody) as Map<String, dynamic>;
@@ -5286,7 +5286,7 @@ class FitKarmaApp extends ConsumerWidget {
 - [ ] §F4: RevenueCat configured with App Store + Play Store products
 - [ ] §F4: 7-day free trial configured for Pro tier
 - [ ] All 17 Appwrite collections created via CLI (§A1)
-- [ ] Unified Appwrite Function (`fitkarma-core`) deployed and activated
+- [ ] Unified Appwrite Function (`fitkarma-cores`) deployed and activated
 - [ ] Single storage bucket (`fitkarma-vault`) created with prefix-based organization
 - [ ] `--dart-define` environment variables set for all build flavors
 - [ ] Biometric lock tested on device (Journal, Lab Reports, BP, Glucose)

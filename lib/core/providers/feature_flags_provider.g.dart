@@ -82,4 +82,4 @@ final class FeatureFlagsProvider
   }
 }
 
-String _$featureFlagsHash() => r'fd4746172d92b873d078ba69b4d1a5baeff3511a';
+String _$featureFlagsHash() => r'05ab4a16b5f727b4332f69145ccfbb7360fab61f';

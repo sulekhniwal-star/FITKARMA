@@ -84,7 +84,7 @@ class AppConfig {
       String.fromEnvironment('APPWRITE_DB_ID', defaultValue: 'fitkarma-db');
 
   // Consolidated Appwrite Resources
-  static const String coreFunctionId = 'fitkarma-core';
+  static const String coreFunctionId = 'fitkarma-cores';
   static const String mainBucketId   = 'fitkarma-vault';
 
   // Collection IDs
@@ -164,7 +164,7 @@ appwrite storage createBucket \
 ```bash
 # Unified function for all server-side logic
 appwrite functions create \
-  --functionId "fitkarma-core" \
+  --functionId "fitkarma-cores" \
   --name "FitKarma Core" \
   --runtime node-20.0 --timeout 60
 ```

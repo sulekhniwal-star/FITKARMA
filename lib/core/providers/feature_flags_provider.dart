@@ -33,10 +33,10 @@ Future<FeatureFlags> featureFlags(FeatureFlagsRef ref) async {
   final functions = ref.watch(appwriteFunctionsProvider);
 
   try {
-    final response = await functions.createExecution(
-      functionId: 'fitkarma-core',
-      body: jsonEncode({'action': 'get_feature_flags'}),
-    );
+      final response = await functions.createExecution(
+        functionId: 'fitkarma-cores',
+        body: jsonEncode({'action': 'get_feature_flags'}),
+      );
     
     if (response.status == 'completed') {
       final data = jsonDecode(response.responseBody);

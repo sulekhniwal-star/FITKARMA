@@ -60,6 +60,10 @@
             "schedule": "",
             "timeout": 15,
             "commands": "npm install",
+            "vars": [
+              { "key": "ANTHROPIC_API_KEY", "value": "" },
+              { "key": "APP_BASE_URL", "value": "https://fitkarma.app" }
+            ],
             "scopes": [],
             "buildSpecification": "s-0.5vcpu-512mb",
             "runtimeSpecification": "s-0.5vcpu-512mb",

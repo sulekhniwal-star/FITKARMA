@@ -378,7 +378,7 @@ void _runApp() {
 > Consolidates all server-side logic into a single function to stay within the 1-function limit.
 
 ```js
-// functions/fitkarma-core/src/main.js
+// functions/fitkarma-cores/src/main.js
 import { Client, Databases, ID, Query, Storage } from "node-appwrite";
 
 export default async ({ req, res, log, error }) => {
@@ -410,7 +410,7 @@ export default async ({ req, res, log, error }) => {
 Future<void> awardXp(String eventType) async {
   final functions = Functions(ref.read(appwriteClientProvider));
   await functions.createExecution(
-    functionId: 'fitkarma-core',
+    functionId: 'fitkarma-cores',
     body: jsonEncode({
       'action': 'XP_AWARD',
       'payload': { 'userId': uid, 'eventType': eventType }

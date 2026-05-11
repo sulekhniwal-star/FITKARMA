@@ -287,26 +287,26 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [x] Free tier: enforce max 3 lab report files per user in app logic (Implemented in `StorageService.uploadLabReport`)
 - [x] Pro tier: unlimited files — check `isProProvider` before upload
 
-### 6.4 Appwrite Function — Single Consolidated: `fitkarma-core`
+### 6.4 Appwrite Function — Single Consolidated: `fitkarma-cores`
 
-- [ ] Initialized function `fitkarma-core` using Node.js 22 runtime.
-- [ ] Implemented master router in `src/main.js` with sub-handlers in `src/handlers/`.
-- [ ] Actions implemented and verified:
+- [x] Initialized function `fitkarma-cores` using Node.js 22 runtime.
+- [x] Implemented master router in `src/main.js` with sub-handlers in `src/handlers/`.
+- [x] Actions implemented and verified:
   - `award_xp`: Award XP, update karmaXP + karmaLevel.
   - `generate_share_link`: Create 7-day expiring share token.
   - `ai_coach`: Holistic health advice via Anthropic Claude-3 Haiku.
   - `search_food`: Proxy Open Food Facts + cache in food_database.
   - `get_feature_flags`: Centralized control for UI features.
-- [ ] Secured function with internal `APPWRITE_API_KEY` and user-scoped execution.
-- [ ] Configured environment variables (`ANTHROPIC_API_KEY`, `APP_BASE_URL`) via `.env`.
-- [ ] In Flutter, updated/implemented services to use `fitkarma-core`:
+- [x] Secured function with internal `APPWRITE_API_KEY` and user-scoped execution.
+- [x] Configured environment variables (`ANTHROPIC_API_KEY`, `APP_BASE_URL`) via `.env`.
+- [x] In Flutter, updated/implemented services to use `fitkarma-cores`:
   - `KarmaService.awardXP()` -> `action: 'award_xp'`
   - `ReportService.generateShareLink()` -> `action: 'generate_share_link'`
   - `AiCoachProvider.sendMessage()` -> `action: 'ai_coach'`
   - `FoodDatabaseService.searchRemote()` -> `action: 'search_food'`
   - `featureFlagsProvider` -> `action: 'get_feature_flags'`
 
-#### Actions handled by `functions/fitkarma-core/src/main.js`:
+#### Actions handled by `functions/fitkarma-cores/src/main.js`:
 
 | `action` value        | Replaces old function | Purpose                                        |
 | --------------------- | --------------------- | ---------------------------------------------- |
@@ -316,7 +316,7 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 | `search_food`         | `food-search`         | Proxy Open Food Facts + cache in food_database |
 | `get_feature_flags`   | `feature-flags`       | Return JSON of enabled feature flags           |
 
-- [ ] Scaffold `functions/fitkarma-core/src/main.js` with router pattern:
+- [x] Scaffold `functions/fitkarma-cores/src/main.js` with router pattern:
   ```js
   export default async ({ req, res, log, error }) => {
     const { action, ...payload } = JSON.parse(req.body || "{}");
@@ -336,20 +336,20 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
     }
   };
   ```
-- [ ] Implement `handleAwardXp()` — XP_TABLE, LEVEL_THRESHOLDS, LEVEL_NAMES, `computeLevel()`, creates karma_events doc + updates user karmaXP & karmaLevel
-- [ ] Implement `handleShareLink()` — generates 64-byte crypto random token, creates share_tokens doc, returns 7-day expiring URL
-- [ ] Implement `handleAiCoach()` — fetches user health context (last 7 days BP/glucose/steps/sleep/food), calls Anthropic Claude API. API key stays server-side, never in Flutter binary
-- [ ] Implement `handleFoodSearch()` — proxies Open Food Facts (name search or barcode), caches result in food_database collection
-- [ ] Implement `handleFeatureFlags()` — returns JSON of enabled flags (safe defaults if any error)
-- [ ] Deploy:
+- [x] Implement `handleAwardXp()` — XP_TABLE, LEVEL_THRESHOLDS, LEVEL_NAMES, `computeLevel()`, creates karma_events doc + updates user karmaXP & karmaLevel
+- [x] Implement `handleShareLink()` — generates 64-byte crypto random token, creates share_tokens doc, returns 7-day expiring URL
+- [x] Implement `handleAiCoach()` — fetches user health context (last 7 days BP/glucose/steps/sleep/food), calls Anthropic Claude API. API key stays server-side, never in Flutter binary
+- [x] Implement `handleFoodSearch()` — proxies Open Food Facts (name search or barcode), caches result in food_database collection
+- [x] Implement `handleFeatureFlags()` — returns JSON of enabled flags (safe defaults if any error)
+- [x] Deploy:
   ```bash
   appwrite push functions --all --force --activate true
   ```
-- [ ] Set all environment variables on the single function:
+- [x] Set all environment variables on the single function:
   - `ANTHROPIC_API_KEY`
   - `APP_BASE_URL`
   - (Appwrite internal vars `APPWRITE_FUNCTION_API_ENDPOINT` and `APPWRITE_FUNCTION_PROJECT_ID` are injected automatically)
-- [ ] In Flutter, update all Appwrite Function calls to use `functionId: 'fitkarma-core'` with the correct `action` in the request body:
+- [x] In Flutter, update all Appwrite Function calls to use `functionId: 'fitkarma-cores'` with the correct `action` in the request body:
   - `KarmaService.awardXP()` → `action: 'award_xp'`
   - `ReportService.generateShareLink()` → `action: 'generate_share_link'`
   - `AiCoachProvider.sendMessage()` → `action: 'ai_coach'`
@@ -518,7 +518,7 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [ ] Upload PDF/image via Appwrite Storage — bucket: `fitkarma-vault`, filename: `labreport_{userId}_{uuid}.ext`
 - [ ] Manual value entry (HbA1c, cholesterol, creatinine, etc.)
 - [ ] Report list with date + type
-- [ ] 7-day expiring share link — calls `fitkarma-core` with `action: 'generate_share_link'`
+- [ ] 7-day expiring share link — calls `fitkarma-coress` with `action: 'generate_share_link'`
 - [ ] Free tier: max 3 reports enforced in app logic (count `lab_reports` docs before upload); Pro: unlimited
 
 ### 8.14 Water Tracking
@@ -752,12 +752,12 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [ ] Portion selector after item tap (serving size picker)
 - [ ] `FoodLogNotifier.logFood()` → Drift insert → XP award → sync
 
-### 9.7 Food Search — `handleFoodSearch()` inside `fitkarma-core`
+### 9.7 Food Search — `handleFoodSearch()` inside `fitkarma-cores`
 
-- [ ] Implement `handleFoodSearch()` handler in `functions/fitkarma-core/src/main.js`
+- [ ] Implement `handleFoodSearch()` handler in `functions/fitkarma-cores/src/main.js`
 - [ ] Accepts `{ action: 'search_food', query?, barcode? }` — name search or barcode lookup
 - [ ] Proxies Open Food Facts API (avoids CORS on mobile), caches result in `food_database` collection
-- [ ] Flutter `FoodDatabaseService` fallback path calls `functionId: 'fitkarma-core'` with `action: 'search_food'`
+- [ ] Flutter `FoodDatabaseService` fallback path calls `functionId: 'fitkarma-cores'` with `action: 'search_food'`
 
 ---
 
@@ -774,14 +774,14 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [ ] `HealthInsight` Freezed model with confidence score (0.0–1.0)
 - [ ] Show on Dashboard only if ≥7 days data; full insights at ≥14 days
 
-### 10.2 AI Coach — `handleAiCoach()` inside `fitkarma-core`
+### 10.2 AI Coach — `handleAiCoach()` inside `fitkarma-cores`
 
-- [ ] Implement `handleAiCoach()` handler in `functions/fitkarma-core/src/main.js`
+- [ ] Implement `handleAiCoach()` handler in `functions/fitkarma-cores/src/main.js`
 - [ ] SYSTEM_PROMPT per §F2 — warm, empathetic, India-specific, 3–5 sentence responses, celebrate streaks, redirect off-topic
 - [ ] Fetch user health context from Appwrite inside the function (last 7 days: BP, glucose, steps, sleep, food logs)
 - [ ] Safety rules: BP Stage 2+ or glucose > 200 mg/dL → always recommend doctor. Never diagnose
-- [ ] Anthropic API key stays server-side via `ANTHROPIC_API_KEY` env var on `fitkarma-core` function
-- [ ] Flutter calls: `Functions.createExecution(functionId: 'fitkarma-core', body: jsonEncode({action: 'ai_coach', ...}))`
+- [ ] Anthropic API key stays server-side via `ANTHROPIC_API_KEY` env var on `fitkarma-cores` function
+- [ ] Flutter calls: `Functions.createExecution(functionId: 'fitkarma-cores', body: jsonEncode({action: 'ai_coach', ...}))`
 
 ### 10.3 AI Coach Screen (`/ai-coach`) — Pro only
 
@@ -1064,12 +1064,12 @@ All items from the Master Checklist §Master Checklist:
 
 - [ ] §F1: Indian food database seeded (≥5,000 items)
 - [ ] §F1: Open Food Facts integration tested with barcode scan on real device
-- [ ] §F2: AI Coach `handleAiCoach()` handler deployed inside `fitkarma-core` function with `ANTHROPIC_API_KEY` env var set
+- [ ] §F2: AI Coach `handleAiCoach()` handler deployed inside `fitkarma-cores` function with `ANTHROPIC_API_KEY` env var set
 - [ ] §F3: iOS HealthKit entitlements configured and tested in Xcode on physical iPhone
 - [ ] §F4: RevenueCat configured with App Store + Play Store products
 - [ ] §F4: 7-day free trial configured in both stores
 - [ ] All 17 Appwrite collections created via CLI (no console)
-- [ ] Single `fitkarma-core` Appwrite Function deployed and activated (handles: award_xp, generate_share_link, ai_coach, search_food, get_feature_flags)
+- [ ] Single `fitkarma-cores` Appwrite Function deployed and activated (handles: award_xp, generate_share_link, ai_coach, search_food, get_feature_flags)
 - [ ] Single `fitkarma-vault` storage bucket created with server-side encryption + antivirus; file naming convention applied (`labreport_*`, `avatar_*`)
 - [ ] All `--dart-define` environment variables set for all build flavors
 - [ ] Biometric lock tested on physical device (Journal, Lab Reports, BP, Glucose)
@@ -1114,7 +1114,7 @@ All items from the Master Checklist §Master Checklist:
 | Core (theme, router, DB, sync, security, providers) | ~25                                        |
 | Shared widgets                                      | 18                                         |
 | Feature screens                                     | ~40                                        |
-| Appwrite Functions                                  | 1 (`fitkarma-core` with 5 action handlers) |
+| Appwrite Functions                                  | 1 (`fitkarma-cores` with 5 action handlers) |
 | Test files                                          | ~30                                        |
 | CI/CD YAMLs                                         | 4                                          |
 | Assets (fonts, seed JSON)                           | ~5                                         |
@@ -1124,7 +1124,7 @@ All items from the Master Checklist §Master Checklist:
 
 > **Appwrite Constraints Applied**
 >
-> - **1 Function only:** `fitkarma-core` — internal router dispatching on `req.body.action` → `award_xp`, `generate_share_link`, `ai_coach`, `search_food`, `get_feature_flags`
+> - **1 Function only:** `fitkarma-cores` — internal router dispatching on `req.body.action` → `award_xp`, `generate_share_link`, `ai_coach`, `search_food`, `get_feature_flags`
 > - **1 Bucket only:** `fitkarma-vault` — all uploads unified; type distinguished by filename prefix (`labreport_{userId}_{uuid}.*`, `avatar_{userId}.*`)
 
 ---

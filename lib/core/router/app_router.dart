@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/onboarding/onboarding_providers.dart';
+import '../../features/onboarding/splash_screen.dart';
 import '../../shared/widgets/bottom_nav_bar.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
 import '../security/biometric_lock.dart';
@@ -10,7 +12,7 @@ import 'transitions.dart';
 part 'app_router.g.dart';
 
 @riverpod
-GoRouter appRouter(AppRouterRef ref) {
+GoRouter appRouter(Ref ref) {
   final authState = ref.watch(authProvider);
   final bool isAuthenticated = authState.valueOrNull != null;
 
@@ -24,13 +26,13 @@ GoRouter appRouter(AppRouterRef ref) {
       if (isSplash) return null;
       if (!isAuthenticated && !isLoggingIn) return '/onboarding/welcome';
       if (isAuthenticated && isLoggingIn) return '/home/dashboard';
-      
+
       return null;
     },
     routes: [
       GoRoute(
         path: '/splash',
-        builder: (context, state) => const _PlaceholderScreen(title: 'Splash Reveal'),
+        builder: (context, state) => const SplashScreen(),
       ),
 
       // Onboarding Branch

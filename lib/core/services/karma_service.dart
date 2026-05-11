@@ -18,7 +18,7 @@ class KarmaService extends _$KarmaService {
 
     try {
       await functions.createExecution(
-        functionId: 'fitkarma-core',
+        functionId: 'fitkarma-cores',
         body: jsonEncode({
           'action': 'award_xp',
           'userId': user.$id,

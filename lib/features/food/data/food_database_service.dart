@@ -14,7 +14,7 @@ class FoodDatabaseService extends _$FoodDatabaseService {
 
     try {
       final execution = await functions.createExecution(
-        functionId: 'fitkarma-core',
+        functionId: 'fitkarma-cores',
         body: jsonEncode({
           'action': 'search_food',
           'query': query,

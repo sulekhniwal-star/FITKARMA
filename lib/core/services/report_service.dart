@@ -18,7 +18,7 @@ class ReportService extends _$ReportService {
 
     try {
       final execution = await functions.createExecution(
-        functionId: 'fitkarma-core',
+        functionId: 'fitkarma-cores',
         body: jsonEncode({
           'action': 'generate_share_link',
           'userId': user.$id,

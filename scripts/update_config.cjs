@@ -5,11 +5,11 @@ try {
     const config = JSON.parse(content);
     config.functions = [
       {
-        "$id": "fitkarma-core",
-        "name": "fitkarma-core",
+        "$id": "fitkarma-cores",
+        "name": "fitkarma-cores",
         "enabled": true,
         "runtime": "node-22",
-        "path": "functions/fitkarma-core",
+        "path": "functions/fitkarma-cores",
         "entrypoint": "src/main.js",
         "commands": "npm install",
         "execute": ["users"],

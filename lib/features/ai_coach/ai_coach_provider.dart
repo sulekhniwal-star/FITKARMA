@@ -23,7 +23,7 @@ class AiCoach extends _$AiCoach {
 
     try {
       final execution = await functions.createExecution(
-        functionId: 'fitkarma-core',
+        functionId: 'fitkarma-cores',
         body: jsonEncode({
           'action': 'ai_coach',
           'userId': user.$id,
