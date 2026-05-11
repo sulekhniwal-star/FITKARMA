@@ -85,6 +85,13 @@ class Medications extends Table with SyncableColumns {
   DateTimeColumn get startDate => dateTime()();
 }
 
+class Users extends Table with SyncableColumns {
+  TextColumn get email => text()();
+  TextColumn get name => text()();
+  TextColumn get uxStage => text().withDefault(const Constant('onboarding'))(); // onboarding, firstWeek, established
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
 // ─── App Database ────────────────────────────────────────────────────────────
 
 @DriftDatabase(tables: [
@@ -97,6 +104,7 @@ class Medications extends Table with SyncableColumns {
   JournalEntries,
   WaterLogs,
   Medications,
+  Users,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openDatabase());

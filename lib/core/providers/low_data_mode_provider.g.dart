@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_experience_stage.dart';
+part of 'low_data_mode_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,42 +9,43 @@ part of 'user_experience_stage.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(UxStage)
-final uxStageProvider = UxStageProvider._();
+@ProviderFor(LowDataMode)
+final lowDataModeProvider = LowDataModeProvider._();
 
-final class UxStageProvider extends $AsyncNotifierProvider<UxStage, UXStage> {
-  UxStageProvider._()
+final class LowDataModeProvider
+    extends $AsyncNotifierProvider<LowDataMode, bool> {
+  LowDataModeProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'uxStageProvider',
+        name: r'lowDataModeProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$uxStageHash();
+  String debugGetCreateSourceHash() => _$lowDataModeHash();
 
   @$internal
   @override
-  UxStage create() => UxStage();
+  LowDataMode create() => LowDataMode();
 }
 
-String _$uxStageHash() => r'9f4a475277c73ca16d657851c5d066e1a1a85629';
+String _$lowDataModeHash() => r'7b9e305a823e5a874a47fd2cdc95c70593d99151';
 
-abstract class _$UxStage extends $AsyncNotifier<UXStage> {
-  FutureOr<UXStage> build();
+abstract class _$LowDataMode extends $AsyncNotifier<bool> {
+  FutureOr<bool> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<UXStage>, UXStage>;
+    final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<UXStage>, UXStage>,
-              AsyncValue<UXStage>,
+              AnyNotifier<AsyncValue<bool>, bool>,
+              AsyncValue<bool>,
               Object?,
               Object?
             >;

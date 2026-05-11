@@ -233,13 +233,13 @@ Build all 18 shared widgets per §10:
 
 ### 5.8 Low Data Mode (`lib/core/providers/low_data_mode_provider.dart`)
 
-- [ ] Implement `lowDataModeProvider` (persisted user preference)
-- [ ] When ON: swap `CachedNetworkImage` → emoji placeholder, pause background sync, disable blur (Logic in components/SyncWorker)
+- [x] Implement `lowDataModeProvider` (persisted user preference)
+- [x] When ON: swap `CachedNetworkImage` → emoji placeholder, pause background sync, disable blur (Logic in components/SyncWorker)
 
 ### 5.9 UX Stage (`lib/core/config/user_experience_stage.dart`)
 
-- [ ] Define `UXStage` enum: `onboarding`, `firstWeek`, `established`
-- [ ] Implement `uxStageProvider` — reads from Drift users table, updates after onboarding completes
+- [x] Define `UXStage` enum: `onboarding`, `firstWeek`, `established`
+- [x] Implement `uxStageProvider` — reads from Drift users table, updates after onboarding completes
 
 ---
 

@@ -5804,6 +5804,654 @@ class MedicationsCompanion extends UpdateCompanion<Medication> {
   }
 }
 
+class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UsersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _remoteIdMeta = const VerificationMeta(
+    'remoteId',
+  );
+  @override
+  late final GeneratedColumn<String> remoteId = GeneratedColumn<String>(
+    'remote_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _failedAttemptsMeta = const VerificationMeta(
+    'failedAttempts',
+  );
+  @override
+  late final GeneratedColumn<int> failedAttempts = GeneratedColumn<int>(
+    'failed_attempts',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _isDeletedMeta = const VerificationMeta(
+    'isDeleted',
+  );
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+    'is_deleted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_deleted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _uxStageMeta = const VerificationMeta(
+    'uxStage',
+  );
+  @override
+  late final GeneratedColumn<String> uxStage = GeneratedColumn<String>(
+    'ux_stage',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('onboarding'),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    syncStatus,
+    remoteId,
+    failedAttempts,
+    isDeleted,
+    updatedAt,
+    email,
+    name,
+    uxStage,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'users';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<User> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('remote_id')) {
+      context.handle(
+        _remoteIdMeta,
+        remoteId.isAcceptableOrUnknown(data['remote_id']!, _remoteIdMeta),
+      );
+    }
+    if (data.containsKey('failed_attempts')) {
+      context.handle(
+        _failedAttemptsMeta,
+        failedAttempts.isAcceptableOrUnknown(
+          data['failed_attempts']!,
+          _failedAttemptsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(
+        _isDeletedMeta,
+        isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('ux_stage')) {
+      context.handle(
+        _uxStageMeta,
+        uxStage.isAcceptableOrUnknown(data['ux_stage']!, _uxStageMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return User(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      remoteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}remote_id'],
+      ),
+      failedAttempts: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}failed_attempts'],
+      )!,
+      isDeleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_deleted'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      uxStage: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ux_stage'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $UsersTable createAlias(String alias) {
+    return $UsersTable(attachedDatabase, alias);
+  }
+}
+
+class User extends DataClass implements Insertable<User> {
+  final String id;
+  final String userId;
+  final String syncStatus;
+  final String? remoteId;
+  final int failedAttempts;
+  final bool isDeleted;
+  final DateTime updatedAt;
+  final String email;
+  final String name;
+  final String uxStage;
+  final DateTime createdAt;
+  const User({
+    required this.id,
+    required this.userId,
+    required this.syncStatus,
+    this.remoteId,
+    required this.failedAttempts,
+    required this.isDeleted,
+    required this.updatedAt,
+    required this.email,
+    required this.name,
+    required this.uxStage,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['sync_status'] = Variable<String>(syncStatus);
+    if (!nullToAbsent || remoteId != null) {
+      map['remote_id'] = Variable<String>(remoteId);
+    }
+    map['failed_attempts'] = Variable<int>(failedAttempts);
+    map['is_deleted'] = Variable<bool>(isDeleted);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['email'] = Variable<String>(email);
+    map['name'] = Variable<String>(name);
+    map['ux_stage'] = Variable<String>(uxStage);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  UsersCompanion toCompanion(bool nullToAbsent) {
+    return UsersCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      syncStatus: Value(syncStatus),
+      remoteId: remoteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteId),
+      failedAttempts: Value(failedAttempts),
+      isDeleted: Value(isDeleted),
+      updatedAt: Value(updatedAt),
+      email: Value(email),
+      name: Value(name),
+      uxStage: Value(uxStage),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory User.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return User(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      remoteId: serializer.fromJson<String?>(json['remoteId']),
+      failedAttempts: serializer.fromJson<int>(json['failedAttempts']),
+      isDeleted: serializer.fromJson<bool>(json['isDeleted']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      email: serializer.fromJson<String>(json['email']),
+      name: serializer.fromJson<String>(json['name']),
+      uxStage: serializer.fromJson<String>(json['uxStage']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'remoteId': serializer.toJson<String?>(remoteId),
+      'failedAttempts': serializer.toJson<int>(failedAttempts),
+      'isDeleted': serializer.toJson<bool>(isDeleted),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'email': serializer.toJson<String>(email),
+      'name': serializer.toJson<String>(name),
+      'uxStage': serializer.toJson<String>(uxStage),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  User copyWith({
+    String? id,
+    String? userId,
+    String? syncStatus,
+    Value<String?> remoteId = const Value.absent(),
+    int? failedAttempts,
+    bool? isDeleted,
+    DateTime? updatedAt,
+    String? email,
+    String? name,
+    String? uxStage,
+    DateTime? createdAt,
+  }) => User(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    syncStatus: syncStatus ?? this.syncStatus,
+    remoteId: remoteId.present ? remoteId.value : this.remoteId,
+    failedAttempts: failedAttempts ?? this.failedAttempts,
+    isDeleted: isDeleted ?? this.isDeleted,
+    updatedAt: updatedAt ?? this.updatedAt,
+    email: email ?? this.email,
+    name: name ?? this.name,
+    uxStage: uxStage ?? this.uxStage,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  User copyWithCompanion(UsersCompanion data) {
+    return User(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      remoteId: data.remoteId.present ? data.remoteId.value : this.remoteId,
+      failedAttempts: data.failedAttempts.present
+          ? data.failedAttempts.value
+          : this.failedAttempts,
+      isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      email: data.email.present ? data.email.value : this.email,
+      name: data.name.present ? data.name.value : this.name,
+      uxStage: data.uxStage.present ? data.uxStage.value : this.uxStage,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('User(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('failedAttempts: $failedAttempts, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('email: $email, ')
+          ..write('name: $name, ')
+          ..write('uxStage: $uxStage, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    syncStatus,
+    remoteId,
+    failedAttempts,
+    isDeleted,
+    updatedAt,
+    email,
+    name,
+    uxStage,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is User &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.syncStatus == this.syncStatus &&
+          other.remoteId == this.remoteId &&
+          other.failedAttempts == this.failedAttempts &&
+          other.isDeleted == this.isDeleted &&
+          other.updatedAt == this.updatedAt &&
+          other.email == this.email &&
+          other.name == this.name &&
+          other.uxStage == this.uxStage &&
+          other.createdAt == this.createdAt);
+}
+
+class UsersCompanion extends UpdateCompanion<User> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> syncStatus;
+  final Value<String?> remoteId;
+  final Value<int> failedAttempts;
+  final Value<bool> isDeleted;
+  final Value<DateTime> updatedAt;
+  final Value<String> email;
+  final Value<String> name;
+  final Value<String> uxStage;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const UsersCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.failedAttempts = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.email = const Value.absent(),
+    this.name = const Value.absent(),
+    this.uxStage = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UsersCompanion.insert({
+    required String id,
+    required String userId,
+    this.syncStatus = const Value.absent(),
+    this.remoteId = const Value.absent(),
+    this.failedAttempts = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    required String email,
+    required String name,
+    this.uxStage = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       email = Value(email),
+       name = Value(name);
+  static Insertable<User> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? syncStatus,
+    Expression<String>? remoteId,
+    Expression<int>? failedAttempts,
+    Expression<bool>? isDeleted,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? email,
+    Expression<String>? name,
+    Expression<String>? uxStage,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (remoteId != null) 'remote_id': remoteId,
+      if (failedAttempts != null) 'failed_attempts': failedAttempts,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (email != null) 'email': email,
+      if (name != null) 'name': name,
+      if (uxStage != null) 'ux_stage': uxStage,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UsersCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? syncStatus,
+    Value<String?>? remoteId,
+    Value<int>? failedAttempts,
+    Value<bool>? isDeleted,
+    Value<DateTime>? updatedAt,
+    Value<String>? email,
+    Value<String>? name,
+    Value<String>? uxStage,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return UsersCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      syncStatus: syncStatus ?? this.syncStatus,
+      remoteId: remoteId ?? this.remoteId,
+      failedAttempts: failedAttempts ?? this.failedAttempts,
+      isDeleted: isDeleted ?? this.isDeleted,
+      updatedAt: updatedAt ?? this.updatedAt,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      uxStage: uxStage ?? this.uxStage,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (remoteId.present) {
+      map['remote_id'] = Variable<String>(remoteId.value);
+    }
+    if (failedAttempts.present) {
+      map['failed_attempts'] = Variable<int>(failedAttempts.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (uxStage.present) {
+      map['ux_stage'] = Variable<String>(uxStage.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UsersCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('remoteId: $remoteId, ')
+          ..write('failedAttempts: $failedAttempts, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('email: $email, ')
+          ..write('name: $name, ')
+          ..write('uxStage: $uxStage, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -5818,6 +6466,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $JournalEntriesTable journalEntries = $JournalEntriesTable(this);
   late final $WaterLogsTable waterLogs = $WaterLogsTable(this);
   late final $MedicationsTable medications = $MedicationsTable(this);
+  late final $UsersTable users = $UsersTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -5832,6 +6481,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     journalEntries,
     waterLogs,
     medications,
+    users,
   ];
 }
 
@@ -8642,6 +9292,317 @@ typedef $$MedicationsTableProcessedTableManager =
       Medication,
       PrefetchHooks Function()
     >;
+typedef $$UsersTableCreateCompanionBuilder =
+    UsersCompanion Function({
+      required String id,
+      required String userId,
+      Value<String> syncStatus,
+      Value<String?> remoteId,
+      Value<int> failedAttempts,
+      Value<bool> isDeleted,
+      Value<DateTime> updatedAt,
+      required String email,
+      required String name,
+      Value<String> uxStage,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+typedef $$UsersTableUpdateCompanionBuilder =
+    UsersCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<String> syncStatus,
+      Value<String?> remoteId,
+      Value<int> failedAttempts,
+      Value<bool> isDeleted,
+      Value<DateTime> updatedAt,
+      Value<String> email,
+      Value<String> name,
+      Value<String> uxStage,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get failedAttempts => $composableBuilder(
+    column: $table.failedAttempts,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDeleted => $composableBuilder(
+    column: $table.isDeleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get uxStage => $composableBuilder(
+    column: $table.uxStage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$UsersTableOrderingComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get remoteId => $composableBuilder(
+    column: $table.remoteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get failedAttempts => $composableBuilder(
+    column: $table.failedAttempts,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDeleted => $composableBuilder(
+    column: $table.isDeleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get uxStage => $composableBuilder(
+    column: $table.uxStage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UsersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get remoteId =>
+      $composableBuilder(column: $table.remoteId, builder: (column) => column);
+
+  GeneratedColumn<int> get failedAttempts => $composableBuilder(
+    column: $table.failedAttempts,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isDeleted =>
+      $composableBuilder(column: $table.isDeleted, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get uxStage =>
+      $composableBuilder(column: $table.uxStage, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$UsersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UsersTable,
+          User,
+          $$UsersTableFilterComposer,
+          $$UsersTableOrderingComposer,
+          $$UsersTableAnnotationComposer,
+          $$UsersTableCreateCompanionBuilder,
+          $$UsersTableUpdateCompanionBuilder,
+          (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
+          User,
+          PrefetchHooks Function()
+        > {
+  $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UsersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UsersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UsersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String?> remoteId = const Value.absent(),
+                Value<int> failedAttempts = const Value.absent(),
+                Value<bool> isDeleted = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> email = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> uxStage = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UsersCompanion(
+                id: id,
+                userId: userId,
+                syncStatus: syncStatus,
+                remoteId: remoteId,
+                failedAttempts: failedAttempts,
+                isDeleted: isDeleted,
+                updatedAt: updatedAt,
+                email: email,
+                name: name,
+                uxStage: uxStage,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                Value<String> syncStatus = const Value.absent(),
+                Value<String?> remoteId = const Value.absent(),
+                Value<int> failedAttempts = const Value.absent(),
+                Value<bool> isDeleted = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                required String email,
+                required String name,
+                Value<String> uxStage = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UsersCompanion.insert(
+                id: id,
+                userId: userId,
+                syncStatus: syncStatus,
+                remoteId: remoteId,
+                failedAttempts: failedAttempts,
+                isDeleted: isDeleted,
+                updatedAt: updatedAt,
+                email: email,
+                name: name,
+                uxStage: uxStage,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$UsersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UsersTable,
+      User,
+      $$UsersTableFilterComposer,
+      $$UsersTableOrderingComposer,
+      $$UsersTableAnnotationComposer,
+      $$UsersTableCreateCompanionBuilder,
+      $$UsersTableUpdateCompanionBuilder,
+      (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
+      User,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -8664,4 +9625,6 @@ class $AppDatabaseManager {
       $$WaterLogsTableTableManager(_db, _db.waterLogs);
   $$MedicationsTableTableManager get medications =>
       $$MedicationsTableTableManager(_db, _db.medications);
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db, _db.users);
 }

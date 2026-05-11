@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/config/device_tier.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../core/providers/low_data_mode_provider.dart';
 
 /// GlassCard — A premium, tier-aware glassmorphic container.
 ///
@@ -29,6 +30,7 @@ class GlassCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tier = ref.watch(deviceTierProvider).valueOrNull ?? DeviceTier.mid;
+    final isLowData = ref.watch(lowDataModeProvider).valueOrNull ?? false;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final radius = customRadius ?? AppRadius.md;
 
@@ -53,8 +55,8 @@ class GlassCard extends ConsumerWidget {
       child: child,
     );
 
-    // Apply Blur for Mid/High Tiers
-    if (tier != DeviceTier.low) {
+    // Apply Blur for Mid/High Tiers, unless Low Data Mode is active
+    if (tier != DeviceTier.low && !isLowData) {
       cardContent = ClipRRect(
         borderRadius: BorderRadius.circular(radius),
         child: BackdropFilter(

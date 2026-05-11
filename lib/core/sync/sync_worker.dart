@@ -7,6 +7,7 @@ import 'package:workmanager/workmanager.dart';
 import '../config/device_tier.dart';
 import '../database/app_database.dart';
 import '../providers/core_providers.dart';
+import '../providers/low_data_mode_provider.dart';
 
 part 'sync_worker.g.dart';
 
@@ -14,10 +15,16 @@ part 'sync_worker.g.dart';
 class SyncWorker {
   final Databases databases;
   final AppDatabase db;
+  final bool isLowDataMode;
 
-  SyncWorker({required this.databases, required this.db});
+  SyncWorker({
+    required this.databases,
+    required this.db,
+    this.isLowDataMode = false,
+  });
 
   Future<void> syncAll() async {
+    if (isLowDataMode) return; // Pause sync in Low Data Mode
     // Priority 1: Vital Metrics & Meds
     await _syncTable('bp_readings', db.bpReadings);
     await _syncTable('glucose_readings', db.glucoseReadings);

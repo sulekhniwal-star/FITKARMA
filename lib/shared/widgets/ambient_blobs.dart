@@ -1,15 +1,21 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/providers/low_data_mode_provider.dart';
 
 /// AmbientBlobs — Soft, blurry background blobs for depth and atmosphere.
 ///
-/// Used in Pattern A and B scaffolds.
-class AmbientBlobs extends StatelessWidget {
+/// Automatically disabled in Low Data Mode to save resources.
+class AmbientBlobs extends ConsumerWidget {
   const AmbientBlobs({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLowData = ref.watch(lowDataModeProvider).valueOrNull ?? false;
+
+    if (isLowData) return const SizedBox.shrink();
+
     return Stack(
       children: [
         Positioned(
