@@ -55,8 +55,9 @@ GoRouter appRouter(AppRouterRef ref) {
       ShellRoute(
         builder: (context, state, child) {
           int currentIndex = 0;
-          if (state.matchedLocation.contains('/food')) currentIndex = 1;
-          else if (state.matchedLocation.contains('/workout')) currentIndex = 2;
+          if (state.matchedLocation.contains('/food')) {
+            currentIndex = 1;
+          } else if (state.matchedLocation.contains('/workout')) currentIndex = 2;
           else if (state.matchedLocation.contains('/steps')) currentIndex = 3;
           else if (state.matchedLocation.contains('/karma')) currentIndex = 4;
 

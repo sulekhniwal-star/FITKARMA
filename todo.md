@@ -218,13 +218,13 @@ Build all 18 shared widgets per §10:
 
 ### 5.6 Sync Engine (`lib/core/sync/sync_worker.dart`)
 
-- [ ] Implement `SyncWorker` class with `syncAll()` — priority order: BP/Glucose/Medications → Workouts/Sleep → Food/Habits/Journal → Water
-- [ ] Each sync method: select `pending` rows with `failedAttempts < 3` → push to Appwrite → on success set `synced` + `remoteId` → on failure increment `failedAttempts`, promote to `dlq` at 3
-- [ ] Implement `_pushRecord()` generic helper — create vs update (upsert via remoteId)
-- [ ] Implement `connectivityServiceProvider` — listen to connectivity changes
-- [ ] Implement `syncIntervalProvider` — DeviceTier.low=6h, mid=30min, high=15min
-- [ ] Set up periodic background sync using `WorkManager` (Android) / BGTaskScheduler (iOS)
-- [ ] Show `DLQAlertBanner` when any record reaches `dlq` status
+- [x] Implement `SyncWorker` class with `syncAll()` — priority order: BP/Glucose/Medications → Workouts/Sleep → Food/Habits/Journal → Water
+- [x] Each sync method: select `pending` rows with `failedAttempts < 3` → push to Appwrite → on success set `synced` + `remoteId` → on failure increment `failedAttempts`, promote to `dlq` at 3
+- [x] Implement `_pushRecord()` generic helper — create vs update (upsert via remoteId)
+- [x] Implement `connectivityServiceProvider` — listen to connectivity changes
+- [x] Implement `syncIntervalProvider` — DeviceTier.low=6h, mid=30min, high=15min
+- [x] Set up periodic background sync using `WorkManager` (Android) / BGTaskScheduler (iOS)
+- [x] Show `DLQAlertBanner` when any record reaches `dlq` status
 
 ### 5.7 Feature Flags (`lib/core/providers/feature_flags_provider.dart`)
 

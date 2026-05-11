@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
-import 'bento_card.dart';
 
 /// QuickLogFab — A persistent FAB that opens the quick logging menu.
 class QuickLogFab extends StatelessWidget {
