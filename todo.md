@@ -195,10 +195,10 @@ Build all 18 shared widgets per §10:
 
 ### 5.3 Authentication (`lib/features/onboarding/`)
 
-- [ ] Implement `AuthNotifier` (Riverpod `AsyncNotifier`) — `build()` calls `Account.get()`, `login()`, `logout()`
-- [ ] Implement `authProvider`
-- [ ] Email + password session creation via Appwrite
-- [ ] Guest session for first launch (optional — verify with docs)
+- [x] Implement `AuthNotifier` (Riverpod `AsyncNotifier`) — `build()` calls `Account.get()`, `login()`, `logout()`
+- [x] Implement `authProvider`
+- [x] Email + password session creation via Appwrite
+- [x] Guest session for first launch (optional — verify with docs)
 
 ### 5.4 Biometric Lock (`lib/core/security/biometric_lock.dart`)
 

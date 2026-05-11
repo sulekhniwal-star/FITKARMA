@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../features/onboarding/onboarding_providers.dart';
 import '../../shared/widgets/bottom_nav_bar.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
 import 'transitions.dart';
@@ -9,8 +10,8 @@ part 'app_router.g.dart';
 
 @riverpod
 GoRouter appRouter(AppRouterRef ref) {
-  // TODO: Connect to actual authProvider in Phase 5.3
-  final bool isAuthenticated = true; 
+  final authState = ref.watch(authProvider);
+  final bool isAuthenticated = authState.valueOrNull != null;
 
   return GoRouter(
     initialLocation: '/splash',
