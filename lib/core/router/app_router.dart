@@ -7,6 +7,7 @@ import '../../features/onboarding/welcome_screen.dart';
 import '../../features/onboarding/auth_screen.dart';
 import '../../features/onboarding/dosha_quiz_screen.dart';
 import '../../features/onboarding/goals_screen.dart';
+import '../../features/onboarding/permissions_screen.dart';
 import '../../features/onboarding/splash_screen.dart';
 import '../../shared/widgets/bottom_nav_bar.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
@@ -62,7 +63,7 @@ GoRouter appRouter(Ref ref) {
       ),
       GoRoute(
         path: '/onboarding/permissions',
-        builder: (context, state) => const _PlaceholderScreen(title: 'Permissions'),
+        builder: (context, state) => const PermissionsScreen(),
       ),
 
       // Main App Shell (Bottom Nav)

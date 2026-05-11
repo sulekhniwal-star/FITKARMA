@@ -395,10 +395,10 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 7.6 Permissions & Privacy (`/onboarding/permissions`) — §17B/19
 
-- [ ] Calm Zone scaffold
-- [ ] Permission toggles for Health, Notifications, Location
-- [ ] Privacy commitment and Get Started flow
-- [ ] Set `onboardingCompleted = true` in Drift
+- [x] Calm Zone scaffold
+- [x] Permission toggles for Health, Notifications, Location
+- [x] Privacy commitment and Get Started flow
+- [x] Set `onboardingCompleted = true` in Drift
 
 ---
 

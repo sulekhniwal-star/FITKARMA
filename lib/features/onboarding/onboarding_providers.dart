@@ -122,6 +122,35 @@ class Auth extends _$Auth {
     }
   }
 
+  Future<void> completeOnboarding() async {
+    final user = state.value;
+    if (user == null) return;
+
+    final db = ref.read(appDatabaseProvider);
+    await (db.update(db.users)..where((t) => t.id.equals(user.$id))).write(
+      const UsersCompanion(
+        onboardingCompleted: Value(true),
+        uxStage: Value('established'),
+      ),
+    );
+
+    // Sync to Appwrite
+    final databases = ref.read(appwriteDatabasesProvider);
+    try {
+      await databases.updateDocument(
+        databaseId: 'fitkarma-db',
+        collectionId: 'users',
+        documentId: user.$id,
+        data: {
+          'onboardingCompleted': true,
+          'uxStage': 'established',
+        },
+      );
+    } catch (e) {
+      print('Error syncing onboarding status to Appwrite: $e');
+    }
+  }
+
   Future<void> loginAnonymous() async {
     // ... existing loginAnonymous ...
     state = const AsyncValue.loading();

@@ -99,6 +99,8 @@ class Users extends Table with SyncableColumns {
   // Goals (Stored as comma-separated strings or JSON)
   TextColumn get goals => text().nullable()();
 
+  BoolColumn get onboardingCompleted => boolean().withDefault(const Constant(false))();
+
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
 
@@ -120,7 +122,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openDatabase());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
