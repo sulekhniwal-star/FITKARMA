@@ -3,149 +3,158 @@ import 'app_colors.dart';
 import 'app_typography.dart';
 import 'app_spacing.dart';
 
+/// AppTheme — ThemeData builder for FitKarma.
+///
+/// Provides dark (primary) and light (warm inversion) themes.
+/// Supports OpenDyslexic accessibility font override.
 class AppTheme {
+  AppTheme._();
+
   static ThemeData dark({String? overrideFont}) {
-    final String fontFamily = overrideFont ?? AppTypography.primaryFont;
+    const c = AppColorsDark;
+    final textTheme = _buildTextTheme(
+      c.textPrimary,
+      c.textSecondary,
+      c.textMuted,
+      overrideFont: overrideFont,
+    );
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: AppColors.darkBg0,
-      fontFamily: fontFamily,
-      
+      scaffoldBackgroundColor: c.bg1,
       colorScheme: const ColorScheme.dark(
-        primary: AppColors.primary,
-        secondary: AppColors.secondary,
-        surface: AppColors.darkSurface0,
-        error: AppColors.error,
+        primary: c.primary,
+        secondary: c.secondary,
+        surface: c.surface0,
+        error: c.error,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onSurface: AppColors.darkTextPrimary,
+        onSurface: c.textPrimary,
+        onError: Colors.white,
       ),
-
-      textTheme: _buildTextTheme(AppColors.darkTextPrimary, fontFamily),
-
-      appBarTheme: const AppBarTheme(
+      textTheme: textTheme,
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        centerTitle: false,
-        titleTextStyle: TextStyle(
-          color: AppColors.darkTextPrimary,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
+        scrolledUnderElevation: 0,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: c.textSecondary),
+        titleTextStyle: AppTypography.h1(color: c.textPrimary).copyWith(
+          fontFamily: overrideFont,
         ),
-        iconTheme: IconThemeData(color: AppColors.darkTextPrimary),
       ),
-
       dividerTheme: const DividerThemeData(
-        color: AppColors.darkDivider,
+        color: c.divider,
         thickness: 1,
         space: 1,
       ),
-
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          backgroundColor: c.primary,
           foregroundColor: Colors.white,
-          minimumSize: const Size.fromHeight(56),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadius.md),
           ),
-          textStyle: const TextStyle(
-            fontSize: 16,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          textStyle: AppTypography.h4(color: Colors.white).copyWith(
+            fontFamily: overrideFont,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
-
       bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: AppColors.darkSurface0,
+        backgroundColor: c.surface1,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppRadius.xl),
-          ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
         ),
+        elevation: 8,
       ),
     );
   }
 
   static ThemeData light({String? overrideFont}) {
-    final String fontFamily = overrideFont ?? AppTypography.primaryFont;
+    const c = AppColorsLight;
+    final textTheme = _buildTextTheme(
+      c.textPrimary,
+      c.textSecondary,
+      c.textMuted,
+      overrideFont: overrideFont,
+    );
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      scaffoldBackgroundColor: AppColors.lightBg0,
-      fontFamily: fontFamily,
-
+      scaffoldBackgroundColor: c.bg1,
       colorScheme: const ColorScheme.light(
-        primary: AppColors.primary,
-        secondary: AppColors.secondary,
-        surface: AppColors.lightSurface0,
-        error: AppColors.error,
+        primary: c.primary,
+        secondary: c.secondary,
+        surface: c.surface0,
+        error: AppColorsDark.error, // Reusing semantic error
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onSurface: AppColors.lightTextPrimary,
+        onSurface: c.textPrimary,
+        onError: Colors.white,
       ),
-
-      textTheme: _buildTextTheme(AppColors.lightTextPrimary, fontFamily),
-
-      appBarTheme: const AppBarTheme(
+      textTheme: textTheme,
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        centerTitle: false,
-        titleTextStyle: TextStyle(
-          color: AppColors.lightTextPrimary,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
+        scrolledUnderElevation: 0,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: c.textSecondary),
+        titleTextStyle: AppTypography.h1(color: c.textPrimary).copyWith(
+          fontFamily: overrideFont,
         ),
-        iconTheme: IconThemeData(color: AppColors.lightTextPrimary),
       ),
-
       dividerTheme: const DividerThemeData(
-        color: AppColors.lightDivider,
+        color: c.divider,
         thickness: 1,
         space: 1,
       ),
-
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          backgroundColor: c.primary,
           foregroundColor: Colors.white,
-          minimumSize: const Size.fromHeight(56),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadius.md),
           ),
-          textStyle: const TextStyle(
-            fontSize: 16,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          textStyle: AppTypography.h4(color: Colors.white).copyWith(
+            fontFamily: overrideFont,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
-
       bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: AppColors.lightSurface0,
+        backgroundColor: c.surface1,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppRadius.xl),
-          ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
         ),
+        elevation: 8,
       ),
     );
   }
 
-  static TextTheme _buildTextTheme(Color textColor, String fontFamily) {
+  static TextTheme _buildTextTheme(
+    Color primary,
+    Color secondary,
+    Color muted, {
+    String? overrideFont,
+  }) {
     return TextTheme(
-      displayLarge: AppTypography.displayLg.copyWith(color: textColor, fontFamily: fontFamily),
-      headlineLarge: AppTypography.h1.copyWith(color: textColor, fontFamily: fontFamily),
-      headlineMedium: AppTypography.h2.copyWith(color: textColor, fontFamily: fontFamily),
-      headlineSmall: AppTypography.h3.copyWith(color: textColor, fontFamily: fontFamily),
-      bodyLarge: AppTypography.bodyLg.copyWith(color: textColor, fontFamily: fontFamily),
-      bodyMedium: AppTypography.bodyMd.copyWith(color: textColor, fontFamily: fontFamily),
-      bodySmall: AppTypography.bodySm.copyWith(color: textColor, fontFamily: fontFamily),
-      labelLarge: AppTypography.labelLg.copyWith(color: textColor, fontFamily: fontFamily),
-      labelMedium: AppTypography.labelMd.copyWith(color: textColor, fontFamily: fontFamily),
-      labelSmall: AppTypography.labelSm.copyWith(color: textColor, fontFamily: fontFamily),
+      displayLarge: AppTypography.heroDisplay(color: primary).copyWith(fontFamily: overrideFont),
+      displayMedium: AppTypography.displayLg(color: primary).copyWith(fontFamily: overrideFont),
+      headlineLarge: AppTypography.h1(color: primary).copyWith(fontFamily: overrideFont),
+      headlineMedium: AppTypography.h2(color: primary).copyWith(fontFamily: overrideFont),
+      headlineSmall: AppTypography.h3(color: primary).copyWith(fontFamily: overrideFont),
+      titleLarge: AppTypography.h4(color: primary).copyWith(fontFamily: overrideFont),
+      bodyLarge: AppTypography.bodyLg(color: primary).copyWith(fontFamily: overrideFont),
+      bodyMedium: AppTypography.bodyMd(color: secondary).copyWith(fontFamily: overrideFont),
+      bodySmall: AppTypography.bodySm(color: muted).copyWith(fontFamily: overrideFont),
+      labelLarge: AppTypography.labelLg(color: secondary).copyWith(fontFamily: overrideFont),
+      labelMedium: AppTypography.labelMd(color: secondary).copyWith(fontFamily: overrideFont),
+      labelSmall: AppTypography.labelSm(color: muted).copyWith(fontFamily: overrideFont),
     );
   }
 }

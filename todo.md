@@ -119,9 +119,9 @@ assets/fonts/           assets/data/            functions/
 
 ### 3.5 ThemeData Builder (`lib/core/theme/app_theme.dart`)
 
-- [ ] Implement `AppTheme.dark()` — scaffoldBg, colorScheme, textTheme, appBarTheme, dividerTheme, elevatedButtonTheme, bottomSheetTheme
-- [ ] Implement `AppTheme.light()` — warm inversion, identical structure
-- [ ] Support `overrideFont` param for OpenDyslexic accessibility
+- [x] Implement `AppTheme.dark()` — scaffoldBg, colorScheme, textTheme, appBarTheme, dividerTheme, elevatedButtonTheme, bottomSheetTheme
+- [x] Implement `AppTheme.light()` — warm inversion, identical structure
+- [x] Support `overrideFont` param for OpenDyslexic accessibility
 
 ### 3.6 Device Tier (`lib/core/config/device_tier.dart`)
 
