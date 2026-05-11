@@ -12,19 +12,24 @@ part of 'device_tier.dart';
 @ProviderFor(deviceTier)
 final deviceTierProvider = DeviceTierProvider._();
 
-final class DeviceTierProvider extends $FunctionalProvider<
-        AsyncValue<DeviceTier>, DeviceTier, FutureOr<DeviceTier>>
+final class DeviceTierProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<DeviceTier>,
+          DeviceTier,
+          FutureOr<DeviceTier>
+        >
     with $FutureModifier<DeviceTier>, $FutureProvider<DeviceTier> {
   DeviceTierProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'deviceTierProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'deviceTierProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$deviceTierHash();

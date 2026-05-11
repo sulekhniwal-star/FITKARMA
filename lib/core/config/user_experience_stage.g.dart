@@ -15,15 +15,15 @@ final userExperienceStageProvider = UserExperienceStageProvider._();
 final class UserExperienceStageProvider
     extends $NotifierProvider<UserExperienceStage, UXStage> {
   UserExperienceStageProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'userExperienceStageProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userExperienceStageProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$userExperienceStageHash();
@@ -50,8 +50,14 @@ abstract class _$UserExperienceStage extends $Notifier<UXStage> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<UXStage, UXStage>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<UXStage, UXStage>, UXStage, Object?, Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<UXStage, UXStage>,
+              UXStage,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

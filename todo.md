@@ -50,26 +50,26 @@
 
 ### 1.2 `pubspec.yaml` — All Dependencies
 
-- [ ] Add state & navigation: `flutter_riverpod`, `riverpod_annotation`, `go_router`
-- [ ] Add local DB: `drift`, `drift_flutter`, `sqlite3_flutter_libs`, `sqlcipher_flutter_libs`
-- [ ] Add sync: `appwrite`, `connectivity_plus`
-- [ ] Add UI & animation: `flutter_animate`, `shimmer`, `cached_network_image`, `fl_chart`
-- [ ] Add health: `health` (Health Connect + HealthKit)
-- [ ] Add auth & security: `local_auth`, `flutter_secure_storage`, `pointycastle`
-- [ ] Add food: `mobile_scanner` (barcode), `dio`
-- [ ] Add monetisation: `purchases_flutter` (RevenueCat — upgraded to ^10.0.2)
-- [ ] Add notifications: `flutter_local_notifications`, `timezone`
-- [ ] Add observability: `sentry_flutter`
-- [ ] Add code-gen dev deps: `build_runner`, `drift_dev`, `riverpod_generator`, `freezed`, `json_serializable`
-- [ ] Add test deps: `mocktail`, `golden_toolkit`, `integration_test`
-- [ ] Add assets section: fonts (PlusJakartaSans, JetBrainsMono, OpenDyslexic), `assets/data/`
-- [ ] Run `flutter pub get` and confirm no conflicts (Got dependencies! — 30 minor upgrades available)
+- [x] Add state & navigation: `flutter_riverpod`, `riverpod_annotation`, `go_router`
+- [x] Add local DB: `drift`, `drift_flutter`, `sqlite3_flutter_libs`, `sqlcipher_flutter_libs`
+- [x] Add sync: `appwrite`, `connectivity_plus`
+- [x] Add UI & animation: `flutter_animate`, `shimmer`, `cached_network_image`, `fl_chart`
+- [x] Add health: `health` (Health Connect + HealthKit)
+- [x] Add auth & security: `local_auth`, `flutter_secure_storage`, `pointycastle`
+- [x] Add food: `mobile_scanner` (barcode), `dio`
+- [x] Add monetisation: `purchases_flutter` (RevenueCat — upgraded to ^10.0.2)
+- [x] Add notifications: `flutter_local_notifications`, `timezone`
+- [x] Add observability: `sentry_flutter`
+- [x] Add code-gen dev deps: `build_runner`, `drift_dev`, `riverpod_generator`, `freezed`, `json_serializable`
+- [x] Add test deps: `mocktail`, `golden_toolkit`, `integration_test`
+- [x] Add assets section: fonts (PlusJakartaSans, JetBrainsMono, OpenDyslexic), `assets/data/`
+- [x] Run `flutter pub get` and confirm no conflicts (Got dependencies! — 30 minor upgrades available)
 
 ### 1.3 Code Generation Bootstrap
 
-- [ ] Run `dart run build_runner build --delete-conflicting-outputs` (Success — no-op on placeholders)
-- [ ] Confirm Freezed, Riverpod, Drift generated files exist (Infrastructure ready)
-- [ ] Add `build_runner watch` alias to Makefile or script (Added to Makefile and scripts/watch.ps1)
+- [x] Run `dart run build_runner build --delete-conflicting-outputs` (Success — no-op on placeholders)
+- [x] Confirm Freezed, Riverpod, Drift generated files exist (Infrastructure ready)
+- [x] Add `build_runner watch` alias to Makefile or script (Added to Makefile and scripts/watch.ps1)
 
 ---
 
@@ -88,9 +88,9 @@ lib/features/wedding/   lib/features/ai_coach/  lib/features/settings/
 assets/fonts/           assets/data/            functions/
 ```
 
-- [ ] Create all directories
-- [ ] Create empty placeholder `.dart` files to prevent import errors during early dev
-- [ ] Add `assets/data/indian_foods_seed.json` placeholder (to be populated in Phase 9)
+- [x] Create all directories
+- [x] Create empty placeholder `.dart` files to prevent import errors during early dev
+- [x] Add `assets/data/indian_foods_seed.json` placeholder (to be populated in Phase 9)
 
 ---
 
