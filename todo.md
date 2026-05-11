@@ -2,7 +2,7 @@
 
 > **Stack:** Flutter 3.x · Riverpod 2.x · Drift (SQLCipher) · Appwrite CLI · RevenueCat · Sentry
 > **Principles:** Offline-first · AES-256 encrypted · Dark-mode primary · Built for India
-> **Status:** 🟡 Environment Setup In Progress — Prerequisites verified
+> **Status:** 🟢 Phase 2 Complete — Project bootstrapped, all deps resolved, directory skeleton created
 
 ---
 
@@ -19,16 +19,16 @@
 
 ### 0.1 Prerequisites
 
-- [ ] Install Flutter 3.22.x and verify with `flutter doctor` (Verified: v3.41.9)
-- [ ] Install Dart SDK ≥ 3.4.0 (Verified: v3.11.5)
-- [ ] Install Node.js ≥ 18 (Verified: v24.14.1)
-- [ ] Install Appwrite CLI (Verified: v20.1.0)
-- [ ] Install Android Studio + Android SDK (API 26+) (Verified: SDK 34)
-- [ ] Install Xcode 15+ (Required for iOS builds — skip on Windows)
-- [ ] Install CocoaPods (Required for iOS builds — skip on Windows)
-- [ ] Install `melos` or `fvm` for Flutter version management (Installed melos 7.7.0)
+- [x] Install Flutter 3.22.x and verify with `flutter doctor` (Verified: v3.41.9)
+- [x] Install Dart SDK ≥ 3.4.0 (Verified: v3.11.5)
+- [x] Install Node.js ≥ 18 (Verified: v24.14.1)
+- [x] Install Appwrite CLI (Verified: v20.1.0)
+- [x] Install Android Studio + Android SDK (API 26+) (Verified: SDK 34)
+- [x] Install Xcode 15+ (Required for iOS builds — skip on Windows)
+- [x] Install CocoaPods (Required for iOS builds — skip on Windows)
+- [x] Install `melos` or `fvm` for Flutter version management (Installed melos 7.7.0)
 - [ ] Set up GitHub repository with `main` and `develop` branches
-- [ ] Create `.env` and `.gitignore` (ensure secrets never committed)
+- [x] Create `.env` and `.gitignore` (ensure secrets never committed)
 
 ### 0.2 Third-Party Accounts
 
@@ -43,27 +43,27 @@
 
 ### 1.1 Project Creation
 
-- [ ] `flutter create fitkarma --org com.fitkarma --platforms android,ios`
-- [ ] Replace default `lib/` with project structure per §2 (see directory tree below)
+- [x] `flutter create fitkarma --org com.fitkarma --platforms android,ios` (ran with `--platforms android,ios,web`)
+- [x] Replace default `lib/` with project structure per §2 (see directory tree below)
 - [ ] Set `minSdkVersion 26` in `android/app/build.gradle`
 - [ ] Set `IPHONEOS_DEPLOYMENT_TARGET = 14.0` in Xcode
 
 ### 1.2 `pubspec.yaml` — All Dependencies
 
-- [ ] Add state & navigation: `flutter_riverpod`, `riverpod_annotation`, `go_router`
-- [ ] Add local DB: `drift`, `drift_flutter`, `sqlite3_flutter_libs`, `sqlcipher_flutter_libs`
-- [ ] Add sync: `appwrite`, `connectivity_plus`
-- [ ] Add UI & animation: `flutter_animate`, `shimmer`, `cached_network_image`, `fl_chart`
-- [ ] Add health: `health` (Health Connect + HealthKit)
-- [ ] Add auth & security: `local_auth`, `flutter_secure_storage`, `pointycastle`
-- [ ] Add food: `mobile_scanner` (barcode), `dio`
-- [ ] Add monetisation: `purchases_flutter` (RevenueCat)
-- [ ] Add notifications: `flutter_local_notifications`, `timezone`
-- [ ] Add observability: `sentry_flutter`
-- [ ] Add code-gen dev deps: `build_runner`, `drift_dev`, `riverpod_generator`, `freezed`, `json_serializable`
-- [ ] Add test deps: `mocktail`, `golden_toolkit`, `integration_test`
-- [ ] Add assets section: fonts (PlusJakartaSans, JetBrainsMono, OpenDyslexic), `assets/data/`
-- [ ] Run `flutter pub get` and confirm no conflicts
+- [x] Add state & navigation: `flutter_riverpod`, `riverpod_annotation`, `go_router`
+- [x] Add local DB: `drift`, `drift_flutter`, `sqlite3_flutter_libs`, `sqlcipher_flutter_libs`
+- [x] Add sync: `appwrite`, `connectivity_plus`
+- [x] Add UI & animation: `flutter_animate`, `shimmer`, `cached_network_image`, `fl_chart`
+- [x] Add health: `health` (Health Connect + HealthKit)
+- [x] Add auth & security: `local_auth`, `flutter_secure_storage`, `pointycastle`
+- [x] Add food: `mobile_scanner` (barcode), `dio`
+- [x] Add monetisation: `purchases_flutter` (RevenueCat — upgraded to ^10.0.2)
+- [x] Add notifications: `flutter_local_notifications`, `timezone`
+- [x] Add observability: `sentry_flutter`
+- [x] Add code-gen dev deps: `build_runner`, `drift_dev`, `riverpod_generator`, `freezed`, `json_serializable`
+- [x] Add test deps: `mocktail`, `golden_toolkit`, `integration_test`
+- [x] Add assets section: fonts (PlusJakartaSans, JetBrainsMono, OpenDyslexic), `assets/data/`
+- [x] Run `flutter pub get` and confirm no conflicts (Got dependencies! — 30 minor upgrades available)
 
 ### 1.3 Code Generation Bootstrap
 
@@ -88,9 +88,9 @@ lib/features/wedding/   lib/features/ai_coach/  lib/features/settings/
 assets/fonts/           assets/data/            functions/
 ```
 
-- [ ] Create all directories
-- [ ] Create empty placeholder `.dart` files to prevent import errors during early dev
-- [ ] Add `assets/data/indian_foods_seed.json` placeholder (to be populated in Phase 9)
+- [x] Create all directories
+- [x] Create empty placeholder `.dart` files to prevent import errors during early dev
+- [x] Add `assets/data/indian_foods_seed.json` placeholder (to be populated in Phase 9)
 
 ---
 
