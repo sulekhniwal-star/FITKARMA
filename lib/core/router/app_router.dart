@@ -17,6 +17,8 @@ import '../../features/health/blood_pressure_screen.dart';
 import '../../features/health/glucose_screen.dart';
 import '../../features/health/steps_screen.dart';
 import '../../features/health/sleep_screen.dart';
+import '../../features/karma/karma_screen.dart';
+import '../../features/journal/journal_screen.dart';
 import 'transitions.dart';
 
 part 'app_router.g.dart';
@@ -102,7 +104,7 @@ GoRouter appRouter(Ref ref) {
           GoRoute(path: '/home/food', builder: (context, state) => const FoodHomeScreen()),
           GoRoute(path: '/home/workout', builder: (context, state) => const _PlaceholderScreen(title: 'Workouts')),
           GoRoute(path: '/home/steps', builder: (context, state) => const StepsScreen()),
-          GoRoute(path: '/karma', builder: (context, state) => const _PlaceholderScreen(title: 'Karma')),
+          GoRoute(path: '/karma', builder: (context, state) => const KarmaScreen()),
         ],
       ),
 
@@ -132,7 +134,7 @@ GoRouter appRouter(Ref ref) {
         path: '/journal',
         builder: (context, state) => const SensitiveScreenGuard(
           screenId: 'journal',
-          child: _PlaceholderScreen(title: 'Journal'),
+          child: JournalScreen(),
         ),
       ),
       GoRoute(

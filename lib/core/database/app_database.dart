@@ -178,6 +178,12 @@ class AppDatabase extends _$AppDatabase {
         .watch();
   }
 
+  Stream<List<JournalEntry>> watchJournalEntries() {
+    return (select(journalEntries)
+          ..orderBy([(t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)]))
+        .watch();
+  }
+
   Future<int> getTodayWaterMl() async {
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);

@@ -461,21 +461,21 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 8.7 Karma Hub (`/karma`) — Pattern B
 
-- [ ] Hero: displayLg XP total, "⚡ Level 8 Warrior" badge, XP progress bar to next level
-- [ ] Today's karma events list (each event: type, XP awarded, timestamp)
-- [ ] XP breakdown bento (by category: food, workout, steps, etc.)
-- [ ] Achievements grid (unlocked + locked with progress)
-- [ ] Leaderboard tab (family/friend group)
-- [ ] Active Challenges card
+- [x] Hero: displayLg XP total, "⚡ Level 8 Warrior" badge, XP progress bar to next level
+- [x] Today's karma events list (each event: type, XP awarded, timestamp)
+- [x] XP breakdown bento (by category: food, workout, steps, etc.)
+- [x] Achievements grid (unlocked + locked with progress)
+- [x] Leaderboard tab (family/friend group)
+- [x] Active Challenges card
 
 ### 8.8 Journal (`/journal`) — Calm Zone
 
-- [ ] Biometric re-auth on first enter per session
-- [ ] Rich text editor (bold, italic, lists)
-- [ ] Mood selector (emoji 1–5 scale)
-- [ ] Tags (comma-separated)
-- [ ] Entry list sorted by date
-- [ ] Encrypted locally via SQLCipher
+- [x] Biometric re-auth on first enter per session
+- [x] Rich text editor (bold, italic, lists)
+- [x] Mood selector (emoji 1–5 scale)
+- [x] Tags (comma-separated)
+- [x] Entry list sorted by date
+- [x] Encrypted locally via SQLCipher
 
 ### 8.9 Mental Health Hub (`/mental-health`) — Pattern A
 
