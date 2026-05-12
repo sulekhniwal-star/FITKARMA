@@ -98,7 +98,7 @@ class _LabReportsScreenState extends ConsumerState<LabReportsScreen> {
 
                 // Report Type Dropdown
                 DropdownButtonFormField<String>(
-                  value: _selectedReportType,
+                  initialValue: _selectedReportType,
                   dropdownColor: AppColorsDark.surface2,
                   style: AppTypography.bodyLg(color: Colors.white),
                   decoration: InputDecoration(
@@ -396,7 +396,7 @@ class _LabReportsScreenState extends ConsumerState<LabReportsScreen> {
                   return ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     itemCount: items.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    separatorBuilder: (_, _) => const SizedBox(height: 12),
                     itemBuilder: (context, idx) {
                       final item = items[idx];
                       final isGenerating = _generatingShareId == item.id;

@@ -90,7 +90,7 @@ class _MedicationScreenState extends ConsumerState<MedicationScreen> {
 
                 // Schedule selection Dropdown
                 DropdownButtonFormField<String>(
-                  value: _selectedSchedule,
+                  initialValue: _selectedSchedule,
                   dropdownColor: AppColorsDark.surface2,
                   style: AppTypography.bodyLg(color: Colors.white),
                   decoration: InputDecoration(

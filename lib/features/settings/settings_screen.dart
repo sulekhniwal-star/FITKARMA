@@ -165,7 +165,7 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      activeColor: AppColorsDark.teal,
+                      activeThumbColor: AppColorsDark.teal,
                       title: Text('Dark Mode Palette', style: AppTypography.labelLg(color: Colors.white)),
                       subtitle: Text('Optimizes eye comfort alongside organic deep backdrop layouts.', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
                       value: settings.isDarkMode,
@@ -217,7 +217,7 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      activeColor: AppColorsDark.rose,
+                      activeThumbColor: AppColorsDark.rose,
                       title: Text('OS Push Notifications', style: AppTypography.labelLg(color: Colors.white)),
                       subtitle: Text('Trigger device alarms for scheduled Rx medication compliance tracking.', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
                       value: settings.notificationsEnabled,
@@ -281,7 +281,7 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      activeColor: AppColorsDark.purple,
+                      activeThumbColor: AppColorsDark.purple,
                       title: Text('Dyslexic Character Flow', style: AppTypography.labelLg(color: Colors.white)),
                       subtitle: Text('Appends elevated baseline tracking filters optimized for clear visual parsing.', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
                       value: settings.dyslexicFont,
@@ -326,7 +326,7 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      activeColor: AppColorsDark.secondary,
+                      activeThumbColor: AppColorsDark.secondary,
                       title: Text('Low Data Connection Mode', style: AppTypography.labelLg(color: Colors.white)),
                       subtitle: Text('Compresses file bucket objects alongside caching cloud metrics aggressively.', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
                       value: settings.lowDataMode,
@@ -336,7 +336,7 @@ class SettingsScreen extends ConsumerWidget {
 
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      activeColor: AppColorsDark.teal,
+                      activeThumbColor: AppColorsDark.teal,
                       title: Text('Biometric Gates Access Lock', style: AppTypography.labelLg(color: Colors.white)),
                       subtitle: Text('Enforce runtime key credentials before opening secure diagnostic screens.', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
                       value: settings.biometricLock,

@@ -25,7 +25,7 @@ class ProGate extends ConsumerWidget {
         backgroundColor: AppColorsDark.bg1,
         body: Center(child: CircularProgressIndicator(color: AppColorsDark.accent)),
       ),
-      error: (_, __) => Scaffold(
+      error: (_, _) => Scaffold(
         backgroundColor: AppColorsDark.bg1,
         body: Center(
           child: Text('Error validating Pro credentials.', style: AppTypography.bodySm(color: AppColorsDark.rose)),
