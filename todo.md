@@ -489,12 +489,12 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 8.10 Profile (`/profile`) — Pattern B
 
-- [ ] Hero: CircleAvatar + name + email
-- [ ] Karma level compact card
-- [ ] Dosha donut chart (vata/pitta/kapha percentages)
-- [ ] Personal info rows (editable)
-- [ ] Achievements section
-- [ ] Referral card (share app + earn 500 XP)
+- [x] Hero: CircleAvatar + name + email
+- [x] Karma level compact card
+- [x] Dosha donut chart (vata/pitta/kapha percentages)
+- [x] Personal info rows (editable)
+- [x] Achievements section
+- [x] Referral card (share app + earn 500 XP)
 
 ### 8.11 Workout Active (`/workout/active/{workoutId}`) — Pattern C
 

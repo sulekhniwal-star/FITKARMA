@@ -21,6 +21,7 @@ import '../../features/karma/karma_screen.dart';
 import '../../features/journal/journal_screen.dart';
 import '../../features/mental_health/mental_health_screen.dart';
 import '../../features/mental_health/breathing_circle_screen.dart';
+import '../../features/profile/profile_screen.dart';
 import 'transitions.dart';
 
 part 'app_router.g.dart';
@@ -150,7 +151,7 @@ GoRouter appRouter(Ref ref) {
         path: '/mental-health/breathing',
         builder: (context, state) => const BreathingCircleScreen(),
       ),
-      GoRoute(path: '/profile', builder: (context, state) => const _PlaceholderScreen(title: 'Profile')),
+      GoRoute(path: '/profile', builder: (context, state) => const ProfileScreen()),
       GoRoute(path: '/emergency', builder: (context, state) => const _PlaceholderScreen(title: 'Emergency')),
       GoRoute(
         path: '/lab-reports',
