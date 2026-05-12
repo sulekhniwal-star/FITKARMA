@@ -557,17 +557,17 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 8.19 Settings (`/settings`) — Calm Zone
 
-- [ ] Theme toggle (dark/light)
-- [ ] Language selector (English / Hindi)
-- [ ] Notification preferences
-- [ ] Emergency contacts management
-- [ ] Daily goals adjustment
-- [ ] Accessibility: dyslexic font toggle, text scale
-- [ ] Low Data Mode toggle
-- [ ] Biometric lock toggle
-- [ ] Account management (change password, delete account + all data)
-- [ ] Privacy Policy link (DPDP Act compliance, data residency)
-- [ ] App version display
+- [x] Theme toggle (dark/light)
+- [x] Language selector (English / Hindi)
+- [x] Notification preferences
+- [x] Emergency contacts management
+- [x] Daily goals adjustment
+- [x] Accessibility: dyslexic font toggle, text scale
+- [x] Low Data Mode toggle
+- [x] Biometric lock toggle
+- [x] Account management (change password, delete account + all data)
+- [x] Privacy Policy link (DPDP Act compliance, data residency)
+- [x] App version display
 
 ---
 
