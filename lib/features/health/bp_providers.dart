@@ -76,11 +76,10 @@ BpMetadataService bpMetadataService(BpMetadataServiceRef ref) {
 
 // ─── Stream & Cache Providers ───────────────────────────────────────────────
 
-@riverpod
-Stream<List<BpReading>> bpReadingsStream(BpReadingsStreamRef ref) {
+final bpReadingsStreamProvider = StreamProvider<List<BpReading>>((ref) {
   final db = ref.watch(appDatabaseProvider);
   return db.watchRecentBpReadings(limit: 30);
-}
+});
 
 @riverpod
 class BpMetadataCache extends _$BpMetadataCache {

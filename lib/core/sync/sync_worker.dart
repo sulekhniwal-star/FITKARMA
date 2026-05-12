@@ -7,7 +7,6 @@ import 'package:workmanager/workmanager.dart';
 import '../config/device_tier.dart';
 import '../database/app_database.dart';
 import '../providers/core_providers.dart';
-import '../providers/low_data_mode_provider.dart';
 
 part 'sync_worker.g.dart';
 
@@ -110,12 +109,12 @@ class SyncWorker {
 // ─── Providers ───────────────────────────────────────────────────────────────
 
 @riverpod
-Stream<ConnectivityResult> connectivityService(ConnectivityServiceRef ref) {
+Stream<ConnectivityResult> connectivityService(Ref ref) {
   return Connectivity().onConnectivityChanged.map((results) => results.first);
 }
 
 @riverpod
-Duration syncInterval(SyncIntervalRef ref) {
+Duration syncInterval(Ref ref) {
   final tier = ref.watch(deviceTierProvider).valueOrNull ?? DeviceTier.mid;
   switch (tier) {
     case DeviceTier.low:
@@ -129,7 +128,7 @@ Duration syncInterval(SyncIntervalRef ref) {
 }
 
 @riverpod
-Stream<bool> hasDlqRecords(HasDlqRecordsRef ref) {
+Stream<bool> hasDlqRecords(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   // Watch a few key tables for DLQ status
   return db.select(db.foodLogs).watch().map(

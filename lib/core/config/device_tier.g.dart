@@ -45,4 +45,4 @@ final class DeviceTierProvider
   }
 }
 
-String _$deviceTierHash() => r'dac157a2999a07c7d34b98a922529f2e7318629a';
+String _$deviceTierHash() => r'83c1baa8999e8392dde844d3397b5aec524e0c45';

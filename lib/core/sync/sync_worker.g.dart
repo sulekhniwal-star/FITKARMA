@@ -49,7 +49,7 @@ final class ConnectivityServiceProvider
 }
 
 String _$connectivityServiceHash() =>
-    r'ffdf91f8ed9e0260e3881f4a7f1fa291dd24033b';
+    r'45071cab8780631dcd017a6c42c81fb9a512cd86';
 
 @ProviderFor(syncInterval)
 final syncIntervalProvider = SyncIntervalProvider._();
@@ -90,7 +90,7 @@ final class SyncIntervalProvider
   }
 }
 
-String _$syncIntervalHash() => r'adf983fbaff012aca5ac9a309617477a27ca49d9';
+String _$syncIntervalHash() => r'29e0fa964b38e860fa7a99ae598a8766b17e5460';
 
 @ProviderFor(hasDlqRecords)
 final hasDlqRecordsProvider = HasDlqRecordsProvider._();
@@ -123,4 +123,4 @@ final class HasDlqRecordsProvider
   }
 }
 
-String _$hasDlqRecordsHash() => r'cd5658ab3de38cf19867f9b492693314dc32cad8';
+String _$hasDlqRecordsHash() => r'1958636a3c4c9f95c791ac953b4fd88e29ffe753';

@@ -16,6 +16,9 @@
     "phase-k": "node scripts/verify_phase_k_normalization.js",
     "phase-l": "node ../scripts/seed_food_database.js"
   },
+  "dependencies": {
+    "node-appwrite": "^15.0.0"
+  },
   "devDependencies": {
     "axios": "^1.16.0",
     "csv-parser": "^3.2.1",

@@ -82,17 +82,15 @@ GlucoseMetadataService glucoseMetadataService(GlucoseMetadataServiceRef ref) {
 
 // ─── Stream & Cache Providers ───────────────────────────────────────────────
 
-@riverpod
-Stream<List<GlucoseReading>> glucoseReadingsStream(GlucoseReadingsStreamRef ref) {
+final glucoseReadingsStreamProvider = StreamProvider<List<GlucoseReading>>((ref) {
   final db = ref.watch(appDatabaseProvider);
   return db.watchRecentGlucoseReadings(limit: 30);
-}
+});
 
-@riverpod
-Stream<List<FoodLog>> todayFoodLogs(TodayFoodLogsRef ref) {
+final todayFoodLogsProvider = StreamProvider<List<FoodLog>>((ref) {
   final db = ref.watch(appDatabaseProvider);
   return db.watchTodayFoodLogs();
-}
+});
 
 @riverpod
 class GlucoseMetadataCache extends _$GlucoseMetadataCache {

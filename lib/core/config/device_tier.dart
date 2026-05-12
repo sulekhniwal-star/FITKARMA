@@ -44,6 +44,6 @@ class DeviceTierDetector {
 }
 
 @riverpod
-Future<DeviceTier> deviceTier(DeviceTierRef ref) {
+Future<DeviceTier> deviceTier(Ref ref) {
   return DeviceTierDetector.detect();
 }

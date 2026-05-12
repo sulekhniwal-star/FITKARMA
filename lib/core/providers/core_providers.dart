@@ -6,7 +6,7 @@ import '../database/app_database.dart';
 part 'core_providers.g.dart';
 
 @Riverpod(keepAlive: true)
-AppDatabase appDatabase(AppDatabaseRef ref) {
+AppDatabase appDatabase(Ref ref) {
   return AppDatabase();
 }
 
@@ -14,7 +14,7 @@ AppDatabase appDatabase(AppDatabaseRef ref) {
 /// 
 /// Reads configuration from --dart-define environment variables.
 @riverpod
-Client appwriteClient(AppwriteClientRef ref) {
+Client appwriteClient(Ref ref) {
   const endpoint = String.fromEnvironment('APPWRITE_ENDPOINT', defaultValue: 'https://cloud.appwrite.io/v1');
   const projectId = String.fromEnvironment('APPWRITE_PROJECT_ID');
 
@@ -29,31 +29,31 @@ Client appwriteClient(AppwriteClientRef ref) {
 }
 
 @riverpod
-Databases appwriteDatabases(AppwriteDatabasesRef ref) {
+Databases appwriteDatabases(Ref ref) {
   final client = ref.watch(appwriteClientProvider);
   return Databases(client);
 }
 
 @riverpod
-Storage appwriteStorage(AppwriteStorageRef ref) {
+Storage appwriteStorage(Ref ref) {
   final client = ref.watch(appwriteClientProvider);
   return Storage(client);
 }
 
 @riverpod
-Functions appwriteFunctions(AppwriteFunctionsRef ref) {
+Functions appwriteFunctions(Ref ref) {
   final client = ref.watch(appwriteClientProvider);
   return Functions(client);
 }
 
 @riverpod
-Account appwriteAccount(AppwriteAccountRef ref) {
+Account appwriteAccount(Ref ref) {
   final client = ref.watch(appwriteClientProvider);
   return Account(client);
 }
 
 @riverpod
-Future<bool> isPro(IsProRef ref) async {
+Future<bool> isPro(Ref ref) async {
   final auth = ref.watch(authProvider);
   final user = auth.value;
   if (user == null) return false;

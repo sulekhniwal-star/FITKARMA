@@ -48,7 +48,7 @@ final class AppDatabaseProvider
   }
 }
 
-String _$appDatabaseHash() => r'3d3a397d2ea952fc020fce0506793a5564e93530';
+String _$appDatabaseHash() => r'8c69eb46d45206533c176c88a926608e79ca927d';
 
 /// appwriteClientProvider — Configures the core Appwrite client.
 ///
@@ -100,7 +100,7 @@ final class AppwriteClientProvider
   }
 }
 
-String _$appwriteClientHash() => r'588ba90736c7150a28c2c3f2b2b717ddf36b58cc';
+String _$appwriteClientHash() => r'777cd590463dae4f9b03fbea9d73f1e0dfb18011';
 
 @ProviderFor(appwriteDatabases)
 final appwriteDatabasesProvider = AppwriteDatabasesProvider._();
@@ -141,7 +141,7 @@ final class AppwriteDatabasesProvider
   }
 }
 
-String _$appwriteDatabasesHash() => r'0dd371f80b0913101a7f25dc28df59ce2e75d777';
+String _$appwriteDatabasesHash() => r'd3841ab93533f56a0b57d7631fbd444af5aa467a';
 
 @ProviderFor(appwriteStorage)
 final appwriteStorageProvider = AppwriteStorageProvider._();
@@ -182,7 +182,7 @@ final class AppwriteStorageProvider
   }
 }
 
-String _$appwriteStorageHash() => r'df63e1e9bd5679a4627e84fa426c0bd4d1d76891';
+String _$appwriteStorageHash() => r'b1c835e05314f23fe37b1729a74bbb54963188e6';
 
 @ProviderFor(appwriteFunctions)
 final appwriteFunctionsProvider = AppwriteFunctionsProvider._();
@@ -223,7 +223,7 @@ final class AppwriteFunctionsProvider
   }
 }
 
-String _$appwriteFunctionsHash() => r'dde98ec414867fd35d39bbc4e3157725834638be';
+String _$appwriteFunctionsHash() => r'092cfb103b6c96f52da562909c80c2ee8569375a';
 
 @ProviderFor(appwriteAccount)
 final appwriteAccountProvider = AppwriteAccountProvider._();
@@ -264,7 +264,7 @@ final class AppwriteAccountProvider
   }
 }
 
-String _$appwriteAccountHash() => r'e40c83404bb3689a262bde501d894c3c8ac1787b';
+String _$appwriteAccountHash() => r'7c5c3bf21a5f8cc29d2fbcff5337c6cfc39ff979';
 
 @ProviderFor(isPro)
 final isProProvider = IsProProvider._();
@@ -297,4 +297,4 @@ final class IsProProvider
   }
 }
 
-String _$isProHash() => r'8297031fc0a08356b4b8c37f2c268607f4b320a9';
+String _$isProHash() => r'daa32388b468b581d2be19ff8d5fdb1a8eb8f148';

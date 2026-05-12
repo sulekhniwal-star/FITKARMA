@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:drift/drift.dart' show Value;
 import '../../../core/providers/core_providers.dart';
 import '../../../core/database/app_database.dart';
-import '../models/food_item.dart';
 
 part 'food_database_service.g.dart';
 
@@ -48,10 +48,19 @@ class FoodDatabaseService extends _$FoodDatabaseService {
     final localResults = await db.searchFoodItems(query ?? '').first;
     
     if (localResults.length >= 5) {
+      final results = localResults.map((e) => {
+        'id': e.id,
+        'name': e.name,
+        'source': e.source,
+        'priority': e.priority,
+        'caloriesPer100g': e.caloriesPer100g,
+        'bundled': e.isBundled,
+      }).toList();
+      
       return {
         'ok': true,
         'source': 'local',
-        'products': localResults.map((e) => e.toJson()).toList(),
+        'products': results,
       };
     }
 
@@ -65,33 +74,31 @@ class FoodDatabaseService extends _$FoodDatabaseService {
         }),
       );
 
-      if (execution.status == 'completed') {
+      if (execution.status.toString().contains('completed')) {
         final data = jsonDecode(execution.responseBody);
-        if (data['ok'] && data['source'] == 'appwrite') {
-          final products = (data['products'] as List)
-              .map((p) => FoodItem.fromJson(p))
-              .toList();
+        if (data['ok'] == true && data['source'] == 'appwrite') {
+          final products = (data['products'] as List).cast<Map<String, dynamic>>();
           await _cacheToDrift(products);
         }
         return data;
       }
     } catch (e) {
-      print('Error searching food: $e');
+      // ignore
     }
     return null;
   }
 
-  Future<void> _cacheToDrift(List<FoodItem> items) async {
+  Future<void> _cacheToDrift(List<Map<String, dynamic>> products) async {
     final db = ref.read(appDatabaseProvider);
-    final companions = items.map((item) => FoodItemsCompanion.insert(
-      id: item.id,
-      name: item.name,
-      source: item.source,
-      priority: item.priority,
-      caloriesPer100g: item.caloriesPer100g,
-      group: Value(item.group),
-      category: Value(item.category),
-      barcode: Value(item.barcode),
+    final companions = products.map((item) => FoodItemsCompanion.insert(
+      id: item['id'] ?? 'unknown',
+      name: item['name'] ?? 'Unknown',
+      source: item['source'] ?? 'appwrite',
+      priority: item['priority'] ?? 99,
+      caloriesPer100g: (item['caloriesPer100g'] ?? 0).toDouble(),
+      group: Value(item['group']),
+      category: Value(item['category']),
+      barcode: Value(item['barcode']),
       isBundled: Value(false),
     )).toList();
     

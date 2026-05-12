@@ -29,7 +29,7 @@ class FeatureFlags with _$FeatureFlags {
 }
 
 @riverpod
-Future<FeatureFlags> featureFlags(FeatureFlagsRef ref) async {
+Future<FeatureFlags> featureFlags(Ref ref) async {
   final functions = ref.watch(appwriteFunctionsProvider);
 
   try {
