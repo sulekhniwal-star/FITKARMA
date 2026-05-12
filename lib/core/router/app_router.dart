@@ -30,6 +30,7 @@ import '../../features/water/water_screen.dart';
 import '../../features/medication/medication_screen.dart';
 import '../../features/festival/festival_screen.dart';
 import '../../features/wedding/wedding_screen.dart';
+import '../../features/social/social_screen.dart';
 import 'transitions.dart';
 
 part 'app_router.g.dart';
@@ -182,7 +183,7 @@ GoRouter appRouter(Ref ref) {
       GoRoute(path: '/medication', builder: (context, state) => const MedicationScreen()),
       GoRoute(path: '/festival', builder: (context, state) => const FestivalScreen()),
       GoRoute(path: '/wedding', builder: (context, state) => const WeddingScreen()),
-      GoRoute(path: '/social', builder: (context, state) => const _PlaceholderScreen(title: 'Social')),
+      GoRoute(path: '/social', builder: (context, state) => const SocialScreen()),
 
       GoRoute(
         path: '/workout/active/:workoutId',

@@ -550,10 +550,10 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 8.18 Social Groups (`/social`) — Pro only
 
-- [ ] Family/friend group creation
-- [ ] Group feed (posts from members)
-- [ ] Leaderboard within group
-- [ ] ProGate wrapper
+- [x] Family/friend group creation
+- [x] Group feed (posts from members)
+- [x] Leaderboard within group
+- [x] ProGate wrapper
 
 ### 8.19 Settings (`/settings`) — Calm Zone
 
