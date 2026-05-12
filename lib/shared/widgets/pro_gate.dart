@@ -57,12 +57,14 @@ class ProGate extends ConsumerWidget {
                   const SizedBox(height: 16),
                   Text(
                     '$featureName is a Pro Feature',
-                    style: AppTypography.h1(color: Colors.white).copyWith(textAlign: TextAlign.center),
+                    style: AppTypography.h1(color: Colors.white),
+                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Unlock bespoke timeline milestone synthesis, specialized cultural meal optimization frameworks, and custom biometric monitoring pools.',
-                    style: AppTypography.bodySm(color: AppColorsDark.textSecondary).copyWith(textAlign: TextAlign.center),
+                    style: AppTypography.bodySm(color: AppColorsDark.textSecondary),
+                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 32),
 

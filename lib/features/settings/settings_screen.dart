@@ -107,7 +107,7 @@ class SettingsScreen extends ConsumerWidget {
     final notifier = ref.read(systemSettingsProvider.notifier);
 
     final authState = ref.watch(authProvider);
-    final user = authState.valueOrNull;
+    final user = authState.value;
 
     return AppScaffold.calmZone(
       appBar: AppBar(

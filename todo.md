@@ -739,7 +739,7 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
   - Results cached to Drift for future offline use
 - [x] Add `bundled: true` field to Tier 1 items
 - [x] Run `node scripts/seed_food_database.js` — completed successfully
-- [ ] Verify: Appwrite console shows documents in `food_database` (run with ENABLE_REAL_UPLOAD=true)
+- [x] Verify: Appwrite console shows documents in `food_database` (run with ENABLE_REAL_UPLOAD=true)
 
 #### Testing Checklist
 - [ ] Search "roti" returns ≥10 variants offline (Drift)

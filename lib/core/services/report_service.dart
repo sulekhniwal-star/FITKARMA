@@ -26,7 +26,7 @@ class ReportService extends _$ReportService {
         }),
       );
 
-      if (execution.status == 'completed') {
+      if (execution.status.toString().contains('completed')) {
         final data = jsonDecode(execution.responseBody);
         return data['shareUrl'];
       }

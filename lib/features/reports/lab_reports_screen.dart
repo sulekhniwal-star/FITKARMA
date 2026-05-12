@@ -311,9 +311,9 @@ class _LabReportsScreenState extends ConsumerState<LabReportsScreen> {
   Widget build(BuildContext context) {
     final reportsAsync = ref.watch(labReportsListProvider);
     final isProAsync = ref.watch(isProProvider);
-    final isProUser = isProAsync.valueOrNull ?? false;
+    final isProUser = isProAsync.value ?? false;
 
-    final list = reportsAsync.valueOrNull ?? [];
+    final list = reportsAsync.value ?? [];
 
     return AppScaffold.calmZone(
       appBar: AppBar(

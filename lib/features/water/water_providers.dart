@@ -14,15 +14,16 @@ class WaterTrackingState {
   });
 }
 
-class WaterNotifier extends StateNotifier<WaterTrackingState> {
-  final Ref ref;
+class WaterNotifier extends Notifier<WaterTrackingState> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    aOptions: AndroidOptions(),
   );
   static const _streakKey = 'user_hydration_streak_count';
 
-  WaterNotifier(this.ref) : super(WaterTrackingState()) {
+  @override
+  WaterTrackingState build() {
     _loadStreak();
+    return WaterTrackingState();
   }
 
   Future<void> _loadStreak() async {
@@ -64,9 +65,7 @@ class WaterNotifier extends StateNotifier<WaterTrackingState> {
   }
 }
 
-final waterTrackingProvider = StateNotifierProvider<WaterNotifier, WaterTrackingState>((ref) {
-  return WaterNotifier(ref);
-});
+final waterTrackingProvider = NotifierProvider<WaterNotifier, WaterTrackingState>(WaterNotifier.new);
 
 final todayWaterStreamProvider = StreamProvider<int>((ref) {
   final db = ref.watch(appDatabaseProvider);

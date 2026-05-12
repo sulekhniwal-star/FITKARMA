@@ -16,7 +16,7 @@ class WaterScreen extends ConsumerWidget {
     final notifier = ref.read(waterTrackingProvider.notifier);
 
     final todayAsync = ref.watch(todayWaterStreamProvider);
-    final currentTotalMl = todayAsync.valueOrNull ?? 0;
+    final currentTotalMl = todayAsync.value ?? 0;
 
     final double progressRatio = (currentTotalMl / state.dailyGoalMl).clamp(0.0, 1.0);
 

@@ -29,8 +29,8 @@ class GlassCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tier = ref.watch(deviceTierProvider).valueOrNull ?? DeviceTier.mid;
-    final isLowData = ref.watch(lowDataModeProvider).valueOrNull ?? false;
+    final tier = ref.watch(deviceTierProvider).value ?? DeviceTier.mid;
+    final isLowData = ref.watch(lowDataModeProvider).value ?? false;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final radius = customRadius ?? AppRadius.md;
 

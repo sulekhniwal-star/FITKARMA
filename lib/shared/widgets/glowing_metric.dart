@@ -23,7 +23,7 @@ class GlowingMetric extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tier = ref.watch(deviceTierProvider).valueOrNull ?? DeviceTier.mid;
+    final tier = ref.watch(deviceTierProvider).value ?? DeviceTier.mid;
     
     return Stack(
       alignment: Alignment.center,

@@ -115,7 +115,7 @@ Stream<ConnectivityResult> connectivityService(Ref ref) {
 
 @riverpod
 Duration syncInterval(Ref ref) {
-  final tier = ref.watch(deviceTierProvider).valueOrNull ?? DeviceTier.mid;
+  final tier = ref.watch(deviceTierProvider).value ?? DeviceTier.mid;
   switch (tier) {
     case DeviceTier.low:
       return const Duration(hours: 6);

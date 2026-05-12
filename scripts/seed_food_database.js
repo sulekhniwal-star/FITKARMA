@@ -60,12 +60,10 @@ async function uploadBatch(batch, batchIndex, totalBatches) {
     for (let i = 0; i < batch.length; i++) {
         const doc = batch[i];
         try {
-            const appwriteDoc = {
-                name: doc.name ? String(doc.name).substring(0, 200) : 'Unknown',
-                source: doc.source ? String(doc.source).substring(0, 20) : null,
-                caloriesPer100g: Number(doc.caloriesPer100g) || 0,
-                category: doc.category ? String(doc.category).substring(0, 50) : (doc.group ? String(doc.group).substring(0, 50) : null)
-            };
+            const appwriteDoc = { ...doc };
+            delete appwriteDoc.priority;
+            delete appwriteDoc.bundled;
+            delete appwriteDoc.group;
             await appwriteDatabases.createDocument(
                 APPWRITE_DATABASE_ID,
                 APPWRITE_COLLECTION_ID,
@@ -101,35 +99,75 @@ async function processFile() {
 
         totalProcessed++;
 
-        const srcMatch = cleanLine.match(/"source":"([^"]+)"/);
-        const src = srcMatch ? srcMatch[1] : 'unknown';
+        let itemObj = {};
+        try {
+            itemObj = JSON.parse(cleanLine.replace(/,+$/, ''));
+        } catch (e) {
+            // fallback
+        }
 
-        const priorityMatch = cleanLine.match(/"priority":([0-9]+)/);
-        const priority = priorityMatch ? parseInt(priorityMatch[1], 10) : 99;
-
+        const src = itemObj.source || 'unknown';
+        const priority = itemObj.priority !== undefined ? Number(itemObj.priority) : 99;
         const isTier1 = TIER1_SOURCES.has(src) || priority <= 4 || cleanLine.includes('"premium"') || cleanLine.includes('"phase-i"');
 
         if (isTier1) tier1Count++; else tier2Count++;
 
         if (batchIndex <= maxBatchesToGenerate) {
-            const nameMatch = cleanLine.match(/"name":"([^"]+)"/);
-            const name = nameMatch ? nameMatch[1] : `Food Document #${totalProcessed}`;
-            
-            const calMatch = cleanLine.match(/"(?:caloriesPer100g|energy_kcal)":([0-9.]+)/);
-            const caloriesPer100g = calMatch ? parseFloat(calMatch[1]) : 0;
+            const safeNum = val => (val !== undefined && val !== null && !isNaN(Number(val)) ? Number(val) : null);
+            const name = itemObj.name || `Food Document #${totalProcessed}`;
+            const caloriesPer100g = safeNum(itemObj.caloriesPer100g ?? itemObj.energy_kcal) || 0;
 
-            const groupMatch = cleanLine.match(/"group":"([^"]+)"/);
-            const categoryMatch = cleanLine.match(/"category":"([^"]+)"/);
+            let nameHindi = itemObj.nameHindi || null;
+            if (!nameHindi && itemObj.languageNames && itemObj.languageNames.H) {
+                nameHindi = Array.isArray(itemObj.languageNames.H) ? itemObj.languageNames.H.join(', ') : String(itemObj.languageNames.H);
+            }
+            const nameRegional = itemObj.nameRegional || itemObj.lang || null;
+            const servingSizesStr = typeof itemObj.servingSizes === 'object' && itemObj.servingSizes !== null 
+                ? JSON.stringify(itemObj.servingSizes) 
+                : (itemObj.servingSizes ? String(itemObj.servingSizes) : null);
 
-            currentBatch.push({
-                name,
-                source: src,
-                priority,
+            const enrichedDoc = {
+                name: name ? String(name).substring(0, 200) : 'Unknown',
+                nameHindi: nameHindi ? String(nameHindi).substring(0, 200) : null,
+                nameRegional: nameRegional ? String(nameRegional).substring(0, 200) : null,
+                category: itemObj.category ? String(itemObj.category).substring(0, 50) : (itemObj.group ? String(itemObj.group).substring(0, 50) : null),
+                cuisine: itemObj.cuisine ? String(itemObj.cuisine).substring(0, 50) : null,
                 caloriesPer100g,
+                proteinPer100g: safeNum(itemObj.proteinPer100g ?? itemObj.protein_g),
+                carbsPer100g: safeNum(itemObj.carbsPer100g ?? itemObj.carbs_g),
+                fatPer100g: safeNum(itemObj.fatPer100g ?? itemObj.fat_g),
+                fiberPer100g: safeNum(itemObj.fiberPer100g ?? itemObj.fiber_g),
+                barcode: itemObj.barcode ? String(itemObj.barcode).substring(0, 20) : null,
+                servingSizes: servingSizesStr ? servingSizesStr.substring(0, 500) : null,
+                emoji: itemObj.emoji ? String(itemObj.emoji).substring(0, 4) : null,
+                source: src ? String(src).substring(0, 20) : null,
+                calcium_mg: safeNum(itemObj.calcium_mg),
+                iron_mg: safeNum(itemObj.iron_mg),
+                vitaminC_mg: safeNum(itemObj.vitaminC_mg),
+                vitaminA_ug: safeNum(itemObj.vitaminA_ug),
+                vitaminD_ug: safeNum(itemObj.vitaminD_ug),
+                vitaminB12_ug: safeNum(itemObj.vitaminB12_ug),
+                folate_ug: safeNum(itemObj.folate_ug ?? itemObj.vitaminB9_folate_ug),
+                zinc_mg: safeNum(itemObj.zinc_mg),
+                sodium_mg: safeNum(itemObj.sodium_mg),
+                potassium_mg: safeNum(itemObj.potassium_mg),
+                magnesium_mg: safeNum(itemObj.magnesium_mg),
+                glycemicIndex: safeNum(itemObj.glycemicIndex),
+                omega3_g: safeNum(itemObj.omega3_g),
+                saturatedFat_g: safeNum(itemObj.saturatedFat_g),
+                transFat_g: safeNum(itemObj.transFat_g),
+                isVegan: Boolean(itemObj.isVegan),
+                isJain: Boolean(itemObj.isJain),
+                isSattvic: Boolean(itemObj.isSattvic),
+                isGlutenFree: Boolean(itemObj.isGlutenFree),
+                isNavratriSafe: Boolean(itemObj.isNavratriSafe),
+                isDiabeticFriendly: Boolean(itemObj.isDiabeticFriendly),
+                priority,
                 bundled: isTier1,
-                group: groupMatch ? groupMatch[1] : null,
-                category: categoryMatch ? categoryMatch[1] : null,
-            });
+                group: itemObj.group || null
+            };
+
+            currentBatch.push(enrichedDoc);
 
             if (currentBatch.length === 100) {
                 const batchFileName = `batch_${String(batchIndex).padStart(4, '0')}.json`;
@@ -187,9 +225,8 @@ async function processFile() {
 
     if (ENABLE_REAL_UPLOAD && appwriteDatabases && batchesForUpload.length > 0) {
         console.log('\n📤 Uploading batches to Appwrite...');
-        const batchesToUpload = batchesForUpload.slice(0, 5);
-        for (const { batch, index } of batchesToUpload) {
-            await uploadBatch(batch, index, batchesToUpload.length);
+        for (const { batch, index } of batchesForUpload) {
+            await uploadBatch(batch, index, batchesForUpload.length);
         }
         console.log('\n✨ Documents uploaded to Appwrite!');
     } else {

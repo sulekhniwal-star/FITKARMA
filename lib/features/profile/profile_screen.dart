@@ -85,7 +85,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final authAsync = ref.watch(authProvider);
-    final user = authAsync.valueOrNull;
+    final user = authAsync.value;
     final emailStr = user?.email ?? 'sulekhniwal@fitkarma.in';
 
     final metrics = ref.watch(userProfileMetricsProvider);

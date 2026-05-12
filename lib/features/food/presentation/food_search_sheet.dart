@@ -5,7 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/providers/core_providers.dart';
 import '../../../core/database/app_database.dart';
-import '../onboarding/onboarding_providers.dart';
+import '../../onboarding/onboarding_providers.dart';
 
 class FoodSearchSheet extends ConsumerStatefulWidget {
   const FoodSearchSheet({super.key});

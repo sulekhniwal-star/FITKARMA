@@ -26,7 +26,7 @@ class SmartImage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLowData = ref.watch(lowDataModeProvider).valueOrNull ?? false;
+    final isLowData = ref.watch(lowDataModeProvider).value ?? false;
 
     if (isLowData) {
       return Container(

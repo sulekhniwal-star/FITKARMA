@@ -40,7 +40,7 @@ class SleepScreen extends ConsumerWidget {
       });
     });
 
-    final logs = logsAsync.valueOrNull ?? [];
+    final logs = logsAsync.value ?? [];
     final latest = logs.isNotEmpty ? logs.first : null;
     final latestMeta = latest != null ? metadataMap[latest.id] ?? {} : {};
 

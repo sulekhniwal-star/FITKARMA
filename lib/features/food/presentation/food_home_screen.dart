@@ -30,10 +30,17 @@ class FoodHomeScreen extends ConsumerWidget {
           const SizedBox(width: 8),
         ],
       ),
-      body: foodLogsAsync.when(
-        data: (logs) => _buildContent(context, logs),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, s) => Center(child: Text('Error: $e')),
+      body: StreamBuilder<List<FoodLog>>(
+        stream: foodLogsAsync,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return _buildContent(context, snapshot.data!);
+        },
       ),
     );
   }

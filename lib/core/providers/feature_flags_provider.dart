@@ -7,7 +7,9 @@ part 'feature_flags_provider.freezed.dart';
 part 'feature_flags_provider.g.dart';
 
 @freezed
-class FeatureFlags with _$FeatureFlags {
+abstract class FeatureFlags with _$FeatureFlags {
+  const FeatureFlags._();
+
   const factory FeatureFlags({
     @Default(true) bool aiInsights,
     @Default(false) bool wearableSync,
@@ -38,7 +40,7 @@ Future<FeatureFlags> featureFlags(Ref ref) async {
         body: jsonEncode({'action': 'get_feature_flags'}),
       );
     
-    if (response.status == 'completed') {
+    if (response.status.toString().contains('completed')) {
       final data = jsonDecode(response.responseBody);
       return FeatureFlags.fromJson(data);
     }

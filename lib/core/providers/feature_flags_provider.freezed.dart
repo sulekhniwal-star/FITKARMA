@@ -219,8 +219,8 @@ return $default(_that.aiInsights,_that.wearableSync,_that.periodTracker,_that.so
 /// @nodoc
 @JsonSerializable()
 
-class _FeatureFlags implements FeatureFlags {
-  const _FeatureFlags({this.aiInsights = true, this.wearableSync = false, this.periodTracker = true, this.socialFeed = false, this.weddingPlanner = false, this.doshaQuiz = true, this.festivalCalendar = false, this.proSubscription = false, this.fhirExport = false, this.voiceLogging = false, this.cgmIntegration = false, this.pharmacySearch = false});
+class _FeatureFlags extends FeatureFlags {
+  const _FeatureFlags({this.aiInsights = true, this.wearableSync = false, this.periodTracker = true, this.socialFeed = false, this.weddingPlanner = false, this.doshaQuiz = true, this.festivalCalendar = false, this.proSubscription = false, this.fhirExport = false, this.voiceLogging = false, this.cgmIntegration = false, this.pharmacySearch = false}): super._();
   factory _FeatureFlags.fromJson(Map<String, dynamic> json) => _$FeatureFlagsFromJson(json);
 
 @override@JsonKey() final  bool aiInsights;
