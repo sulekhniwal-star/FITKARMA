@@ -90,7 +90,7 @@ final class SyncIntervalProvider
   }
 }
 
-String _$syncIntervalHash() => r'2badac23a01ddd44e624a32641200c8948966fca';
+String _$syncIntervalHash() => r'adf983fbaff012aca5ac9a309617477a27ca49d9';
 
 @ProviderFor(hasDlqRecords)
 final hasDlqRecordsProvider = HasDlqRecordsProvider._();

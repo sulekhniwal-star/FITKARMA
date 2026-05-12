@@ -1,4 +1,3 @@
-﻿import 'package:drift/drift.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'food_item.freezed.dart';

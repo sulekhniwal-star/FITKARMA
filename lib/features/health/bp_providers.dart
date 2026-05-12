@@ -2,10 +2,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
 import '../onboarding/onboarding_providers.dart';
+
+part 'bp_providers.g.dart';
 
 // ─── Classification Logic ───────────────────────────────────────────────────
 
@@ -41,7 +44,6 @@ enum BpClassification {
 
 class BpMetadataService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
     iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
   );
 
@@ -67,28 +69,31 @@ class BpMetadataService {
   }
 }
 
-final bpMetadataServiceProvider = Provider<BpMetadataService>((ref) {
+@riverpod
+BpMetadataService bpMetadataService(BpMetadataServiceRef ref) {
   return BpMetadataService();
-});
+}
 
 // ─── Stream & Cache Providers ───────────────────────────────────────────────
 
-final bpReadingsStreamProvider = StreamProvider<List<BpReading>>((ref) {
+@riverpod
+Stream<List<BpReading>> bpReadingsStream(BpReadingsStreamRef ref) {
   final db = ref.watch(appDatabaseProvider);
   return db.watchRecentBpReadings(limit: 30);
-});
+}
 
-class BpMetadataCacheNotifier extends StateNotifier<Map<String, Map<String, String?>>> {
-  final BpMetadataService _service;
-
-  BpMetadataCacheNotifier(this._service) : super({});
+@riverpod
+class BpMetadataCache extends _$BpMetadataCache {
+  @override
+  Map<String, Map<String, String?>> build() => {};
 
   Future<void> loadForReadings(List<BpReading> readings) async {
+    final service = ref.read(bpMetadataServiceProvider);
     final updated = {...state};
     bool changed = false;
     for (final r in readings) {
       if (!updated.containsKey(r.id)) {
-        updated[r.id] = await _service.getMetadata(r.id);
+        updated[r.id] = await service.getMetadata(r.id);
         changed = true;
       }
     }
@@ -98,18 +103,14 @@ class BpMetadataCacheNotifier extends StateNotifier<Map<String, Map<String, Stri
   }
 
   Future<void> save(String readingId, String? notes, String arm) async {
-    await _service.saveMetadata(readingId, notes, arm);
+    final service = ref.read(bpMetadataServiceProvider);
+    await service.saveMetadata(readingId, notes, arm);
     state = {
       ...state,
       readingId: {'notes': notes, 'arm': arm},
     };
   }
 }
-
-final bpMetadataCacheProvider = StateNotifierProvider<BpMetadataCacheNotifier, Map<String, Map<String, String?>>>((ref) {
-  final service = ref.watch(bpMetadataServiceProvider);
-  return BpMetadataCacheNotifier(service);
-});
 
 // Helper function to insert reading
 Future<void> logBpReading(

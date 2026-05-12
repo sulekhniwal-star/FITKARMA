@@ -40,7 +40,7 @@ class GlucoseScreen extends ConsumerWidget {
       });
     });
 
-    final readings = readingsAsync.valueOrNull ?? [];
+    final readings = readingsAsync.value ?? [];
     final latest = readings.isNotEmpty ? readings.first : null;
     final classification = latest != null
         ? GlucoseClassification.classify(latest.value, latest.timing)

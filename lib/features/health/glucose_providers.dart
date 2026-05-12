@@ -2,10 +2,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
 import '../onboarding/onboarding_providers.dart';
+
+part 'glucose_providers.g.dart';
 
 // ─── Classification Logic ───────────────────────────────────────────────────
 
@@ -47,7 +50,6 @@ enum GlucoseClassification {
 
 class GlucoseMetadataService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
     iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
   );
 
@@ -73,33 +75,37 @@ class GlucoseMetadataService {
   }
 }
 
-final glucoseMetadataServiceProvider = Provider<GlucoseMetadataService>((ref) {
+@riverpod
+GlucoseMetadataService glucoseMetadataService(GlucoseMetadataServiceRef ref) {
   return GlucoseMetadataService();
-});
+}
 
 // ─── Stream & Cache Providers ───────────────────────────────────────────────
 
-final glucoseReadingsStreamProvider = StreamProvider<List<GlucoseReading>>((ref) {
+@riverpod
+Stream<List<GlucoseReading>> glucoseReadingsStream(GlucoseReadingsStreamRef ref) {
   final db = ref.watch(appDatabaseProvider);
   return db.watchRecentGlucoseReadings(limit: 30);
-});
+}
 
-final todayFoodLogsProvider = StreamProvider<List<FoodLog>>((ref) {
+@riverpod
+Stream<List<FoodLog>> todayFoodLogs(TodayFoodLogsRef ref) {
   final db = ref.watch(appDatabaseProvider);
   return db.watchTodayFoodLogs();
-});
+}
 
-class GlucoseMetadataCacheNotifier extends StateNotifier<Map<String, Map<String, String?>>> {
-  final GlucoseMetadataService _service;
-
-  GlucoseMetadataCacheNotifier(this._service) : super({});
+@riverpod
+class GlucoseMetadataCache extends _$GlucoseMetadataCache {
+  @override
+  Map<String, Map<String, String?>> build() => {};
 
   Future<void> loadForReadings(List<GlucoseReading> readings) async {
+    final service = ref.read(glucoseMetadataServiceProvider);
     final updated = {...state};
     bool changed = false;
     for (final r in readings) {
       if (!updated.containsKey(r.id)) {
-        updated[r.id] = await _service.getMetadata(r.id);
+        updated[r.id] = await service.getMetadata(r.id);
         changed = true;
       }
     }
@@ -109,18 +115,14 @@ class GlucoseMetadataCacheNotifier extends StateNotifier<Map<String, Map<String,
   }
 
   Future<void> save(String readingId, String? notes, String? linkedFood) async {
-    await _service.saveMetadata(readingId, notes, linkedFood);
+    final service = ref.read(glucoseMetadataServiceProvider);
+    await service.saveMetadata(readingId, notes, linkedFood);
     state = {
       ...state,
       readingId: {'notes': notes, 'linkedFood': linkedFood},
     };
   }
 }
-
-final glucoseMetadataCacheProvider = StateNotifierProvider<GlucoseMetadataCacheNotifier, Map<String, Map<String, String?>>>((ref) {
-  final service = ref.watch(glucoseMetadataServiceProvider);
-  return GlucoseMetadataCacheNotifier(service);
-});
 
 // Helper function to insert reading
 Future<void> logGlucoseReading(

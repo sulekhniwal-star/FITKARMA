@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'emergency_providers.g.dart';
 
 class EmergencyContact {
   final String name;
@@ -26,17 +29,18 @@ class EmergencyContact {
       );
 }
 
-class EmergencyNotifier extends StateNotifier<List<EmergencyContact>> {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+@riverpod
+class EmergencyContacts extends _$EmergencyContacts {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   static const _storageKey = 'user_emergency_contacts_config';
 
-  EmergencyNotifier() : super([
-    EmergencyContact(name: 'Rohan Sharma', phone: '+91 98765 43210', relation: 'Spouse / Primary Companion'),
-    EmergencyContact(name: 'Dr. Vivek Mehta', phone: '+91 91234 56789', relation: 'Family Physician'),
-  ]) {
+  @override
+  List<EmergencyContact> build() {
     _loadContacts();
+    return [
+      EmergencyContact(name: 'Rohan Sharma', phone: '+91 98765 43210', relation: 'Spouse / Primary Companion'),
+      EmergencyContact(name: 'Dr. Vivek Mehta', phone: '+91 91234 56789', relation: 'Family Physician'),
+    ];
   }
 
   Future<void> _loadContacts() async {
@@ -46,12 +50,11 @@ class EmergencyNotifier extends StateNotifier<List<EmergencyContact>> {
         final list = jsonDecode(data) as List<dynamic>;
         final parsed = list.map((e) => EmergencyContact.fromJson(e as Map<String, dynamic>)).toList();
         if (parsed.isNotEmpty) {
-          // Keep exactly up to 2 configured contacts
-          state = parsed.take(2).toList();
-          // Pad if less than 2
-          while (state.length < 2) {
-            state.add(EmergencyContact(name: 'Unassigned Contact', phone: 'Tap to configure', relation: 'Companion'));
+          final res = parsed.take(2).toList();
+          while (res.length < 2) {
+            res.add(EmergencyContact(name: 'Unassigned Contact', phone: 'Tap to configure', relation: 'Companion'));
           }
+          state = res;
         }
       }
     } catch (_) {}
@@ -65,7 +68,3 @@ class EmergencyNotifier extends StateNotifier<List<EmergencyContact>> {
     } catch (_) {}
   }
 }
-
-final emergencyContactsProvider = StateNotifierProvider<EmergencyNotifier, List<EmergencyContact>>((ref) {
-  return EmergencyNotifier();
-});

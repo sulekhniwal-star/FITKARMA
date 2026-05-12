@@ -40,7 +40,7 @@ class BloodPressureScreen extends ConsumerWidget {
       });
     });
 
-    final readings = readingsAsync.valueOrNull ?? [];
+    final readings = readingsAsync.value ?? [];
     final latest = readings.isNotEmpty ? readings.first : null;
     final classification = latest != null
         ? BpClassification.classify(latest.systolic, latest.diastolic)

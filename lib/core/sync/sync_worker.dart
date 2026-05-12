@@ -125,6 +125,7 @@ Duration syncInterval(SyncIntervalRef ref) {
     case DeviceTier.high:
       return const Duration(minutes: 15);
   }
+  return const Duration(minutes: 30);
 }
 
 @riverpod

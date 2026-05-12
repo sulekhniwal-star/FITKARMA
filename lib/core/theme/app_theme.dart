@@ -11,26 +11,25 @@ class AppTheme {
   AppTheme._();
 
   static ThemeData dark({String? overrideFont}) {
-    const c = AppColorsDark;
     final textTheme = _buildTextTheme(
-      c.textPrimary,
-      c.textSecondary,
-      c.textMuted,
+      AppColorsDark.textPrimary,
+      AppColorsDark.textSecondary,
+      AppColorsDark.textMuted,
       overrideFont: overrideFont,
     );
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: c.bg1,
+      scaffoldBackgroundColor: AppColorsDark.bg1,
       colorScheme: const ColorScheme.dark(
-        primary: c.primary,
-        secondary: c.secondary,
-        surface: c.surface0,
-        error: c.error,
+        primary: AppColorsDark.primary,
+        secondary: AppColorsDark.secondary,
+        surface: AppColorsDark.surface0,
+        error: AppColorsDark.error,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onSurface: c.textPrimary,
+        onSurface: AppColorsDark.textPrimary,
         onError: Colors.white,
       ),
       textTheme: textTheme,
@@ -39,19 +38,19 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: c.textSecondary),
-        titleTextStyle: AppTypography.h1(color: c.textPrimary).copyWith(
+        iconTheme: const IconThemeData(color: AppColorsDark.textSecondary),
+        titleTextStyle: AppTypography.h1(color: AppColorsDark.textPrimary).copyWith(
           fontFamily: overrideFont,
         ),
       ),
       dividerTheme: const DividerThemeData(
-        color: c.divider,
+        color: AppColorsDark.divider,
         thickness: 1,
         space: 1,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: c.primary,
+          backgroundColor: AppColorsDark.primary,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadius.md),
@@ -64,7 +63,7 @@ class AppTheme {
         ),
       ),
       bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: c.surface1,
+        backgroundColor: AppColorsDark.surface1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
         ),
@@ -74,26 +73,25 @@ class AppTheme {
   }
 
   static ThemeData light({String? overrideFont}) {
-    const c = AppColorsLight;
     final textTheme = _buildTextTheme(
-      c.textPrimary,
-      c.textSecondary,
-      c.textMuted,
+      AppColorsLight.textPrimary,
+      AppColorsLight.textSecondary,
+      AppColorsLight.textMuted,
       overrideFont: overrideFont,
     );
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      scaffoldBackgroundColor: c.bg1,
+      scaffoldBackgroundColor: AppColorsLight.bg1,
       colorScheme: const ColorScheme.light(
-        primary: c.primary,
-        secondary: c.secondary,
-        surface: c.surface0,
-        error: AppColorsDark.error, // Reusing semantic error
+        primary: AppColorsLight.primary,
+        secondary: AppColorsLight.secondary,
+        surface: AppColorsLight.surface0,
+        error: AppColorsDark.error,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onSurface: c.textPrimary,
+        onSurface: AppColorsLight.textPrimary,
         onError: Colors.white,
       ),
       textTheme: textTheme,
@@ -102,19 +100,19 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: c.textSecondary),
-        titleTextStyle: AppTypography.h1(color: c.textPrimary).copyWith(
+        iconTheme: const IconThemeData(color: AppColorsLight.textSecondary),
+        titleTextStyle: AppTypography.h1(color: AppColorsLight.textPrimary).copyWith(
           fontFamily: overrideFont,
         ),
       ),
       dividerTheme: const DividerThemeData(
-        color: c.divider,
+        color: AppColorsLight.divider,
         thickness: 1,
         space: 1,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: c.primary,
+          backgroundColor: AppColorsLight.primary,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadius.md),
@@ -127,7 +125,7 @@ class AppTheme {
         ),
       ),
       bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: c.surface1,
+        backgroundColor: AppColorsLight.surface1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
         ),

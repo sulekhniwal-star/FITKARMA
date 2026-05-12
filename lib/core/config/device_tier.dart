@@ -15,10 +15,7 @@ class DeviceTierDetector {
     try {
       if (Platform.isAndroid) {
         final androidInfo = await DeviceInfoPlugin().androidInfo;
-        final int ramMb = androidInfo.totalMemory ~/ (1024 * 1024);
-        
-        if (ramMb < 2000) return DeviceTier.low;
-        if (ramMb < 4000) return DeviceTier.mid;
+        if (androidInfo.isLowRamDevice) return DeviceTier.low;
         return DeviceTier.high;
       }
       

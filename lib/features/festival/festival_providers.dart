@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/providers/core_providers.dart';
+
+part 'festival_providers.g.dart';
 
 class FestivalItem {
   final String id;
@@ -43,19 +46,13 @@ class FestivalItem {
       );
 }
 
-class FestivalNotifier extends StateNotifier<AsyncValue<List<FestivalItem>>> {
-  final Ref ref;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+@riverpod
+class FestivalsList extends _$FestivalsList {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   static const _cacheKey = 'local_festivals_seed_cache';
 
-  FestivalNotifier(this.ref) : super(const AsyncValue.loading()) {
-    fetchFestivals();
-  }
-
-  Future<void> fetchFestivals() async {
-    state = const AsyncValue.loading();
+  @override
+  Future<List<FestivalItem>> build() async {
     try {
       final databases = ref.read(appwriteDatabasesProvider);
       final res = await databases.listDocuments(
@@ -77,14 +74,12 @@ class FestivalNotifier extends StateNotifier<AsyncValue<List<FestivalItem>>> {
       }).toList();
 
       if (list.isNotEmpty) {
-        state = AsyncValue.data(list);
         _cacheLocally(list);
-        return;
+        return list;
       }
     } catch (_) {}
 
-    // Load from local secure storage cache or seed cultural array fallback
-    await _loadFallback();
+    return await _loadFallback();
   }
 
   Future<void> _cacheLocally(List<FestivalItem> items) async {
@@ -93,20 +88,18 @@ class FestivalNotifier extends StateNotifier<AsyncValue<List<FestivalItem>>> {
     } catch (_) {}
   }
 
-  Future<void> _loadFallback() async {
+  Future<List<FestivalItem>> _loadFallback() async {
     try {
       final str = await _storage.read(key: _cacheKey);
       if (str != null) {
         final decoded = jsonDecode(str) as List<dynamic>;
         final parsed = decoded.map((e) => FestivalItem.fromJson(e as Map<String, dynamic>)).toList();
         if (parsed.isNotEmpty) {
-          state = AsyncValue.data(parsed);
-          return;
+          return parsed;
         }
       }
     } catch (_) {}
 
-    // Seed magnificent native cultural Indian calendar array out of the box
     final seedArray = [
       FestivalItem(
         id: 'fest_diwali',
@@ -146,11 +139,7 @@ class FestivalNotifier extends StateNotifier<AsyncValue<List<FestivalItem>>> {
       ),
     ];
 
-    state = AsyncValue.data(seedArray);
     _cacheLocally(seedArray);
+    return seedArray;
   }
 }
-
-final festivalsListProvider = StateNotifierProvider<FestivalNotifier, AsyncValue<List<FestivalItem>>>((ref) {
-  return FestivalNotifier(ref);
-});

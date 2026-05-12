@@ -294,35 +294,30 @@ class AppDatabase extends _$AppDatabase {
 // ─── Connection Logic ────────────────────────────────────────────────────────
 
 QueryExecutor _openDatabase() {
-  return driftDatabase(
-    name: 'fitkarma_db',
-    native: const DriftNativeOptions(
-      sharePreparedStatements: true,
-      setup: _setupDatabase,
-    ),
-  );
-}
-
-Future<void> _setupDatabase(Database db) async {
-  final key = await _getOrCreateDbKey();
-  db.execute("PRAGMA key = '$key';");
-  db.execute("PRAGMA cipher_page_size = 4096;");
-  db.execute("PRAGMA kdf_iter = 64000;");
+  return LazyDatabase(() async {
+    final key = await _getOrCreateDbKey();
+    return driftDatabase(
+      name: 'fitkarma_db',
+      native: DriftNativeOptions(
+        setup: (database) {
+          database.execute("PRAGMA key = '$key';");
+          database.execute("PRAGMA cipher_page_size = 4096;");
+          database.execute("PRAGMA kdf_iter = 64000;");
+        },
+      ),
+    );
+  });
 }
 
 Future<String> _getOrCreateDbKey() async {
   const storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
     iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
   );
 
   String? key = await storage.read(key: 'fitkarma_db_key');
   if (key == null) {
-    // Generate a random 64-character hex key
+    // Generate a random 32-byte key
     final random = Uint8List(32);
-    // In a real app, use a proper CSPRNG. For now, random.secure() is sufficient.
-    // However, since we can't easily use random.secure() here without more imports,
-    // we'll assume a basic generation for now.
     key = base64Url.encode(random); 
     await storage.write(key: 'fitkarma_db_key', value: key);
   }

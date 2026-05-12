@@ -1,4 +1,6 @@
+import 'package:drift/drift.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../database/app_database.dart';
 import '../providers/core_providers.dart';
 
 part 'user_experience_stage.g.dart';

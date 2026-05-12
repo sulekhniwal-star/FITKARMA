@@ -7,7 +7,6 @@ export async function handleFoodSearch(data, context, req, res) {
 
   try {
     if (barcode) {
-      // 1. Check if barcode exists in our DB
       const existing = await databases.listDocuments('fitkarma-db', 'food_database', [
         Query.equal('barcode', barcode),
         Query.limit(1)
@@ -17,12 +16,10 @@ export async function handleFoodSearch(data, context, req, res) {
         return res.json({ ok: true, source: 'local', product: existing.documents[0] });
       }
 
-      // 2. Fetch from Open Food Facts
       const response = await axios.get(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
       if (response.data.status === 1) {
         const product = mapOFFProduct(response.data.product);
         
-        // 3. Cache it
         const saved = await databases.createDocument('fitkarma-db', 'food_database', ID.unique(), {
           ...product,
           source: 'off_barcode'
@@ -32,7 +29,6 @@ export async function handleFoodSearch(data, context, req, res) {
       }
       return res.json({ ok: false, error: "Product not found" }, 404);
     } else if (query) {
-      // Name search
       const response = await axios.get(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&json=true&page_size=10`);
       const products = response.data.products.map(p => mapOFFProduct(p));
       
@@ -43,6 +39,18 @@ export async function handleFoodSearch(data, context, req, res) {
   } catch (e) {
     error(`Error in handleFoodSearch: ${e.message}`);
     return res.json({ ok: false, error: e.message }, 500);
+  }
+}
+
+async function appwriteFullTextSearch(query, databases) {
+  try {
+    const response = await databases.listDocuments('fitkarma-db', 'food_database', [
+      Query.search('name', query),
+      Query.limit(20)
+    ]);
+    return response.documents;
+  } catch (e) {
+    return [];
   }
 }
 

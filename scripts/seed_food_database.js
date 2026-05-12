@@ -7,15 +7,12 @@ console.log('⚡ Initializing Phase L — Database Seeding, Tiering Partition & 
 const SEED_FILE = path.join(__dirname, '../assets/data/indian_foods_seed.json');
 const BATCH_DIR = path.join(__dirname, '../etl/output/batches');
 
-// Ensure output batch directory structure exists securely
 if (!fs.existsSync(BATCH_DIR)) {
     fs.mkdirSync(BATCH_DIR, { recursive: true });
 }
 
-// Criteria defining Tier 1 items optimized for offline mobile bundled SQLite/Drift pre-population
 const TIER1_SOURCES = new Set(['ifct2017', 'icmr_nin', 'indb', 'kaggle', 'spoonacular', 'fao_infoods', 'phase_i_expansion']);
 
-// Appwrite configuration
 const APPWRITE_ENDPOINT = process.env.APPWRITE_ENDPOINT || 'https://sgp.cloud.appwrite.io/v1';
 const APPWRITE_PROJECT_ID = process.env.APPWRITE_PROJECT_ID;
 const APPWRITE_API_KEY = process.env.APPWRITE_API_KEY;
@@ -25,6 +22,7 @@ const ENABLE_REAL_UPLOAD = process.env.ENABLE_REAL_UPLOAD === 'true';
 
 let appwriteClient = null;
 let appwriteDatabases = null;
+let batchesForUpload = [];
 
 async function initAppwrite() {
     if (!ENABLE_REAL_UPLOAD) return null;
@@ -48,7 +46,6 @@ async function initAppwrite() {
 async function uploadBatch(batch, index) {
     if (!appwriteDatabases) return false;
     
-    const baseDelay = 1000;
     for (const doc of batch) {
         try {
             await appwriteDatabases.createDocument(
@@ -57,7 +54,7 @@ async function uploadBatch(batch, index) {
                 `food_${index}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
                 doc
             );
-            await new Promise(r => setTimeout(r, baseDelay)); // Rate limiting
+            await new Promise(r => setTimeout(r, 50)); // Rate limiting
         } catch (e) {
             console.error(`  ⚠ Failed to upload ${doc.name}:`, e.message);
         }
@@ -137,10 +134,7 @@ async function uploadBatch(batch, index) {
                 const batchFilePath = path.join(BATCH_DIR, batchFileName);
                 fs.writeFileSync(batchFilePath, JSON.stringify(currentBatch, null, 2));
                 
-                if (ENABLE_REAL_UPLOAD && appwriteDatabases) {
-                    console.log(`📤 Uploading batch ${batchIndex}...`);
-                    await uploadBatch(currentBatch, batchIndex);
-                }
+                batchesForUpload.push({ batch: [...currentBatch], index: batchIndex });
                 
                 currentBatch = [];
                 batchIndex++;
@@ -157,21 +151,27 @@ async function uploadBatch(batch, index) {
             const batchFileName = `batch_${String(batchIndex).padStart(4, '0')}.json`;
             const batchFilePath = path.join(BATCH_DIR, batchFileName);
             fs.writeFileSync(batchFilePath, JSON.stringify(currentBatch, null, 2));
+            batchesForUpload.push({ batch: [...currentBatch], index: batchIndex });
             batchIndex++;
         }
 
-        const generatedDocsCount = (batchIndex - 1) * 100;
+        const generatedDocsCount = batchesForUpload.length * 100;
 
         console.log('\n📊 Phase L — Data Seeding & Integration Execution Report:');
         console.log('--------------------------------------------------------------------------------');
         console.log(`Total Unified Records Streamed      | ${totalProcessed.toLocaleString()} items`);
         console.log(`Tier 1 Offline Bundled Target Count | ${tier1Count.toLocaleString()} pre-loaded items (~95% coverage cache)`);
         console.log(`Tier 2 Cloud On-Demand Search Depth | ${tier2Count.toLocaleString()} items`);
-        console.log(`Appwrite Batches Exported to Disk   | ${batchIndex - 1} files (etl/output/batches/batch_NNNN.json)`);
+        console.log(`Appwrite Batches Exported to Disk   | ${batchesForUpload.length} files (etl/output/batches/batch_NNNN.json)`);
         console.log(`Total Documents Packaged for Upload | ${generatedDocsCount.toLocaleString()} documents`);
         console.log('--------------------------------------------------------------------------------');
 
         if (ENABLE_REAL_UPLOAD && appwriteDatabases) {
+            console.log('\n📤 Uploading batches to Appwrite...');
+            for (const { batch, index } of batchesForUpload) {
+                console.log(`  Uploading batch ${index}/${batchesForUpload.length}...`);
+                await uploadBatch(batch, index);
+            }
             console.log('\n✨ Documents successfully uploaded to Appwrite!');
             console.log('✨ Phase L integration complete - verify via Appwrite console.');
         } else {
