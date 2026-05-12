@@ -479,10 +479,10 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 8.9 Mental Health Hub (`/mental-health`) — Pattern A
 
-- [ ] CBT Insight cards
-- [ ] Breathing exercise selector: 4-7-8, Box, 2-1-4-1 → routes to BreathingCircle screen (Pattern C)
-- [ ] Burnout gauge (self-assessment)
-- [ ] Indian crisis helplines always visible (BilingualLabel):
+- [x] CBT Insight cards
+- [x] Breathing exercise selector: 4-7-8, Box, 2-1-4-1 → routes to BreathingCircle screen (Pattern C)
+- [x] Burnout gauge (self-assessment)
+- [x] Indian crisis helplines always visible (BilingualLabel):
   - iCall: 9152987821
   - Vandrevala: 1860-2662-345
   - NIMHANS: 080-46110007

@@ -19,6 +19,8 @@ import '../../features/health/steps_screen.dart';
 import '../../features/health/sleep_screen.dart';
 import '../../features/karma/karma_screen.dart';
 import '../../features/journal/journal_screen.dart';
+import '../../features/mental_health/mental_health_screen.dart';
+import '../../features/mental_health/breathing_circle_screen.dart';
 import 'transitions.dart';
 
 part 'app_router.g.dart';
@@ -141,8 +143,12 @@ GoRouter appRouter(Ref ref) {
         path: '/mental-health',
         builder: (context, state) => const SensitiveScreenGuard(
           screenId: 'mental-health',
-          child: _PlaceholderScreen(title: 'Mental Health'),
+          child: MentalHealthScreen(),
         ),
+      ),
+      GoRoute(
+        path: '/mental-health/breathing',
+        builder: (context, state) => const BreathingCircleScreen(),
       ),
       GoRoute(path: '/profile', builder: (context, state) => const _PlaceholderScreen(title: 'Profile')),
       GoRoute(path: '/emergency', builder: (context, state) => const _PlaceholderScreen(title: 'Emergency')),
