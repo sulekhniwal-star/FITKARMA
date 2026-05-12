@@ -171,6 +171,13 @@ class MentalHealthNotifier extends Notifier<MentalHealthState> {
 
 final mentalHealthStateProvider = NotifierProvider<MentalHealthNotifier, MentalHealthState>(MentalHealthNotifier.new);
 
-final selectedBreathingExerciseProvider = StateProvider<BreathingExercise?>((ref) {
-  return null;
-});
+class SelectedBreathingExerciseNotifier extends Notifier<BreathingExercise?> {
+  @override
+  BreathingExercise? build() => null;
+
+  void select(BreathingExercise? exercise) {
+    state = exercise;
+  }
+}
+
+final selectedBreathingExerciseProvider = NotifierProvider<SelectedBreathingExerciseNotifier, BreathingExercise?>(SelectedBreathingExerciseNotifier.new);

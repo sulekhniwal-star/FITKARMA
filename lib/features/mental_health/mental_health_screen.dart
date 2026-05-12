@@ -20,7 +20,7 @@ class _MentalHealthScreenState extends ConsumerState<MentalHealthScreen> {
   int? _expandedCbtIndex;
 
   void _routeToBreathing(BreathingExercise exercise) {
-    ref.read(selectedBreathingExerciseProvider.notifier).state = exercise;
+    ref.read(selectedBreathingExerciseProvider.notifier).select(exercise);
     context.push('/mental-health/breathing');
   }
 

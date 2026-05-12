@@ -100,12 +100,15 @@ class ActiveWorkoutState {
   }
 }
 
-class ActiveWorkoutNotifier extends FamilyNotifier<ActiveWorkoutState, String> {
+class ActiveWorkoutNotifier extends Notifier<ActiveWorkoutState> {
+  ActiveWorkoutNotifier(this.arg);
+
+  final String arg;
   Timer? _timer;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   @override
-  ActiveWorkoutState build(String arg) {
+  ActiveWorkoutState build() {
     final parts = arg.split('_');
     final typeStr = parts.length > 1 ? Uri.decodeComponent(parts.sublist(1).join('_')) : 'Hypertrophy Power Circuit';
     final stateObj = ActiveWorkoutState.initial(parts[0], typeStr);

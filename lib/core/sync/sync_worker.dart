@@ -12,12 +12,12 @@ part 'sync_worker.g.dart';
 
 /// SyncWorker — Manages data synchronization between local Drift and remote Appwrite.
 class SyncWorker {
-  final Databases databases;
+  final TablesDB tablesDb;
   final AppDatabase db;
   final bool isLowDataMode;
 
   SyncWorker({
-    required this.databases,
+    required this.tablesDb,
     required this.db,
     this.isLowDataMode = false,
   });
@@ -42,7 +42,7 @@ class SyncWorker {
     await _syncTable('water_logs', db.waterLogs);
   }
 
-  Future<void> _syncTable(String collectionId, dynamic table) async {
+  Future<void> _syncTable(String tableId, dynamic table) async {
     final query = db.select(table)..where((t) {
       final st = (t as dynamic).syncStatus;
       final fa = (t as dynamic).failedAttempts;
@@ -52,11 +52,11 @@ class SyncWorker {
     final pending = await query.get();
 
     for (final row in pending) {
-      await _pushRecord(collectionId, table, row);
+      await _pushRecord(tableId, table, row);
     }
   }
 
-  Future<void> _pushRecord(String collectionId, dynamic table, dynamic row) async {
+  Future<void> _pushRecord(String tableId, dynamic table, dynamic row) async {
     try {
       final String? remoteId = row.remoteId;
       final Map<String, dynamic> data = row.toJson();
@@ -67,10 +67,10 @@ class SyncWorker {
       data.remove('updatedAt');
       
       if (remoteId == null) {
-        final doc = await databases.createDocument(
+        final doc = await tablesDb.createRow(
           databaseId: 'main',
-          collectionId: collectionId,
-          documentId: row.id,
+          tableId: tableId,
+          rowId: row.id,
           data: data,
         );
         
@@ -81,10 +81,10 @@ class SyncWorker {
           ),
         );
       } else {
-        await databases.updateDocument(
+        await tablesDb.updateRow(
           databaseId: 'main',
-          collectionId: collectionId,
-          documentId: remoteId,
+          tableId: tableId,
+          rowId: remoteId,
           data: data,
         );
         
@@ -124,7 +124,6 @@ Duration syncInterval(Ref ref) {
     case DeviceTier.high:
       return const Duration(minutes: 15);
   }
-  return const Duration(minutes: 30);
 }
 
 @riverpod

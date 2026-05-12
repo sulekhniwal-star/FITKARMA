@@ -48,7 +48,6 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
   Widget build(BuildContext context) {
     final state = ref.watch(karmaStateProvider);
     final formattedXp = NumberFormat('#,###').format(state.totalXp);
-    final prevLvlTarget = (state.currentLevel - 1) * 600;
 
     return AppScaffold.patternB(
       appBar: AppBar(
@@ -74,9 +73,9 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             decoration: BoxDecoration(
-              color: AppColorsDark.surface0.withOpacity(0.4),
+              color: AppColorsDark.surface0.withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(100),
-              border: Border.all(color: AppColorsDark.accent.withOpacity(0.5)),
+              border: Border.all(color: AppColorsDark.accent.withValues(alpha: 0.5)),
             ),
             child: Text(
               state.badgeTitle,
@@ -123,7 +122,7 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
                     height: 10,
                     child: LinearProgressIndicator(
                       value: state.levelProgressRatio,
-                      backgroundColor: AppColorsDark.surface0.withOpacity(0.5),
+                      backgroundColor: AppColorsDark.surface0.withValues(alpha: 0.5),
                       valueColor: const AlwaysStoppedAnimation<Color>(AppColorsDark.accent),
                     ),
                   ),
@@ -168,7 +167,7 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
               indicator: BoxDecoration(
                 color: AppColorsDark.surface1,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColorsDark.accent.withOpacity(0.3)),
+                border: Border.all(color: AppColorsDark.accent.withValues(alpha: 0.3)),
               ),
               labelColor: AppColorsDark.accent,
               unselectedLabelColor: AppColorsDark.textSecondary,
@@ -299,7 +298,7 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
                 child: Icon(icon, size: 16, color: color),
               ),
               const SizedBox(width: 8),
@@ -337,7 +336,7 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: AppColorsDark.accent.withOpacity(0.15),
+                        color: AppColorsDark.accent.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(chal.reward, style: AppTypography.labelSm(color: AppColorsDark.accent)),
@@ -409,7 +408,7 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
               children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: color.withOpacity(0.15), shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: color.withValues(alpha: 0.15), shape: BoxShape.circle),
                   child: Icon(icon, size: 16, color: color),
                 ),
                 const SizedBox(width: 12),
@@ -449,7 +448,7 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
                     height: 48,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: ach.isUnlocked ? AppColorsDark.accent.withOpacity(0.15) : AppColorsDark.surface2,
+                      color: ach.isUnlocked ? AppColorsDark.accent.withValues(alpha: 0.15) : AppColorsDark.surface2,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(ach.icon, style: const TextStyle(fontSize: 24)),
@@ -512,9 +511,9 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColorsDark.purple.withOpacity(0.1),
+              color: AppColorsDark.purple.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColorsDark.purple.withOpacity(0.3)),
+              border: Border.all(color: AppColorsDark.purple.withValues(alpha: 0.3)),
             ),
             child: Row(
               children: [

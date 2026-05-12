@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../core/providers/core_providers.dart';
+import '../onboarding/onboarding_providers.dart';
 
 class GroupMemberScore {
   final String memberId;
@@ -190,7 +190,7 @@ class SocialGroupsNotifier extends Notifier<List<SocialGroup>> {
   Future<void> createGroup(String name) async {
     final auth = ref.read(authProvider);
     final user = auth.value;
-    final myName = user?.name?.isNotEmpty == true ? user!.name : 'You';
+    final myName = (user != null && user.name.isNotEmpty) ? user.name : 'You';
 
     final newGrp = SocialGroup(
       id: 'grp_${DateTime.now().millisecondsSinceEpoch}',
@@ -217,7 +217,7 @@ class SocialGroupsNotifier extends Notifier<List<SocialGroup>> {
   Future<void> addPost(String groupId, String content) async {
     final auth = ref.read(authProvider);
     final user = auth.value;
-    final myName = user?.name?.isNotEmpty == true ? user!.name : 'You';
+    final myName = (user != null && user.name.isNotEmpty) ? user.name : 'You';
 
     final newPost = GroupPost(
       id: 'p_${DateTime.now().millisecondsSinceEpoch}',

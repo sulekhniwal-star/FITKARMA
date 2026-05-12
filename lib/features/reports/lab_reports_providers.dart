@@ -59,22 +59,23 @@ class LabReportsNotifier extends Notifier<AsyncValue<List<LabReportItem>>> {
   Future<void> fetchReports() async {
     state = const AsyncValue.loading();
     try {
-      final databases = ref.read(appwriteDatabasesProvider);
+      final client = ref.read(appwriteClientProvider);
+      final tablesDb = TablesDB(client);
       final auth = ref.read(authProvider);
       final user = auth.value;
       final uId = user?.$id ?? 'client_user';
 
-      // Attempt Appwrite Cloud collection fetch
-      final res = await databases.listDocuments(
+      // Attempt Appwrite Cloud table fetch
+      final res = await tablesDb.listRows(
         databaseId: 'fitkarma-db',
-        collectionId: 'lab_reports',
+        tableId: 'lab_reports',
         queries: [
           Query.equal('userId', uId),
           Query.orderDesc('date'),
         ],
       );
 
-      final list = res.documents.map((d) {
+      final list = res.rows.map((d) {
         final data = d.data;
         return LabReportItem(
           id: d.$id,
@@ -167,7 +168,7 @@ class LabReportsNotifier extends Notifier<AsyncValue<List<LabReportItem>>> {
     String? storageId;
     try {
       // Simulate Appwrite Storage Bucket upload payload sequence
-      final storage = ref.read(appwriteStorageProvider);
+      ref.read(appwriteStorageProvider);
       // In real scenario uses storage.createFile(bucketId: 'fitkarma-vault', fileId: ID.unique(), file: InputFile.fromPath(...))
       storageId = 'file_vault_$uuid';
     } catch (_) {
@@ -185,11 +186,12 @@ class LabReportsNotifier extends Notifier<AsyncValue<List<LabReportItem>>> {
     );
 
     try {
-      final databases = ref.read(appwriteDatabasesProvider);
-      await databases.createDocument(
+      final client = ref.read(appwriteClientProvider);
+      final tablesDb = TablesDB(client);
+      await tablesDb.createRow(
         databaseId: 'fitkarma-db',
-        collectionId: 'lab_reports',
-        documentId: uuid,
+        tableId: 'lab_reports',
+        rowId: uuid,
         data: {
           'userId': uId,
           'title': title,

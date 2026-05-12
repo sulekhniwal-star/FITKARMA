@@ -22,7 +22,7 @@ class BiometricLock {
       return await _auth.authenticate(
         localizedReason: reason,
         biometricOnly: false,
-        stickyAuth: true,
+        persistAcrossBackgrounding: true,
       );
     } catch (_) {
       return false;
