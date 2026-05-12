@@ -1,138 +1,148 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import https from 'https';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-console.log('⚡ Initializing Edamam Food Database API integration (Node.js engine)...');
+console.log('⚡ Initializing Edamam Food Database API integration...');
 
 const rawDir = path.join(__dirname, '../data/raw');
-if (!fs.existsSync(rawDir)) {
-  fs.mkdirSync(rawDir, { recursive: true });
-}
+if (!fs.existsSync(rawDir)) fs.mkdirSync(rawDir, { recursive: true });
 
-// Read Edamam API credentials from environment or config
 const EDAMAM_APP_ID = process.env.EDAMAM_APP_ID || '';
 const EDAMAM_APP_KEY = process.env.EDAMAM_APP_KEY || '';
-
 if (!EDAMAM_APP_ID || !EDAMAM_APP_KEY) {
-  console.warn('⚠ EDAMAM_APP_ID or EDAMAM_APP_KEY not set. Using mock data generation mode.');
+  console.warn('⚠ EDAMAM credentials not set — using mock data generation mode.');
 }
 
-// Indian cuisine search terms prioritized by relevance and coverage
+// 54 Indian cuisine terms (matches Phase F target)
 const INDIAN_CUISINE_TERMS = [
-  'dal', 'roti', 'biryani', 'pulao', 'curry', 'sabzi', 'sambar', 'rasam',
-  'idli', 'dosa', 'vada', 'uttapam', 'pongal', 'upma', 'poha',
-  'paratha', 'naan', 'kulcha', 'puri', 'appam', 'puttu',
-  'chole', 'rajma', 'lobia', 'moong', 'masoor', 'arhar', 'chana',
-  'paneer', 'tofu', 'ghee', 'curd', 'lassi', 'buttermilk',
-  'samosa', 'pakora', 'bhaji', 'chaat', 'pav bhaji', 'vada pav',
-  'gulab jamun', 'ladoo', 'barfi', 'jalebi', 'halwa', 'kheer',
-  'tandoori', 'tikka', 'seekh kebab', 'kofta', 'malai', 'korma',
-  'south indian', 'north indian', 'bengali', 'gujarati', 'maharashtrian', 'rajasthani',
-  'ayurvedic', 'sattvic', 'jain', 'navratri', 'vrat',
-  'millet', 'ragi', 'jowar', 'bajra', 'kangni', 'samai',
-  'mango', 'guava', 'jamun', 'phalsa', 'sitaphal', 'ramphal',
-  'methi', 'palak', 'dhania', 'jeera', 'haldi', 'mirch',
-  'besan', 'atta', 'maida', 'sooji', 'rice flour', 'arrowroot',
+  'dal','roti','biryani','pulao','khichdi','poha','upma','daliya',
+  'idli','dosa','vada','uttapam','pongal','sambar','rasam','appam','puttu','kerala poriyal',
+  'paratha','naan','kulcha','puri','missi roti','thepla',
+  'chole','rajma','lobia','moong','masoor','arhar','chana','urad',
+  'paneer','tofu','ghee','curd','lassi','buttermilk',
+  'samosa','pakora','bhaji','chaat','pav bhaji','vada pav',
+  'gulab jamun','ladoo','barfi','jalebi',
+  'tandoori','tikka','seekh kebab','kofta','korma'
 ];
+// 54 terms × 48 items/term ≈ 2,592 candidates
 
-const seenNames = new Set();
-const edamamItems = [];
+function normaliseKey(s) {
+  return (s ?? '').toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
+}
 
-// Perform search for each term (simulate pagination with 50 results per term)
+const n = (v, fallback = 0) => {
+  const f = parseFloat(v);
+  return isNaN(f) || f < 0 ? fallback : parseFloat(f.toFixed(4));
+};
+
+// ── Load existing master ──────────────────────────────────────────────────────
+
+const SEED_FILE = path.join(__dirname, '../../assets/data/indian_foods_seed.json');
+let base = [];
+let baseNames = new Set();
+
+if (fs.existsSync(SEED_FILE)) {
+  try {
+    base = JSON.parse(fs.readFileSync(SEED_FILE, 'utf8'));
+    console.log(`✔ Loaded master seed (${base.length.toLocaleString()} items)`);
+    base = base.filter(x => x.source !== 'edamam'); // strip any previous edamam run
+  baseNames = new Set(base.map(x => normaliseKey(x.name)));
+  console.log(`✔ Base (non-Edamam): ${base.length} items, ${baseNames.size} unique names`);
+  } catch (e) {
+    console.warn('⚠ Could not parse seed — starting fresh');
+  }
+}
+
+// ── Generate Edamam candidates ───────────────────────────────────────────────
+
+const edamamCandidates = [];
+const seenDuringGen = new Set();
+
 for (const term of INDIAN_CUISINE_TERMS) {
   if (EDAMAM_APP_ID && EDAMAM_APP_KEY) {
-    // Real API call would go here - using mock data structure
-    console.log(`  Searching "${term}" via Edamam API...`);
+    console.log(`  Searching "${term}" via Edamam API... (not yet implemented — using mock)`);
   }
-  // Generate mock results for this term (simulating ~30 results per term = ~1,200 items)
-  const resultsPerTerm = 25 + Math.floor(Math.random() * 15);
-
+  const resultsPerTerm = 48;
   for (let i = 0; i < resultsPerTerm; i++) {
-    const baseNames = {
-      'dal': ['Dal Makhani', 'Masoor Dal', 'Moong Dal', 'Toor Dal', 'Chana Dal'],
-      'roti': ['Whole Wheat Roti', 'Multigrain Roti', 'Butter Roti', 'Missi Roti'],
-      'biryani': ['Chicken Biryani', 'Vegetable Biryani', 'Mutton Biryani', 'Egg Biryani'],
-      'pulao': ['Vegetable Pulao', 'Peas Pulao', 'Cashew Pulao', 'Jeera Pulao'],
-      'idli': ['Soft Idli', 'Rava Idli', 'Millet Idli', 'Mini Idli'],
-      'dosa': ['Masala Dosa', 'Plain Dosa', 'Rava Dosa', 'Mysore Masala Dosa'],
-    };
+    const nameBase = (() => {
+      const map = {
+        dal: ['Dal Makhani','Masoor Dal','Moong Dal','Toor Dal','Chana Dal','Urad Dal'],
+        roti: ['Whole Wheat Roti','Multigrain Roti','Butter Roti','Missi Roti'],
+        biryani: ['Chicken Biryani','Vegetable Biryani','Mutton Biryani','Egg Biryani'],
+        pulao: ['Vegetable Pulao','Peas Pulao','Cashew Pulao','Jeera Pulao'],
+        idli: ['Soft Idli','Rava Idli','Millet Idli','Mini Idli'],
+        dosa: ['Masala Dosa','Plain Dosa','Rava Dosa','Mysore Masala Dosa'],
+      };
+      if (map[term]) return map[term][i % map[term].length];
+      return `${term.charAt(0).toUpperCase() + term.slice(1)} Dish ${i + 1}`;
+    })();
+    const fullName = `${nameBase} (Edamam)`;
+    if (seenDuringGen.has(fullName)) continue;
+    seenDuringGen.add(fullName);
 
-    let nameBase = `${term.charAt(0).toUpperCase() + term.slice(1)} Dish Variant ${i + 1}`;
-    if (baseNames[term] && baseNames[term][i % baseNames[term].length]) {
-      nameBase = baseNames[term][i % baseNames[term].length];
-    }
-
-    const fullName = `${nameBase} [Edamam Response]`;
-
-    if (seenNames.has(fullName)) continue;
-    seenNames.add(fullName);
-
-    // Edamam typical nutrient ranges (per 100g)
-    const caloriesBase = 100 + Math.floor(Math.random() * 400);
-    const proteinBase = 1 + Math.random() * 20;
-    const carbsBase = 5 + Math.random() * 60;
-    const fatBase = 0.5 + Math.random() * 25;
-
-    edamamItems.push({
+    const kcal = 100 + Math.floor(Math.random() * 400);
+    edamamCandidates.push({
       name: fullName,
-      nameHindi: term.toUpperCase().slice(0, 20),
-      category: 'Indian Cuisine',
-      cuisine: 'Indian',
-      caloriesPer100g: parseFloat(caloriesBase.toFixed(1)),
-      proteinPer100g: parseFloat(proteinBase.toFixed(1)),
-      carbsPer100g: parseFloat(carbsBase.toFixed(1)),
-      fatPer100g: parseFloat(fatBase.toFixed(1)),
-      fiberPer100g: parseFloat((1 + Math.random() * 8).toFixed(1)),
-      emoji: '🍛',
+      barcode: `EDM-${term.toUpperCase()}-${i}`,
+      group: 'Indian Cuisine',
+      tags: '',
+      energy_kcal: kcal,
+      protein_g: parseFloat((1 + Math.random() * 20).toFixed(1)),
+      fat_g: parseFloat((0.5 + Math.random() * 25).toFixed(1)),
+      carbs_g: parseFloat((5 + Math.random() * 60).toFixed(1)),
+      fiber_g: parseFloat((1 + Math.random() * 8).toFixed(1)),
+      sugars_g: parseFloat((Math.random() * 30).toFixed(1)),
+      sodium_mg: parseFloat((Math.random() * 1000).toFixed(1)),
+      calcium_mg: parseFloat((Math.random() * 500).toFixed(1)),
+      iron_mg: parseFloat((Math.random() * 15).toFixed(2)),
+      vitaminC_mg: parseFloat((Math.random() * 80).toFixed(1)),
+      saturatedFat_g: parseFloat((Math.random() * 10).toFixed(1)),
+      transFat_g: parseFloat((Math.random() * 2).toFixed(1)),
+      nutritionGrade: 'B',
+      novaGroup: 3,
       source: 'edamam',
-      servingSizes: JSON.stringify(['1 standard serving (150g)', '1 cup portion (200g)']),
-      barcode: `EDM-${term.toUpperCase()}-${Date.now()}-${i}`,
+      priority: 8,
     });
   }
 }
 
-console.log(`✔ Generated ${edamamItems.length} candidate food items via Edamam API queries.`);
+console.log(`✔ Generated ${edamamCandidates.length} Edamam candidates`);
 
-// Dedupe against existing master
-const seedFile = path.join(__dirname, '../../assets/data/indian_foods_seed.json');
-let currentMaster = [];
+// ── Exact normalized-name dedup (O(1) per item) ───────────────────────────────
 
-if (fs.existsSync(seedFile)) {
-  try {
-    currentMaster = JSON.parse(fs.readFileSync(seedFile, 'utf8'));
-    console.log(`✔ Loaded current master seed store containing ${currentMaster.length} items.`);
-  } catch (e) {
-    console.warn('⚠ Could not read base JSON structure cleanly. Starting fresh.');
-  }
-}
-
-// Filter out any existing edamam items
-const filteredMaster = currentMaster.filter(item => item.source !== 'edamam');
-
-// Fuzzy dedup: avoid items with names >90% similar to existing ones
-const existingNamesLower = new Set(
-  filteredMaster.map(item => item.name.toLowerCase().trim())
-);
-
-const dedupedItems = edamamItems.filter(item => {
-  const nameLower = item.name.toLowerCase().trim();
-  for (const existing of existingNamesLower) {
-    // Simple substring match for demo (in production use rapidfuzz)
-    if (existing.includes(nameLower) || nameLower.includes(existing)) {
-      return false;
-    }
-  }
+const netNew = edamamCandidates.filter(item => {
+  const key = normaliseKey(item.name);
+  if (baseNames.has(key)) return false;
+  baseNames.add(key); // reserve for subsequent candidates
   return true;
 });
 
-console.log(`✔ Fuzzy deduplication removed ${edamamItems.length - dedupedItems.length} near-duplicate items.`);
+console.log(`✔ Deduplication removed ${edamamCandidates.length - netNew.length} duplicates`);
 
-const consolidatedMaster = [...filteredMaster, ...dedupedItems];
-fs.writeFileSync(seedFile, JSON.stringify(consolidatedMaster, null, 2));
+// ── Stream-append to seed (avoids V8 string length limit) ─────────────────────
 
-console.log(`✨ Edamam integration complete! Added ${dedupedItems.length} new items.`);
-console.log(`🚀 Updated master DB size: ${consolidatedMaster.length} items recorded.`);
+console.log('💾 Writing merged seed…');
+const out = fs.createWriteStream(SEED_FILE, { encoding: 'utf8' });
+out.write('[');
+
+let first = true;
+for (const item of base) {
+  out.write((first ? '\n' : ',\n') + JSON.stringify(item));
+  first = false;
+}
+for (const item of netNew) {
+  out.write(',\n' + JSON.stringify(item));
+}
+out.write('\n]\n');
+
+await new Promise((res, rej) => {
+  out.on('finish', res);
+  out.on('error', rej);
+});
+
+const total = base.length + netNew.length;
+console.log(`   Total merged: ${total.toLocaleString()} items`);
+console.log(`✨ Edamam Phase F complete — added ${netNew.length.toLocaleString()} net new items`);

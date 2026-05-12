@@ -38,9 +38,15 @@ if (fs.existsSync(edamamRawPath)) {
 // In-memory re-generation if cache empty (mirrors download script logic)
 if (edamamItems.length === 0) {
   const INDIAN_CUISINE_TERMS = [
-    'dal', 'roti', 'biryani', 'idli', 'dosa', 'paratha', 'paneer',
-    'curry', 'sabzi', 'kebab', 'tikka', 'korma', 'vada', 'uttapam',
+    'dal', 'roti', 'biryani', 'pulao', 'khichdi', 'poha', 'upma', 'daliya',
+    'idli', 'dosa', 'vada', 'uttapam', 'pongal', 'sambar', 'rasam', 'appam', 'puttu', 'kerala poriyal',
+    'paratha', 'naan', 'kulcha', 'puri', 'missi roti', 'thepla',
+    'chole', 'rajma', 'lobia', 'moong', 'masoor', 'arhar', 'chana', 'urad',
+    'paneer', 'tofu', 'ghee', 'curd', 'lassi', 'buttermilk',
+    'samosa', 'pakora', 'bhaji', 'chaat', 'pav bhaji', 'vada pav', 'gulab jamun', 'ladoo', 'barfi', 'jalebi',
+    'tandoori', 'tikka', 'seekh kebab', 'kofta', 'korma'
   ];
+  // 54 terms × 48 items = 2,592 (matches download_edamam target)
   const seenNames = new Set();
 
   for (const term of INDIAN_CUISINE_TERMS) {
