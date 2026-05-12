@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../providers/core_providers.dart';
 import '../../features/onboarding/onboarding_providers.dart';
@@ -27,7 +28,7 @@ class KarmaService extends _$KarmaService {
       );
     } catch (e) {
       // Log error but don't break the UI
-      print('Error awarding XP: $e');
+      debugPrint('Error awarding XP: $e');
     }
   }
 }

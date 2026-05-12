@@ -41,7 +41,7 @@ final class ReportServiceProvider
   }
 }
 
-String _$reportServiceHash() => r'b04019770feea55aa9a2660e54eec5d03e43aec4';
+String _$reportServiceHash() => r'0763df7d1c0de8c9b0c861c81206d45321d0115f';
 
 abstract class _$ReportService extends $Notifier<void> {
   void build();

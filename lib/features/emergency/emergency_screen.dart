@@ -159,7 +159,7 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColorsDark.surface0.withOpacity(0.4),
+                  color: AppColorsDark.surface0.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: AppColorsDark.divider),
                 ),
@@ -198,7 +198,7 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(color: AppColorsDark.rose.withOpacity(0.2), shape: BoxShape.circle),
+                        decoration: BoxDecoration(color: AppColorsDark.rose.withValues(alpha: 0.2), shape: BoxShape.circle),
                         child: const Icon(Icons.emergency_rounded, color: AppColorsDark.rose, size: 36),
                       ),
                       const SizedBox(width: 20),
@@ -247,7 +247,7 @@ class _EmergencyScreenState extends ConsumerState<EmergencyScreen> {
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(color: AppColorsDark.purple.withOpacity(0.2), borderRadius: BorderRadius.circular(6)),
+                          decoration: BoxDecoration(color: AppColorsDark.purple.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(6)),
                           child: Text('Mainline', style: AppTypography.labelSm(color: AppColorsDark.purple)),
                         ),
                       ],

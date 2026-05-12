@@ -58,14 +58,15 @@ Future<bool> isPro(Ref ref) async {
   final user = auth.value;
   if (user == null) return false;
 
-  final databases = ref.watch(appwriteDatabasesProvider);
+  final client = ref.watch(appwriteClientProvider);
+  final tablesDb = TablesDB(client);
   try {
-    final doc = await databases.getDocument(
+    final row = await tablesDb.getRow(
       databaseId: 'fitkarma-db',
-      collectionId: 'users',
-      documentId: user.$id,
+      tableId: 'users',
+      rowId: user.$id,
     );
-    return doc.data['isPro'] ?? false;
+    return row.data['isPro'] ?? false;
   } catch (e) {
     // If user document doesn't exist yet, they are not pro
     return false;

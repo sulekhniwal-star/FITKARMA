@@ -91,7 +91,7 @@ class SleepScreen extends ConsumerWidget {
           GlowingMetric(
             value: heroDurationStr,
             textStyle: AppTypography.metricXL().copyWith(fontSize: 56),
-            glowColor: AppColorsDark.purple.withOpacity(0.4),
+            glowColor: AppColorsDark.purple.withValues(alpha: 0.4),
           ),
           const SizedBox(height: 8),
 
@@ -113,7 +113,7 @@ class SleepScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
             decoration: BoxDecoration(
-              color: AppColorsDark.surface1.withOpacity(0.5),
+              color: AppColorsDark.surface1.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(100),
               border: Border.all(color: AppColorsDark.surface2),
             ),
@@ -295,7 +295,7 @@ class SleepScreen extends ConsumerWidget {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
-                              color: AppColorsDark.purple.withOpacity(0.15),
+                              color: AppColorsDark.purple.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -523,7 +523,7 @@ class SleepScreen extends ConsumerWidget {
                     ),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: AppColorsDark.purple.withOpacity(0.15),
+                      color: AppColorsDark.purple.withValues(alpha: 0.15),
                     ),
                   ),
                 ],

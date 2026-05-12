@@ -31,7 +31,6 @@ import '../../features/medication/medication_screen.dart';
 import '../../features/festival/festival_screen.dart';
 import '../../features/wedding/wedding_screen.dart';
 import '../../features/social/social_screen.dart';
-import 'transitions.dart';
 
 part 'app_router.g.dart';
 
@@ -91,9 +90,13 @@ GoRouter appRouter(Ref ref) {
           int currentIndex = 0;
           if (state.matchedLocation.contains('/food')) {
             currentIndex = 1;
-          } else if (state.matchedLocation.contains('/workout')) currentIndex = 2;
-          else if (state.matchedLocation.contains('/steps')) currentIndex = 3;
-          else if (state.matchedLocation.contains('/karma')) currentIndex = 4;
+          } else if (state.matchedLocation.contains('/workout')) {
+            currentIndex = 2;
+          } else if (state.matchedLocation.contains('/steps')) {
+            currentIndex = 3;
+          } else if (state.matchedLocation.contains('/karma')) {
+            currentIndex = 4;
+          }
 
           return Scaffold(
             body: child,
@@ -184,14 +187,6 @@ GoRouter appRouter(Ref ref) {
       GoRoute(path: '/festival', builder: (context, state) => const FestivalScreen()),
       GoRoute(path: '/wedding', builder: (context, state) => const WeddingScreen()),
       GoRoute(path: '/social', builder: (context, state) => const SocialScreen()),
-
-      GoRoute(
-        path: '/workout/active/:workoutId',
-        pageBuilder: (context, state) => AppTransitions.springSlideFade(
-          key: state.pageKey,
-          child: _PlaceholderScreen(title: 'Active Workout ${state.pathParameters['workoutId']}'),
-        ),
-      ),
     ],
   );
 }

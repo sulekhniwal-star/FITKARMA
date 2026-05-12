@@ -297,4 +297,4 @@ final class IsProProvider
   }
 }
 
-String _$isProHash() => r'daa32388b468b581d2be19ff8d5fdb1a8eb8f148';
+String _$isProHash() => r'4099cc4c7f55d18dc399320c0c01a8bf724c899a';

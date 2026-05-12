@@ -95,9 +95,9 @@ class BloodPressureScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               decoration: BoxDecoration(
-                color: classification.color.withOpacity(0.15),
+                color: classification.color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(100),
-                border: Border.all(color: classification.color.withOpacity(0.3)),
+                border: Border.all(color: classification.color.withValues(alpha: 0.3)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -110,7 +110,7 @@ class BloodPressureScreen extends ConsumerWidget {
                       color: classification.color,
                       boxShadow: [
                         BoxShadow(
-                          color: classification.color.withOpacity(0.5),
+                          color: classification.color.withValues(alpha: 0.5),
                           blurRadius: 6,
                         ),
                       ],
@@ -228,7 +228,7 @@ class BloodPressureScreen extends ConsumerWidget {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
-                                color: itemClass.color.withOpacity(0.15),
+                                color: itemClass.color.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -243,11 +243,11 @@ class BloodPressureScreen extends ConsumerWidget {
                         const SizedBox(height: 12),
                         Row(
                           children: [
-                            Icon(Icons.favorite_rounded, size: 14, color: AppColorsDark.rose.withOpacity(0.8)),
+                            Icon(Icons.favorite_rounded, size: 14, color: AppColorsDark.rose.withValues(alpha: 0.8)),
                             const SizedBox(width: 4),
                             Text('${item.pulse} bpm', style: AppTypography.labelSm(color: AppColorsDark.textSecondary)),
                             const SizedBox(width: 16),
-                            Icon(Icons.accessibility_new_rounded, size: 14, color: AppColorsDark.teal.withOpacity(0.8)),
+                            Icon(Icons.accessibility_new_rounded, size: 14, color: AppColorsDark.teal.withValues(alpha: 0.8)),
                             const SizedBox(width: 4),
                             Text('$arm Arm', style: AppTypography.labelSm(color: AppColorsDark.textSecondary)),
                             const Spacer(),
@@ -414,7 +414,7 @@ class BloodPressureScreen extends ConsumerWidget {
                     ),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: AppColorsDark.primary.withOpacity(0.1),
+                      color: AppColorsDark.primary.withValues(alpha: 0.1),
                     ),
                   ),
                   LineChartBarData(

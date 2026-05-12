@@ -42,15 +42,15 @@ class FestivalScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColorsDark.accent.withOpacity(0.12),
+              color: AppColorsDark.accent.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColorsDark.accent.withOpacity(0.3)),
+              border: Border.all(color: AppColorsDark.accent.withValues(alpha: 0.3)),
             ),
             child: Row(
               children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: AppColorsDark.accent.withOpacity(0.2), shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: AppColorsDark.accent.withValues(alpha: 0.2), shape: BoxShape.circle),
                   child: const Icon(Icons.celebration_rounded, color: AppColorsDark.accent, size: 24),
                 ),
                 const SizedBox(width: 16),

@@ -99,9 +99,9 @@ class GlucoseScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               decoration: BoxDecoration(
-                color: classification.color.withOpacity(0.15),
+                color: classification.color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(100),
-                border: Border.all(color: classification.color.withOpacity(0.3)),
+                border: Border.all(color: classification.color.withValues(alpha: 0.3)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -114,7 +114,7 @@ class GlucoseScreen extends ConsumerWidget {
                       color: classification.color,
                       boxShadow: [
                         BoxShadow(
-                          color: classification.color.withOpacity(0.5),
+                          color: classification.color.withValues(alpha: 0.5),
                           blurRadius: 6,
                         ),
                       ],
@@ -235,7 +235,7 @@ class GlucoseScreen extends ConsumerWidget {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
-                                color: itemClass.color.withOpacity(0.15),
+                                color: itemClass.color.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -250,7 +250,7 @@ class GlucoseScreen extends ConsumerWidget {
                         const SizedBox(height: 12),
                         Row(
                           children: [
-                            Icon(_getTimingIcon(item.timing), size: 14, color: AppColorsDark.accent.withOpacity(0.8)),
+                            Icon(_getTimingIcon(item.timing), size: 14, color: AppColorsDark.accent.withValues(alpha: 0.8)),
                             const SizedBox(width: 4),
                             Text(
                               item.timing.toUpperCase(),
@@ -270,9 +270,9 @@ class GlucoseScreen extends ConsumerWidget {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: AppColorsDark.teal.withOpacity(0.1),
+                              color: AppColorsDark.teal.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6),
-                              border: Border.all(color: AppColorsDark.teal.withOpacity(0.2)),
+                              border: Border.all(color: AppColorsDark.teal.withValues(alpha: 0.2)),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -408,7 +408,7 @@ class GlucoseScreen extends ConsumerWidget {
                   horizontalLines: [
                     HorizontalLine(
                       y: 70,
-                      color: AppColorsDark.purple.withOpacity(0.5),
+                      color: AppColorsDark.purple.withValues(alpha: 0.5),
                       strokeWidth: 1.5,
                       dashArray: [6, 4],
                       label: HorizontalLineLabel(
@@ -421,7 +421,7 @@ class GlucoseScreen extends ConsumerWidget {
                     ),
                     HorizontalLine(
                       y: 140,
-                      color: AppColorsDark.teal.withOpacity(0.5),
+                      color: AppColorsDark.teal.withValues(alpha: 0.5),
                       strokeWidth: 1.5,
                       dashArray: [6, 4],
                       label: HorizontalLineLabel(
@@ -492,7 +492,7 @@ class GlucoseScreen extends ConsumerWidget {
                     ),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: AppColorsDark.accent.withOpacity(0.1),
+                      color: AppColorsDark.accent.withValues(alpha: 0.1),
                     ),
                   ),
                 ],

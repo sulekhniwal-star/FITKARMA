@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../providers/core_providers.dart';
 import '../../features/onboarding/onboarding_providers.dart';
@@ -31,7 +32,7 @@ class ReportService extends _$ReportService {
         return data['shareUrl'];
       }
     } catch (e) {
-      print('Error generating share link: $e');
+      debugPrint('Error generating share link: $e');
     }
     return null;
   }

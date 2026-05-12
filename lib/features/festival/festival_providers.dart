@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:appwrite/appwrite.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/providers/core_providers.dart';
@@ -53,13 +54,14 @@ class FestivalsList extends _$FestivalsList {
   @override
   Future<List<FestivalItem>> build() async {
     try {
-      final databases = ref.read(appwriteDatabasesProvider);
-      final res = await databases.listDocuments(
+      final client = ref.read(appwriteClientProvider);
+      final tablesDb = TablesDB(client);
+      final res = await tablesDb.listRows(
         databaseId: 'fitkarma-db',
-        collectionId: 'festivals',
+        tableId: 'festivals',
       );
 
-      final list = res.documents.map((d) {
+      final list = res.rows.map((d) {
         final data = d.data;
         return FestivalItem(
           id: d.$id,
