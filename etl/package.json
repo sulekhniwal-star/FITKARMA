@@ -12,7 +12,9 @@
     "phase-f": "node scripts/download_edamam.js",
     "phase-g": "node scripts/download_spoonacular.js",
     "phase-h": "node scripts/download_fao_infoods.js",
-    "phase-i": "node scripts/audit_phase_i_coverage.js"
+    "phase-i": "node scripts/audit_phase_i_coverage.js",
+    "phase-k": "node scripts/verify_phase_k_normalization.js",
+    "phase-l": "node ../scripts/seed_food_database.js"
   },
   "devDependencies": {
     "axios": "^1.16.0",

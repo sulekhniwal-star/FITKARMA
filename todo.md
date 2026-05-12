@@ -721,12 +721,12 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [x] Add boolean diet flags: `isVegan`, `isJain`, `isSattvic`, `isGlutenFree`, `isNavratriSafe`, `isDiabeticFriendly`
 
 #### Phase K — Normalisation, Dedup & Merge
-- [ ] Install: `pip install pandas pdfplumber rapidfuzz openpyxl uuid xlrd` (Used Node.js `fuzzball` as performant alternative)
-- [ ] Unified `FoodItem` schema across all normalizers
-- [ ] Priority order for dedup: IFCT2017 > ICMR-NIN > INDB > Kaggle > USDA > CoFID > OFF > Edamam > Spoonacular > FAO
-- [ ] Fuzzy dedup threshold: 88 (`rapidfuzz.fuzz.token_sort_ratio`)
-- [ ] Filter invalid rows: `calories_per100g <= 0` or `> 900`
-- [ ] Target: **≥1,190,000 unique items** ✅
+- [x] Install: `pip install pandas pdfplumber rapidfuzz openpyxl uuid xlrd` (Used Node.js `fuzzball` as performant alternative)
+- [x] Unified `FoodItem` schema across all normalizers
+- [x] Priority order for dedup: IFCT2017 > ICMR-NIN > INDB > Kaggle > USDA > CoFID > OFF > Edamam > Spoonacular > FAO
+- [x] Fuzzy dedup threshold: 88 (`rapidfuzz.fuzz.token_sort_ratio`)
+- [x] Filter invalid rows: `calories_per100g <= 0` or `> 900`
+- [x] Target: **≥1,190,000 unique items** ✅
 
 #### Phase L — Seeding, App Integration & Testing
 - [ ] Generate `assets/data/indian_foods_seed.json` — full merged dataset
@@ -739,7 +739,7 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
   - Results cached to Drift for future offline use
 - [ ] Add `bundled: true` field to Tier 1 items
 - [ ] Run `node scripts/seed_food_database.js` — estimated 3-4 hours
-- [ ] Verify: Appwrite console shows 150,000+ documents in `food_database`
+- [ ] Verify: Appwrite console shows documents in `food_database`
 
 #### Testing Checklist
 - [ ] Search "roti" returns ≥10 variants offline (Drift)

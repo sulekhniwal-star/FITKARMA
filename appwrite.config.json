@@ -125,9 +125,7 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "heightCm",
@@ -202,9 +200,7 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": 0,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": 0
                 },
                 {
                     "key": "conditions",
@@ -220,9 +216,7 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "weddingDate",
@@ -329,9 +323,7 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "calories",
@@ -423,9 +415,7 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "syncStatus",
@@ -441,18 +431,14 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": 0,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": 0
                 },
                 {
                     "key": "updatedAt",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 }
             ],
             "indexes": [
@@ -805,36 +791,28 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "diastolic",
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "pulse",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "measuredAt",
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "notes",
@@ -884,18 +862,14 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": 0,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": 0
                 },
                 {
                     "key": "updatedAt",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 }
             ],
             "indexes": [
@@ -969,9 +943,7 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "classification",
@@ -1021,18 +993,14 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": 0,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": 0
                 },
                 {
                     "key": "updatedAt",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 }
             ],
             "indexes": [
@@ -1081,63 +1049,49 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "sleepEnd",
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "totalMinutes",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "remMinutes",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "deepMinutes",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "lightMinutes",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "qualityScore",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "avgSpO2",
@@ -1183,9 +1137,7 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": 0,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": 0
                 }
             ],
             "indexes": [
@@ -1252,27 +1204,21 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "endedAt",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "durationSeconds",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "caloriesBurned",
@@ -1286,18 +1232,14 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "maxHeartRate",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "distanceKm",
@@ -1345,9 +1287,7 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": 0,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": 0
                 }
             ],
             "indexes": [
@@ -1414,9 +1354,7 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "weight",
@@ -1430,9 +1368,7 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "syncStatus",
@@ -1515,18 +1451,14 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": 0,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": 0
                 },
                 {
                     "key": "longestStreak",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": 0,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": 0
                 },
                 {
                     "key": "isActive",
@@ -1556,9 +1488,7 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 }
             ],
             "indexes": []
@@ -1614,9 +1544,7 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "moodEmoji",
@@ -1641,9 +1569,7 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "isDeleted",
@@ -1666,18 +1592,14 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": 0,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": 0
                 },
                 {
                     "key": "updatedAt",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 }
             ],
             "indexes": [
@@ -1726,18 +1648,14 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "occurredAt",
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "resourceId",
@@ -1804,9 +1722,7 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "type",
@@ -1947,18 +1863,14 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": 0,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": 0
                 },
                 {
                     "key": "updatedAt",
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 }
             ],
             "indexes": []
@@ -1996,18 +1908,14 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "loggedAt",
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "source",
@@ -2032,9 +1940,7 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": 0,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": 0
                 }
             ],
             "indexes": [
@@ -2092,9 +1998,7 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "labName",
@@ -2153,9 +2057,7 @@
                     "type": "integer",
                     "required": false,
                     "array": false,
-                    "default": 0,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": 0
                 }
             ],
             "indexes": [
@@ -2231,9 +2133,7 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "isDeleted",
@@ -2316,9 +2216,7 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 }
             ],
             "indexes": []
@@ -2365,9 +2263,7 @@
                     "type": "integer",
                     "required": true,
                     "array": false,
-                    "default": null,
-                    "min": -9223372036854776000,
-                    "max": 9223372036854776000
+                    "default": null
                 },
                 {
                     "key": "reportType",
