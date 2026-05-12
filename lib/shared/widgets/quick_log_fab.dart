@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
+import 'package:go_router/go_router.dart';
 
 /// QuickLogFab — A persistent FAB that opens the quick logging menu.
 class QuickLogFab extends StatelessWidget {
@@ -63,12 +64,12 @@ class _QuickLogBottomSheet extends StatelessWidget {
             crossAxisSpacing: 12,
             childAspectRatio: 0.9,
             children: const [
-              _QuickLogItem(label: 'Food', icon: Icons.restaurant, color: AppColorsDark.accent),
-              _QuickLogItem(label: 'Water', icon: Icons.water_drop, color: AppColorsDark.teal),
-              _QuickLogItem(label: 'Workout', icon: Icons.fitness_center, color: AppColorsDark.secondary),
-              _QuickLogItem(label: 'Meds', icon: Icons.medication, color: AppColorsDark.rose),
-              _QuickLogItem(label: 'Mood', icon: Icons.mood, color: AppColorsDark.purple),
-              _QuickLogItem(label: 'BP', icon: Icons.favorite, color: AppColorsDark.error),
+              _QuickLogItem(label: 'Food', icon: Icons.restaurant, color: AppColorsDark.accent, route: '/home/food'),
+              _QuickLogItem(label: 'Water', icon: Icons.water_drop, color: AppColorsDark.teal, route: '/water'),
+              _QuickLogItem(label: 'Workout', icon: Icons.fitness_center, color: AppColorsDark.secondary, route: '/home/workout'),
+              _QuickLogItem(label: 'Meds', icon: Icons.medication, color: AppColorsDark.rose, route: '/medication'),
+              _QuickLogItem(label: 'Mood', icon: Icons.mood, color: AppColorsDark.purple, route: '/journal'),
+              _QuickLogItem(label: 'BP', icon: Icons.favorite, color: AppColorsDark.error, route: '/blood-pressure'),
             ],
           ),
           const SizedBox(height: 32),
@@ -82,34 +83,44 @@ class _QuickLogItem extends StatelessWidget {
   final String label;
   final IconData icon;
   final Color color;
+  final String route;
 
   const _QuickLogItem({
     required this.label,
     required this.icon,
     required this.color,
+    required this.route,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            border: Border.all(color: color.withOpacity(0.2)),
+    return InkWell(
+      onTap: () {
+        context.pop(); // Dismiss menu overlay
+        context.push(route);
+      },
+      borderRadius: BorderRadius.circular(AppRadius.md),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              border: Border.all(color: color.withOpacity(0.2)),
+            ),
+            child: Icon(icon, color: color, size: 28),
           ),
-          child: Icon(icon, color: color, size: 28),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: AppTypography.labelMd(color: AppColorsDark.textPrimary),
-        ),
-      ],
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: AppTypography.labelMd(color: AppColorsDark.textPrimary),
+          ),
+        ],
+      ),
     );
   }
 }

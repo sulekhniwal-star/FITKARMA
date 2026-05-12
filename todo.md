@@ -523,10 +523,10 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 8.14 Water Tracking
 
-- [ ] Accessible via Quick Log FAB
-- [ ] Log amount (ml) with preset buttons (200ml, 350ml, 500ml)
-- [ ] Daily total + goal progress ring
-- [ ] Streak tracking
+- [x] Accessible via Quick Log FAB
+- [x] Log amount (ml) with preset buttons (200ml, 350ml, 500ml)
+- [x] Daily total + goal progress ring
+- [x] Streak tracking
 
 ### 8.15 Medication Tracking
 

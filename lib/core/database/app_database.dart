@@ -202,6 +202,28 @@ class AppDatabase extends _$AppDatabase {
     return result ?? 0;
   }
 
+  Stream<int> watchTodayWaterMl() {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final query = selectOnly(waterLogs)
+      ..addColumns([waterLogs.amountMl.sum()])
+      ..where(waterLogs.logDate.isBiggerOrEqualValue(startOfDay));
+    
+    return query.map((row) => row.read(waterLogs.amountMl.sum()) ?? 0).watchSingle();
+  }
+
+  Future<void> logWater(int amountMl) async {
+    final now = DateTime.now();
+    await into(waterLogs).insert(
+      WaterLogsCompanion.insert(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        userId: 'client_user',
+        amountMl: amountMl,
+        logDate: now,
+      ),
+    );
+  }
+
   Future<List<dynamic>> getPendingSync() async {
     // This is a simplified version; in a real app, you'd probably 
     // union all tables or iterate through them.
