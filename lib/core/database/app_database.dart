@@ -157,6 +157,20 @@ class AppDatabase extends _$AppDatabase {
         .get();
   }
 
+  Stream<List<BpReading>> watchRecentBpReadings({int limit = 30}) {
+    return (select(bpReadings)
+          ..orderBy([(t) => OrderingTerm(expression: t.measuredAt, mode: OrderingMode.desc)])
+          ..limit(limit))
+        .watch();
+  }
+
+  Stream<List<GlucoseReading>> watchRecentGlucoseReadings({int limit = 30}) {
+    return (select(glucoseReadings)
+          ..orderBy([(t) => OrderingTerm(expression: t.measuredAt, mode: OrderingMode.desc)])
+          ..limit(limit))
+        .watch();
+  }
+
   Future<int> getTodayWaterMl() async {
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);

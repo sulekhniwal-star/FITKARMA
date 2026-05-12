@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/onboarding/onboarding_providers.dart';
 import '../../features/onboarding/welcome_screen.dart';
@@ -10,9 +9,12 @@ import '../../features/onboarding/goals_screen.dart';
 import '../../features/onboarding/permissions_screen.dart';
 import '../../features/onboarding/splash_screen.dart';
 import '../../features/dashboard/dashboard_screen.dart';
+import '../../features/food/presentation/food_home_screen.dart';
 import '../../shared/widgets/bottom_nav_bar.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
 import '../security/biometric_lock.dart';
+import '../../features/health/blood_pressure_screen.dart';
+import '../../features/health/glucose_screen.dart';
 import 'transitions.dart';
 
 part 'app_router.g.dart';
@@ -95,7 +97,7 @@ GoRouter appRouter(Ref ref) {
         },
         routes: [
           GoRoute(path: '/home/dashboard', builder: (context, state) => const DashboardScreen()),
-          GoRoute(path: '/home/food', builder: (context, state) => const _PlaceholderScreen(title: 'Food Log')),
+          GoRoute(path: '/home/food', builder: (context, state) => const FoodHomeScreen()),
           GoRoute(path: '/home/workout', builder: (context, state) => const _PlaceholderScreen(title: 'Workouts')),
           GoRoute(path: '/home/steps', builder: (context, state) => const _PlaceholderScreen(title: 'Steps')),
           GoRoute(path: '/karma', builder: (context, state) => const _PlaceholderScreen(title: 'Karma')),
@@ -107,14 +109,14 @@ GoRouter appRouter(Ref ref) {
         path: '/blood-pressure',
         builder: (context, state) => const SensitiveScreenGuard(
           screenId: 'blood-pressure',
-          child: _PlaceholderScreen(title: 'Blood Pressure'),
+          child: BloodPressureScreen(),
         ),
       ),
       GoRoute(
         path: '/glucose',
         builder: (context, state) => const SensitiveScreenGuard(
           screenId: 'glucose',
-          child: _PlaceholderScreen(title: 'Glucose'),
+          child: GlucoseScreen(),
         ),
       ),
       GoRoute(

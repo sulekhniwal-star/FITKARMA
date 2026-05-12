@@ -5,13 +5,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/theme/app_spacing.dart';
-import '../../core/providers/core_providers.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/activity_rings.dart';
 import '../../shared/widgets/streak_flame.dart';
 import '../../shared/widgets/insight_card.dart';
-import '../../shared/widgets/glowing_metric.dart';
 import '../onboarding/onboarding_providers.dart';
 
 class DashboardScreen extends ConsumerWidget {
@@ -269,11 +267,26 @@ class DashboardScreen extends ConsumerWidget {
   Widget _buildQuickStats(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: _StatMiniCard(label: 'BP', value: '120/80', unit: 'mmHg', color: AppColorsDark.error)),
+        Expanded(
+          child: GestureDetector(
+            onTap: () => context.push('/blood-pressure'),
+            child: const _StatMiniCard(label: 'BP', value: '120/80', unit: 'mmHg', color: AppColorsDark.error),
+          ),
+        ),
         const SizedBox(width: 12),
-        Expanded(child: _StatMiniCard(label: 'GLUCOSE', value: '98', unit: 'mg/dL', color: AppColorsDark.teal)),
+        Expanded(
+          child: GestureDetector(
+            onTap: () => context.push('/glucose'),
+            child: const _StatMiniCard(label: 'GLUCOSE', value: '98', unit: 'mg/dL', color: AppColorsDark.teal),
+          ),
+        ),
         const SizedBox(width: 12),
-        Expanded(child: _StatMiniCard(label: 'SLEEP', value: '82', unit: '/100', color: AppColorsDark.purple)),
+        Expanded(
+          child: GestureDetector(
+            onTap: () => context.push('/sleep'),
+            child: const _StatMiniCard(label: 'SLEEP', value: '82', unit: '/100', color: AppColorsDark.purple),
+          ),
+        ),
       ],
     );
   }

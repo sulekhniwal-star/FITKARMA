@@ -417,29 +417,29 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 8.2 Food Home (`/home/food`) — Pattern A
 
-- [ ] AppBar: "Food" + search icon → food search bottom sheet
-- [ ] Macro Ring card — donut chart (protein/carbs/fat), center: remaining kcal metricLg
-- [ ] 4 meal sections: Breakfast, Lunch, Dinner, Snacks — each shows food rows + [+ Add] button
-- [ ] Food row: emoji/photo, name, kcal, portion
-- [ ] Daily Totals: Calories, Protein, Carbs, Fat, Fiber, Water (monoLg)
-- [ ] Reactive via Drift `.watch()` — updates instantly when food logged
+- [x] AppBar: "Food" + search icon → food search bottom sheet
+- [x] Macro Ring card — donut chart (protein/carbs/fat), center: remaining kcal metricLg
+- [x] 4 meal sections: Breakfast, Lunch, Dinner, Snacks — each shows food rows + [+ Add] button
+- [x] Food row: emoji/photo, name, kcal, portion
+- [x] Daily Totals: Calories, Protein, Carbs, Fat, Fiber, Water (monoLg)
+- [x] Reactive via Drift `.watch()` — updates instantly when food logged
 
 ### 8.3 Blood Pressure (`/blood-pressure`) — Pattern B
 
-- [ ] Hero (320px): `GlowingMetric` "{systolic}/{diastolic}" metricXL, primaryGlow; pulse monoLg; classification chip
-- [ ] BP classification logic: Normal (<120/80 success), Elevated (warning), Stage 1 (warning), Stage 2 (error), Hypertensive Crisis (error + immediate alert dialog)
-- [ ] Body: 7-day `fl_chart` LineChart, reading history list, [Log Reading] button, `EncryptionBadge`
-- [ ] Biometric re-auth on first enter per session
-- [ ] Log Reading bottom sheet: systolic, diastolic, pulse inputs + notes + arm selector
+- [x] Hero (320px): `GlowingMetric` "{systolic}/{diastolic}" metricXL, primaryGlow; pulse monoLg; classification chip
+- [x] BP classification logic: Normal (<120/80 success), Elevated (warning), Stage 1 (warning), Stage 2 (error), Hypertensive Crisis (error + immediate alert dialog)
+- [x] Body: 7-day `fl_chart` LineChart, reading history list, [Log Reading] button, `EncryptionBadge`
+- [x] Biometric re-auth on first enter per session
+- [x] Log Reading bottom sheet: systolic, diastolic, pulse inputs + notes + arm selector
 
 ### 8.4 Glucose (`/glucose`) — Pattern B
 
-- [ ] Hero: last reading value + classification chip (Normal/Pre-diabetic/Diabetic/Hypoglycemic)
-- [ ] `GlucoseClassifier` logic per `readingType` (fasting/post-meal/random/bedtime)
-- [ ] Crisis threshold: mgDl < 54 OR > 250 → immediate alert dialog
-- [ ] 7-day chart, reading history, [Log Reading] button
-- [ ] Link glucose reading to food log (optional)
-- [ ] Biometric re-auth on first enter
+- [x] Hero: last reading value + classification chip (Normal/Pre-diabetic/Diabetic/Hypoglycemic)
+- [x] `GlucoseClassifier` logic per `readingType` (fasting/post-meal/random/bedtime)
+- [x] Crisis threshold: mgDl < 54 OR > 250 → immediate alert dialog
+- [x] 7-day chart, reading history, [Log Reading] button
+- [x] Link glucose reading to food log (optional)
+- [x] Biometric re-auth on first enter
 
 ### 8.5 Steps (`/home/steps`) — Pattern C
 
