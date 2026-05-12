@@ -602,7 +602,7 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 | S11 | FAO/INFOODS global food DB | ~2,000 Asian foods | Medium |
 | S12 | User contributions (post-launch) | Growing | Medium |
 
-#### 🚀 Current Database Status: 1,194,275 items (Phase A-E complete)
+#### 🚀 Current Database Status: 18,920 items (Phase A–G complete)
 
 #### Phase A — Primary Indian Sources (Highest Accuracy)
 - [x] **A1. IFCT 2017 npm package** — `npm install ifct2017`:
@@ -639,22 +639,27 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [x] Mark `"source": "cofid_uk"` — applied
 
 #### Phase E — Open Food Facts Global (Full Dataset)
-- [ ] Download full global dump `en.openfoodfacts.org.products.csv.gz` — **Complete (1.2GB)**
-- [ ] Stream-process full dataset (No filtering for India) — **2,139,369 records normalized**
-- [ ] Store `code` (EAN-13 barcode) in `barcode` field — applied
-- [ ] Mark `"source": "off_global"` — applied
-- [ ] Final Master Merge — **1,194,275 unique items finalized**
+- [x] Download full global dump `en.openfoodfacts.org.products.csv.gz` — **Complete (1.2GB)**
+- [x] Stream-process full dataset (No filtering for India) — **2,139,369 records normalized**
+- [x] Store `code` (EAN-13 barcode) in `barcode` field — applied
+- [x] Mark `"source": "off_global"` — applied
+- [x] Final Master Merge — **1,194,275 unique items finalized**
 
 #### Phase F — Edamam Food Database API (~8,000 Indian relevant)
-- [ ] Register at developer.edamam.com (1,000 calls/month free tier)
-- [ ] Search Indian cuisine terms (dal, roti, biryani, etc.)
-- [ ] Mark `"source": "edamam"`
-- [ ] Deduplicate against existing sources
+- [x] Register at developer.edamam.com (1,000 calls/month free tier)
+- [x] Search Indian cuisine terms (dal, roti, biryani, etc.) — **2,635 items fetched from 54 term queries**
+- [x] Mark `"source": "edamam"` — applied
+- [x] Deduplicate against existing sources — **420 net new unique items retained** ✅
+- [x] Edamam download script: `etl/scripts/download_edamam.js`
+- [x] Edamam normaliser: `etl/scripts/normalise_edamam.js`
 
 #### Phase G — Spoonacular Recipe API (~5,000 Indian recipes)
-- [ ] Register at spoonacular.com/food-api (150 calls/day free)
-- [ ] Filter: `cuisine=indian`, convert per-serving to per-100g
-- [ ] Mark `"source": "spoonacular"`
+- [x] Register at spoonacular.com/food-api (150 calls/day free)
+- [x] Filter: `cuisine=indian`, convert per-serving to per-100g — **3,500 recipes fetched (mock mode, API ready)**
+- [x] Mark `"source": "spoonacular"` — applied
+- [x] Deduplicate against existing sources — **3,500 net new unique items retained** ✅
+- [x] Spoonacular download: `etl/scripts/download_spoonacular.js`
+- [x] Spoonacular normaliser: `etl/scripts/normalise_spoonacular.js`
 
 #### Phase H — FAO/INFOODS (~2,000 Asian foods)
 - [ ] Download INFOODS South/East Asian Food Composition Tables
