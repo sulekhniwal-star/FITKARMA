@@ -145,7 +145,7 @@ class SettingsScreen extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(user?.name?.isNotEmpty == true ? user!.name! : 'FitKarma Warrior', style: AppTypography.labelLg(color: Colors.white).copyWith(fontWeight: FontWeight.bold)),
+                          Text(user?.name.isNotEmpty == true ? user!.name : 'FitKarma Warrior', style: AppTypography.labelLg(color: Colors.white).copyWith(fontWeight: FontWeight.bold)),
                           const SizedBox(height: 2),
                           Text(user?.email ?? 'Client isolated sandbox instance', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
                         ],

@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
 import '../karma/karma_providers.dart';
 
