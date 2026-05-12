@@ -1,220 +1,172 @@
+/**
+ * process_off_global.js — Phase E: Open Food Facts Global dump processor
+ *
+ * Source: en.openfoodfacts.org.products.csv.gz (~1.2 GB compressed)
+ * Download from: https://static.openfoodfacts.org/data/en.openfoodfacts.org.products.csv.gz
+ * Place at: etl/data/raw/en.openfoodfacts.org.products.csv.gz
+ *
+ * Strategy:
+ *   - Stream-decompress gz → pipe through CSV parser (never loads full file into RAM)
+ *   - Accept rows where energy_100g > 0 and product_name is non-empty
+ *   - Deduplicate: exact barcode match first, then fuzzy name ≥88 against running index
+ *   - Write final merged seed JSON once stream ends
+ *
+ * OFF CSV key columns (tab-separated):
+ *   code, product_name, generic_name, categories, countries,
+ *   energy-kcal_100g, proteins_100g, carbohydrates_100g, fat_100g,
+ *   fiber_100g, sugars_100g, sodium_100g, salt_100g,
+ *   calcium_100g, iron_100g, vitamin-c_100g,
+ *   saturated-fat_100g, trans-fat_100g,
+ *   nutrition_grade_fr, nova_group
+ */
+
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createGunzip } from 'zlib';
+import { createRequire } from 'module';
+import { parse } from 'csv-parse';
+import { pipeline } from 'stream/promises';
+import { Transform } from 'stream';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const require = createRequire(import.meta.url);
+const fuzz = require('fuzzball');
 
-console.log('⚡ Initializing Open Food Facts Global streaming decompression pipelines...');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const GZ_PATH = path.join(__dirname, '../data/raw/en.openfoodfacts.org.products.csv.gz');
+const SEED    = path.join(__dirname, '../../assets/data/indian_foods_seed.json');
 
-const rawDir = path.join(__dirname, '../data/raw');
-if (!fs.existsSync(rawDir)) {
-  fs.mkdirSync(rawDir, { recursive: true });
+const DEDUP_THRESHOLD = 88;
+const LOG_INTERVAL    = 100_000;
+
+// ── guard ─────────────────────────────────────────────────────────────────────
+
+if (!fs.existsSync(GZ_PATH) || fs.statSync(GZ_PATH).size < 100_000) {
+  console.error('❌ OFF gz file not found or is a stub (< 100 KB).');
+  console.error('   Download: https://static.openfoodfacts.org/data/en.openfoodfacts.org.products.csv.gz');
+  console.error('   Place at: etl/data/raw/en.openfoodfacts.org.products.csv.gz');
+  process.exit(1);
 }
 
-// Stage representation of the massive 1.2GB compressed gzip file dump chunk
-const offGzStub = 'H4sICJ38b2QCA2VuLm9wZW5mb29kZmFjdHMub3JnLnByb2R1Y3RzLmNzdi5neg==_stub_1.2GB';
-fs.writeFileSync(path.join(rawDir, 'en.openfoodfacts.org.products.csv.gz'), offGzStub);
+// ── load existing seed ────────────────────────────────────────────────────────
 
-console.log('✔ Verified en.openfoodfacts.org.products.csv.gz global dump archive availability.');
-console.log('⚡ Executing deep stream processing loops traversing 2,139,369 raw record rows...');
+const master = JSON.parse(fs.readFileSync(SEED, 'utf8'));
+const base   = master.filter(x => x.source !== 'off_global');
+console.log(`✅ Loaded ${base.length} existing items (Phase A–D)`);
 
-const seedFile = path.join(__dirname, '../../assets/data/indian_foods_seed.json');
-let currentMaster = [];
+// Build dedup indexes
+const barcodeSet = new Set(base.map(x => x.barcode).filter(Boolean));
+const nameIndex  = base.map(x => normaliseKey(x.name));
 
-if (fs.existsSync(seedFile)) {
-  try {
-    currentMaster = JSON.parse(fs.readFileSync(seedFile, 'utf8'));
-    console.log(`✔ Loaded base consolidated master sets tracking ${currentMaster.length} analytical baseline items.`);
-  } catch (e) {
-    console.warn('⚠ Base JSON read warning. Initializing target master arrays from clean slate state.');
+function normaliseKey(s) {
+  return (s ?? '').toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
+}
+
+function isDuplicateName(name) {
+  const key = normaliseKey(name);
+  for (const k of nameIndex) {
+    if (fuzz.token_sort_ratio(key, k) >= DEDUP_THRESHOLD) return true;
   }
+  return false;
 }
 
-// Preserve existing source clusters to maintain strict unpolluted tracking metrics
-const filteredMaster = currentMaster.filter(item => item.source !== 'off_global');
+const n = (v, fallback = 0) => {
+  const f = parseFloat(v);
+  return isNaN(f) || f < 0 ? fallback : parseFloat(f.toFixed(4));
+};
 
-// Global high-volume packaged reference products mapped from Open Food Facts EAN-13 commercial registries
-const baseOffTemplates = [
-  {
-    name: 'Nutella Ferrero Hazelnut Spread with Cocoa',
-    nameHindi: 'नुटेला हेज़लनट स्प्रेड',
-    category: 'Packaged Foods',
-    cuisine: 'Global Commercial Standard',
-    caloriesPer100g: 539.0,
-    proteinPer100g: 6.3,
-    carbsPer100g: 57.5,
-    fatPer100g: 30.9,
-    fiberPer100g: 3.5,
-    emoji: '🍫',
-    source: 'off_global',
-    servingSizes: JSON.stringify(['1 tablespoon measure (15g)', '100g bulk reference']),
-    barcode: '3017620422003', // Authentic EAN-13
-  },
-  {
-    name: 'Oreo Original Chocolate Sandwich Cookies',
-    nameHindi: 'ओरियो बिस्कुट',
-    category: 'Packaged Foods',
-    cuisine: 'Global Commercial Standard',
-    caloriesPer100g: 480.0,
-    proteinPer100g: 5.0,
-    carbsPer100g: 69.0,
-    fatPer100g: 20.0,
-    fiberPer100g: 2.5,
-    emoji: '🍪',
-    source: 'off_global',
-    servingSizes: JSON.stringify(['3 cookies serving (34g)', '100g total packaging']),
-    barcode: '7622210449283',
-  },
-  {
-    name: 'Heinz Classic Tomato Ketchup',
-    nameHindi: 'हेंज टोमैटो केचप',
-    category: 'Miscellaneous',
-    cuisine: 'Global Condiment Standard',
-    caloriesPer100g: 102.0,
-    proteinPer100g: 1.2,
-    carbsPer100g: 23.2,
-    fatPer100g: 0.1,
-    fiberPer100g: 0.3,
-    emoji: '🍅',
-    source: 'off_global',
-    servingSizes: JSON.stringify(['1 tablespoon serving (15g)', '100g total weight']),
-    barcode: '5000157024671',
-  },
-  {
-    name: 'Quaker Instant Oatmeal Standard Packets',
-    nameHindi: 'क्वेकर इंस्टेंट ओट्स',
-    category: 'Cereals and Millets',
-    cuisine: 'Global Breakfast Base',
-    caloriesPer100g: 370.0,
-    proteinPer100g: 12.0,
-    carbsPer100g: 67.5,
-    fatPer100g: 6.0,
-    fiberPer100g: 10.0,
-    emoji: '🥣',
-    source: 'off_global',
-    servingSizes: JSON.stringify(['1 dry individual packet (28g)', '100g bulk scale']),
-    barcode: '0030000010204',
-  },
-  {
-    name: 'Lipton Yellow Label Premium Black Tea Bags',
-    nameHindi: 'लिप्टन ब्लैक टी',
-    category: 'Beverages',
-    cuisine: 'Global Infusion Base',
-    caloriesPer100g: 1.0,
-    proteinPer100g: 0.1,
-    carbsPer100g: 0.2,
-    fatPer100g: 0.0,
-    fiberPer100g: 0.0,
-    emoji: '☕',
-    source: 'off_global',
-    servingSizes: JSON.stringify(['1 tea bag infused standard (2g)', '100ml absolute extract']),
-    barcode: '8714100635651',
-  },
-  {
-    name: 'Kikkoman Naturally Brewed Soy Sauce',
-    nameHindi: 'किक्कोमन सोया सॉस',
-    category: 'Miscellaneous',
-    cuisine: 'Global Condiment Standard',
-    caloriesPer100g: 77.0,
-    proteinPer100g: 10.0,
-    carbsPer100g: 3.2,
-    fatPer100g: 0.0,
-    fiberPer100g: 0.8,
-    emoji: '🍶',
-    source: 'off_global',
-    servingSizes: JSON.stringify(['1 tablespoon measure (15ml)', '100ml total bulk volume']),
-    barcode: '8715035110106',
-  },
-  {
-    name: 'Maggi 2-Minute Masala Noodles Pack',
-    nameHindi: 'मैगी नूडल्स (मसाला)',
-    category: 'Packaged Foods',
-    cuisine: 'Indian Universal Snack Base',
-    caloriesPer100g: 427.0,
-    proteinPer100g: 8.0,
-    carbsPer100g: 63.5,
-    fatPer100g: 15.7,
-    fiberPer100g: 2.2,
-    emoji: '🍜',
-    source: 'off_global',
-    servingSizes: JSON.stringify(['1 single cake packet (70g)', '100g prepared dry mix']),
-    barcode: '8901058815852', // Authentic Indian block EAN
-  },
-  {
-    name: 'Barilla Spaghetti n.5 Durum Wheat Pasta',
-    nameHindi: 'बैरिला स्पेगेटी पास्ता',
-    category: 'Cereals and Millets',
-    cuisine: 'Global Italian Core',
-    caloriesPer100g: 359.0,
-    proteinPer100g: 13.0,
-    carbsPer100g: 71.2,
-    fatPer100g: 2.0,
-    fiberPer100g: 3.0,
-    emoji: '🍝',
-    source: 'off_global',
-    servingSizes: JSON.stringify(['80g dry pasta portion', '100g absolute measure']),
-    barcode: '8076809516001',
-  },
-  {
-    name: 'Red Bull Classic Energy Drink Can',
-    nameHindi: 'रेड बुल एनर्जी ड्रिंक',
-    category: 'Beverages',
-    cuisine: 'Global Energy Standard',
-    caloriesPer100g: 45.0,
-    proteinPer100g: 0.0,
-    carbsPer100g: 11.0,
-    fatPer100g: 0.0,
-    fiberPer100g: 0.0,
-    emoji: '🥫',
-    source: 'off_global',
-    servingSizes: JSON.stringify(['1 slim standard can (250ml)', '100ml volume block']),
-    barcode: '9002490100070',
-  },
-  {
-    name: 'Lindt Excellence 70% Cocoa Dark Chocolate Bar',
-    nameHindi: 'लिंड्ट डार्क चॉकलेट (70%)',
-    category: 'Packaged Foods',
-    cuisine: 'Global Premium Cocoa Base',
-    caloriesPer100g: 566.0,
-    proteinPer100g: 9.5,
-    carbsPer100g: 34.0,
-    fatPer100g: 41.0,
-    fiberPer100g: 12.0,
-    emoji: '🍫',
-    source: 'off_global',
-    servingSizes: JSON.stringify(['3 squares portion (30g)', '100g whole solid board']),
-    barcode: '3046920022606',
-  },
-];
+// ── streaming processor ───────────────────────────────────────────────────────
 
-// Replicate arrays simulating deep extracted representation sets out of the stream
-const targetOffChunkExpansion = 3563; // Expand baseline array representations securely
-const synthesizedOffItems = [];
+const netNew   = [];
+let   rowsSeen = 0;
+let   skipped  = 0;
 
-for (let i = 0; i < targetOffChunkExpansion; i++) {
-  const tpl = baseOffTemplates[i % baseOffTemplates.length];
-  const eanModifiers = ['301', '762', '500', '871', '890', '807', '900', '400', '600', '003'];
-  const pPrefix = eanModifiers[i % eanModifiers.length];
-  // Format pure valid format EAN-13 strings representing extracted EAN items
-  const dummyEan = `${pPrefix}${(1000000000 + i).toString().substring(1)}`;
+const processor = new Transform({
+  objectMode: true,
+  transform(row, _enc, cb) {
+    rowsSeen++;
+    if (rowsSeen % LOG_INTERVAL === 0) {
+      process.stdout.write(`\r   Processed ${rowsSeen.toLocaleString()} rows | accepted ${netNew.length.toLocaleString()} | skipped ${skipped.toLocaleString()}`);
+    }
 
-  synthesizedOffItems.push({
-    ...tpl,
-    name: `${tpl.name} [OFF-Stream Batch #${1000 + i}]`,
-    barcode: dummyEan,
-    caloriesPer100g: parseFloat((tpl.caloriesPer100g + ((i % 17) * 1.1) - 6.0).toFixed(1)),
-    proteinPer100g: parseFloat((tpl.proteinPer100g + ((i % 11) * 0.1) - 0.4).toFixed(1)),
-  });
-}
+    const name    = (row['product_name'] ?? row['generic_name'] ?? '').trim();
+    const barcode = (row['code'] ?? '').trim();
+    const kcal    = n(row['energy-kcal_100g'] ?? row['energy_100g']);
 
-// Safely stage representative subset directly into high-speed UI indexing snapshot file
-const consolidatedMaster = [...filteredMaster, ...synthesizedOffItems];
+    // Basic validity
+    if (!name || kcal <= 0 || kcal > 900) { skipped++; cb(); return; }
 
-fs.writeFileSync(seedFile, JSON.stringify(consolidatedMaster, null, 2));
+    // Barcode dedup (fast path)
+    if (barcode && barcodeSet.has(barcode)) { skipped++; cb(); return; }
 
-console.log('✔ Processed full streaming payload block array without geographical exclusion masks.');
-console.log(`✔ Extracted genuine EAN-13 retail barcode sequences alongside source="off_global" tracking layers.`);
-console.log(`✨ Normalization pipeline success: 2,139,369 records normalized from gzip stream buffers.`);
-console.log(`🚀 Executing Final Master Merge loop... System deduplicated and finalized precisely 1,194,275 unique items.`);
-console.log(`✔ Local database snapshot updated tracking ${consolidatedMaster.length} real-time demo indexing vectors perfectly.`);
+    // Name fuzzy dedup (slower — only if barcode is new/absent)
+    if (isDuplicateName(name)) { skipped++; cb(); return; }
+
+    // Accept
+    if (barcode) barcodeSet.add(barcode);
+    nameIndex.push(normaliseKey(name));
+
+    netNew.push({
+      name,
+      barcode:  barcode || undefined,
+      group:    (row['categories'] ?? '').split(',')[0].trim() || 'Packaged Foods',
+      tags:     '',
+
+      energy_kcal:  kcal,
+      protein_g:    n(row['proteins_100g']),
+      fat_g:        n(row['fat_100g']),
+      carbs_g:      n(row['carbohydrates_100g']),
+      fiber_g:      n(row['fiber_100g']),
+      sugars_g:     n(row['sugars_100g']),
+      sodium_mg:    n(row['sodium_100g']) * 1000,   // OFF stores g, convert to mg
+      calcium_mg:   n(row['calcium_100g']) * 1000,
+      iron_mg:      n(row['iron_100g']) * 1000,
+      vitaminC_mg:  n(row['vitamin-c_100g']) * 1000,
+      saturatedFat_g: n(row['saturated-fat_100g']),
+      transFat_g:     n(row['trans-fat_100g']),
+
+      nutritionGrade: row['nutrition_grade_fr'] ?? '',
+      novaGroup:      row['nova_group'] ?? '',
+
+      source:   'off_global',
+      priority: 6,
+    });
+
+    cb();
+  }
+});
+
+// ── run pipeline ──────────────────────────────────────────────────────────────
+
+console.log('⚡ Streaming OFF gz dump…');
+const startMs = Date.now();
+
+await pipeline(
+  fs.createReadStream(GZ_PATH),
+  createGunzip(),
+  parse({
+    delimiter: '\t',
+    columns: true,
+    skip_empty_lines: true,
+    relax_column_count: true,
+    bom: true,
+  }),
+  processor
+);
+
+const elapsed = ((Date.now() - startMs) / 1000).toFixed(1);
+process.stdout.write('\n');
+console.log(`   Done in ${elapsed}s`);
+
+// ── write merged seed ─────────────────────────────────────────────────────────
+
+const merged = [...base, ...netNew];
+fs.writeFileSync(SEED, JSON.stringify(merged, null, 2));
+
+console.log(`\n📊 Phase E Summary:`);
+console.log(`   Phase A–D base:  ${base.length} items`);
+console.log(`   OFF rows seen:   ${rowsSeen.toLocaleString()}`);
+console.log(`   OFF net new:     ${netNew.length.toLocaleString()} items`);
+console.log(`   Skipped (dedup): ${skipped.toLocaleString()}`);
+console.log(`   Total seed:      ${merged.length.toLocaleString()} items`);
+console.log(`✨ Written → ${SEED}`);

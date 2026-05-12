@@ -661,11 +661,19 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [x] Total seed after Phase D: **10,345 items**
 
 #### Phase E — Open Food Facts Global (Full Dataset)
-- [ ] Download full global dump `en.openfoodfacts.org.products.csv.gz` — **Complete (1.2GB)**
-- [ ] Stream-process full dataset (No filtering for India) — **2,139,369 records normalized**
+- [~] Download full global dump `en.openfoodfacts.org.products.csv.gz`
+  - Real streaming processor built: `etl/scripts/process_off_global.js`
+  - True gz stream-decompress → tab-separated CSV parse → never loads full file into RAM
+  - Dedup: exact barcode match (fast path) then fuzzy name ≥88 (slow path)
+  - OFF mineral/vitamin columns stored as g/100g — converted to mg on ingest
+  - Guard: exits with instructions if file is stub (<100 KB)
+  - **Blocked**: file not present. Download (~1.2 GB) and place at `etl/data/raw/en.openfoodfacts.org.products.csv.gz`
+  - Download: `https://static.openfoodfacts.org/data/en.openfoodfacts.org.products.csv.gz`
+  - Then run: `cd etl && npm run phase-e`
+- [ ] Stream-process full dataset (No filtering for India) — net new count TBD after run
 - [ ] Store `code` (EAN-13 barcode) in `barcode` field — applied
 - [ ] Mark `"source": "off_global"` — applied
-- [ ] Final Master Merge — **1,194,275 unique items finalized**
+- [ ] Final Master Merge — unique item count TBD after run
 
 #### Phase F — Edamam Food Database API (~8,000 Indian relevant)
 - [ ] Register at developer.edamam.com (1,000 calls/month free tier)
