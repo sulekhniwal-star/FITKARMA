@@ -692,33 +692,33 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [x] INFOODS normaliser: `etl/scripts/normalise_fao_infoods.js`
 
 #### Phase I — Category Coverage (Expanded to beat HealthifyMe)
-- [ ] **Cereals & Staples** — ≥80 items (rice varieties, millets, pseudo-cereals)
-- [ ] **Dals & Legumes** — ≥60 items (lentils, chickpeas, kidney beans, sprouted)
-- [ ] **Breads & Rotis** — ≥50 items (phulka, naan, paratha, dosa, appam)
-- [ ] **Rice Dishes** — ≥40 items (plain, jeera, lemon, biryani, pongal)
-- [ ] **Sabzis & Curries** — ≥100 items (north + south + Bengali + Rajasthani)
-- [ ] **Non-Vegetarian** — ≥80 items (regional chicken, mutton, fish, prawn, egg)
-- [ ] **Snacks** — ≥80 items (samosa, dhokla, namkeen, baked options)
-- [ ] **Sweets & Mithai** — ≥80 items (gulab jamun, ladoo, barfi, regional)
-- [ ] **Street Food & Chaat** — ≥60 items (pav bhaji, pani puri, dosa)
-- [ ] **South Indian** — ≥80 items (sambhar, rasam, Kerala/Karnataka specialties)
-- [ ] **North Indian Regional** — ≥60 items (Punjabi, Rajasthani, Gujarati, etc.)
-- [ ] **Northeast & Tribal** — ≥40 items (eromba, smoked pork, bamboo shoots - HealthifyMe gap)
-- [ ] **Beverages** — ≥50 items (chai, lassi, thandai, health drinks)
-- [ ] **Dairy & Products** — ≥40 items (milk variants, paneer, ghee, curd)
-- [ ] **Fruits** — ≥60 items (mango varieties, guava, phalsa, jamun)
-- [ ] **Raw Vegetables** — ≥60 items (gourds, leafy greens, roots)
-- [ ] **Spices & Masalas** — ≥50 items (whole + powdered + branded blends)
-- [ ] **Oils & Fats** — ≥20 items (groundnut, mustard, coconut, branded)
-- [ ] **Diabetic & Low-GI** — ≥30 items (tag `glycemicIndex`, `isDiabeticFriendly`)
-- [ ] **Fasting Foods** — ≥40 items (Navratri, Jain, Sattvic, IF-friendly)
+- [x] **Cereals & Staples** — ≥80 items (rice varieties, millets, pseudo-cereals)
+- [x] **Dals & Legumes** — ≥60 items (lentils, chickpeas, kidney beans, sprouted)
+- [x] **Breads & Rotis** — ≥50 items (phulka, naan, paratha, dosa, appam)
+- [x] **Rice Dishes** — ≥40 items (plain, jeera, lemon, biryani, pongal)
+- [x] **Sabzis & Curries** — ≥100 items (north + south + Bengali + Rajasthani)
+- [x] **Non-Vegetarian** — ≥80 items (regional chicken, mutton, fish, prawn, egg)
+- [x] **Snacks** — ≥80 items (samosa, dhokla, namkeen, baked options)
+- [x] **Sweets & Mithai** — ≥80 items (gulab jamun, ladoo, barfi, regional)
+- [x] **Street Food & Chaat** — ≥60 items (pav bhaji, pani puri, dosa)
+- [x] **South Indian** — ≥80 items (sambhar, rasam, Kerala/Karnataka specialties)
+- [x] **North Indian Regional** — ≥60 items (Punjabi, Rajasthani, Gujarati, etc.)
+- [x] **Northeast & Tribal** — ≥40 items (eromba, smoked pork, bamboo shoots - HealthifyMe gap)
+- [x] **Beverages** — ≥50 items (chai, lassi, thandai, health drinks)
+- [x] **Dairy & Products** — ≥40 items (milk variants, paneer, ghee, curd)
+- [x] **Fruits** — ≥60 items (mango varieties, guava, phalsa, jamun)
+- [x] **Raw Vegetables** — ≥60 items (gourds, leafy greens, roots)
+- [x] **Spices & Masalas** — ≥50 items (whole + powdered + branded blends)
+- [x] **Oils & Fats** — ≥20 items (groundnut, mustard, coconut, branded)
+- [x] **Diabetic & Low-GI** — ≥30 items (tag `glycemicIndex`, `isDiabeticFriendly`)
+- [x] **Fasting Foods** — ≥40 items (Navratri, Jain, Sattvic, IF-friendly)
 
 #### Phase J — Nutrient Profile Enhancement
-- [ ] Add extended nutrient fields to Appwrite schema:
+- [x] Add extended nutrient fields to Appwrite schema:
   - `calcium_mg`, `iron_mg`, `vitaminC_mg`, `vitaminA_ug`, `vitaminD_ug`, `vitaminB12_ug`, `folate_ug`
   - `zinc_mg`, `sodium_mg`, `potassium_mg`, `magnesium_mg`, `glycemicIndex`
   - `omega3_g`, `saturatedFat_g`, `transFat_g`
-- [ ] Add boolean diet flags: `isVegan`, `isJain`, `isSattvic`, `isGlutenFree`, `isNavratriSafe`, `isDiabeticFriendly`
+- [x] Add boolean diet flags: `isVegan`, `isJain`, `isSattvic`, `isGlutenFree`, `isNavratriSafe`, `isDiabeticFriendly`
 
 #### Phase K — Normalisation, Dedup & Merge
 - [ ] Install: `pip install pandas pdfplumber rapidfuzz openpyxl uuid xlrd` (Used Node.js `fuzzball` as performant alternative)
