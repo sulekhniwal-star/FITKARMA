@@ -1,186 +1,254 @@
+/**
+ * download_cofid.js — Phase D: UK CoFID 2021 normaliser
+ *
+ * Source: McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx
+ * Place the real file at etl/data/raw/ before running.
+ * Download from: https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid
+ *
+ * CoFID 2021 worksheet structure (13 sheets, all keyed on food code col A):
+ *   Proximates     — energy, water, protein, fat, carbs, fibre, alcohol, NSP
+ *   Inorganics     — Na, K, Ca, Mg, P, Fe, Cu, Zn, Cl, Mn, Se, I
+ *   Vitamins       — retinol, carotene, vit D, vit E, vit K, thiamin, riboflavin,
+ *                    niacin, B6, B12, folate, pantothenate, biotin, vit C
+ *   Fatty acids    — satd, mono, poly, trans, n-3, n-6
+ *   Amino acids    — 18 amino acids
+ *   (+ additional sheets: Proximates2, Carbohydrates, Sterols, etc.)
+ *
+ * Dedup: token-sort fuzzy ≥88 against existing seed
+ * Output: assets/data/indian_foods_seed.json
+ */
+
+import XLSX from 'xlsx';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const require = createRequire(import.meta.url);
+const fuzz = require('fuzzball');
 
-console.log('⚡ Initializing UK CoFID 2021 integrated worksheet ingestion pipelines...');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const XLSX_PATH = path.join(__dirname, '../data/raw/McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx');
+const SEED      = path.join(__dirname, '../../assets/data/indian_foods_seed.json');
+const DEDUP_THRESHOLD = 88;
 
-const rawDir = path.join(__dirname, '../data/raw');
-if (!fs.existsSync(rawDir)) {
-  fs.mkdirSync(rawDir, { recursive: true });
+// ── guard ─────────────────────────────────────────────────────────────────────
+
+if (!fs.existsSync(XLSX_PATH) || fs.statSync(XLSX_PATH).size < 10_000) {
+  console.error('❌ Real CoFID xlsx not found or is a stub.');
+  console.error('   Download from: https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid');
+  console.error('   Save to: etl/data/raw/McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx');
+  process.exit(1);
 }
 
-// Stage stub representation of the official McCance and Widdowson multi-sheet master spreadsheet dump
-const cofidXlsxStub = 'PK\x03\x04\x14\x00\x08\x08\x08\x00McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx_stub';
-fs.writeFileSync(path.join(rawDir, 'McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx'), cofidXlsxStub);
+// ── load workbook ─────────────────────────────────────────────────────────────
 
-console.log('✔ Downloaded McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx successfully.');
-console.log('⚡ Executing deep multi-worksheet merge loops across 13+ separate sub-tables (Proximates, Inorganics, Vitamins mapping)...');
+console.log('⚡ Loading CoFID 2021 workbook…');
+const wb = XLSX.readFile(XLSX_PATH, { cellDates: false, sheetStubs: false });
+console.log(`   Sheets found: ${wb.SheetNames.join(', ')}`);
 
-const seedFile = path.join(__dirname, '../../assets/data/indian_foods_seed.json');
-let currentMaster = [];
+// ── sheet → row array helper ──────────────────────────────────────────────────
 
-if (fs.existsSync(seedFile)) {
-  try {
-    currentMaster = JSON.parse(fs.readFileSync(seedFile, 'utf8'));
-    console.log(`✔ Loaded current active DB state tracking ${currentMaster.length} base entries.`);
-  } catch (e) {
-    console.warn('⚠ Base JSON read check warning. Initializing target master arrays from scratch.');
+function sheetRows(name) {
+  const ws = wb.Sheets[name];
+  if (!ws) return [];
+  return XLSX.utils.sheet_to_json(ws, { defval: '' });
+}
+
+// ── find column by partial header match ──────────────────────────────────────
+
+function col(row, ...parts) {
+  for (const key of Object.keys(row)) {
+    const k = key.toLowerCase();
+    if (parts.every(p => k.includes(p.toLowerCase()))) return row[key];
+  }
+  return '';
+}
+
+const n = (v, fallback = 0) => {
+  const f = parseFloat(v);
+  return isNaN(f) || f < 0 ? fallback : parseFloat(f.toFixed(4));
+};
+
+// ── build per-food-code maps from each sheet ──────────────────────────────────
+// CoFID uses a numeric food code in the first column as the join key.
+
+function buildMap(sheetName, codeCol) {
+  const map = {};
+  for (const row of sheetRows(sheetName)) {
+    const code = String(row[codeCol] ?? '').trim();
+    if (code) map[code] = row;
+  }
+  return map;
+}
+
+// Detect the code column name (varies slightly across sheets)
+function detectCodeCol(sheetName) {
+  const rows = sheetRows(sheetName);
+  if (!rows.length) return null;
+  const keys = Object.keys(rows[0]);
+  // CoFID code column is typically 'Food Code', 'Code', or first numeric-looking column
+  return keys.find(k => /^food.?code$|^code$/i.test(k)) ?? keys[0];
+}
+
+// ── load all sheets ───────────────────────────────────────────────────────────
+
+function findSheet(candidates) {
+  for (const c of candidates) {
+    const found = wb.SheetNames.find(s => s.toLowerCase().includes(c.toLowerCase()));
+    if (found) return found;
+  }
+  return null;
+}
+
+const proxSheet  = findSheet(['Proximates', 'Prox']);
+const inorgSheet = findSheet(['Inorganics', 'Inorganic', 'Minerals']);
+const vitSheet   = findSheet(['1.5 Vitamins', 'Vitamins', 'Vitamin']);
+// CoFID splits fatty acids: merge SFA + MUFA + PUFA per 100g food into one map
+const sfaSheet   = findSheet(['SFA per 100gFood',  'SFA per 100g Food']);
+const mufaSheet  = findSheet(['MUFA per 100gFood', 'MUFA per 100g Food']);
+const pufaSheet  = findSheet(['PUFA per 100gFood', 'PUFA per 100g Food']);
+
+console.log(`   Proximates : ${proxSheet}`);
+console.log(`   Inorganics : ${inorgSheet}`);
+console.log(`   Vitamins   : ${vitSheet}`);
+console.log(`   SFA sheet  : ${sfaSheet}`);
+console.log(`   MUFA sheet : ${mufaSheet}`);
+console.log(`   PUFA sheet : ${pufaSheet}`);
+
+if (!proxSheet) {
+  console.error('❌ Could not find Proximates sheet. Sheet names:', wb.SheetNames.join(', '));
+  process.exit(1);
+}
+
+const proxRows = sheetRows(proxSheet);
+const codeCol  = detectCodeCol(proxSheet);
+console.log(`   Code column: "${codeCol}" | Proximates rows: ${proxRows.length}`);
+console.log(`   Sample columns: ${Object.keys(proxRows[0] ?? {}).slice(0, 12).join(', ')}`);
+
+const inorgMap = inorgSheet ? buildMap(inorgSheet, detectCodeCol(inorgSheet)) : {};
+const vitMap   = vitSheet   ? buildMap(vitSheet,   detectCodeCol(vitSheet))   : {};
+
+// Merge SFA + MUFA + PUFA rows by food code into a single fat map
+const fatMap = {};
+for (const sheet of [sfaSheet, mufaSheet, pufaSheet].filter(Boolean)) {
+  const cc = detectCodeCol(sheet);
+  for (const row of sheetRows(sheet)) {
+    const code = String(row[cc] ?? '').trim();
+    if (code) fatMap[code] = { ...(fatMap[code] ?? {}), ...row };
   }
 }
 
-// Preserve existing source clusters to maintain strict unpolluted tracking metrics
-const filteredMaster = currentMaster.filter(item => item.source !== 'cofid_uk');
+// ── dedup helpers ─────────────────────────────────────────────────────────────
 
-// Authoritative UK standard composition templates mapped from McCance and Widdowson analytical models
-const baseCofidTemplates = [
-  {
-    name: 'Cheddar Cheese Extra Mature UK Standard',
-    nameHindi: 'चेडर चीज़ (परिपक्व)',
-    category: 'Dairy and Products',
-    cuisine: 'British Standard Base',
-    caloriesPer100g: 416.0,
-    proteinPer100g: 25.4,
-    carbsPer100g: 0.1,
-    fatPer100g: 34.9,
-    fiberPer100g: 0.0,
-    emoji: '🧀',
-    source: 'cofid_uk',
-    servingSizes: JSON.stringify(['30g standard slice', '100g shredded block']),
-    barcode: 'UK-COFID-DAI-101',
-  },
-  {
-    name: 'Traditional Rye Sourdough Bread',
-    nameHindi: 'खमीरयुक्त राई ब्रेड',
-    category: 'Cereals and Millets',
-    cuisine: 'European Standard Core',
-    caloriesPer100g: 245.0,
-    proteinPer100g: 8.5,
-    carbsPer100g: 48.0,
-    fatPer100g: 1.4,
-    fiberPer100g: 5.2,
-    emoji: '🍞',
-    source: 'cofid_uk',
-    servingSizes: JSON.stringify(['1 thick slice (50g)', '100g baked standard slice']),
-    barcode: 'UK-COFID-CER-204',
-  },
-  {
-    name: 'Bramley Apple Raw Flesh',
-    nameHindi: 'ब्रैमले सेब (कच्चा)',
-    category: 'Fruits',
-    cuisine: 'British Heritage Varietal',
-    caloriesPer100g: 40.0,
-    proteinPer100g: 0.4,
-    carbsPer100g: 9.2,
-    fatPer100g: 0.1,
-    fiberPer100g: 2.1,
-    emoji: '🍏',
-    source: 'cofid_uk',
-    servingSizes: JSON.stringify(['1 medium core trimmed (150g)', '100g standard portions']),
-    barcode: 'UK-COFID-FRU-309',
-  },
-  {
-    name: 'Scottish Wild Porridge Oats',
-    nameHindi: 'स्कॉटिश ओट्स',
-    category: 'Cereals and Millets',
-    cuisine: 'Scottish Standard Heritage',
-    caloriesPer100g: 374.0,
-    proteinPer100g: 12.1,
-    carbsPer100g: 61.0,
-    fatPer100g: 8.0,
-    fiberPer100g: 9.5,
-    emoji: '🥣',
-    source: 'cofid_uk',
-    servingSizes: JSON.stringify(['40g raw measure', '200g prepared thick bowl']),
-    barcode: 'UK-COFID-CER-412',
-  },
-  {
-    name: 'Jersey Royal New Potatoes Cooked with Skins',
-    nameHindi: 'जर्सी रॉयल आलू (उबला हुआ)',
-    category: 'Starchy Vegetables',
-    cuisine: 'British Isle Standard',
-    caloriesPer100g: 75.0,
-    proteinPer100g: 1.8,
-    carbsPer100g: 16.5,
-    fatPer100g: 0.2,
-    fiberPer100g: 2.0,
-    emoji: '🥔',
-    source: 'cofid_uk',
-    servingSizes: JSON.stringify(['3 small potatoes (120g)', '100g side standard']),
-    barcode: 'UK-COFID-VEG-515',
-  },
-  {
-    name: 'Premium Red Leicester Dairy Cheese',
-    nameHindi: 'रेड लीसेस्टर चीज़',
-    category: 'Dairy and Products',
-    cuisine: 'British Heritage Base',
-    caloriesPer100g: 400.0,
-    proteinPer100g: 23.8,
-    carbsPer100g: 0.1,
-    fatPer100g: 33.5,
-    fiberPer100g: 0.0,
-    emoji: '🧀',
-    source: 'cofid_uk',
-    servingSizes: JSON.stringify(['30g standard block', '100g absolute measure']),
-    barcode: 'UK-COFID-DAI-602',
-  },
-  {
-    name: 'Smoked Haddock Uncooked Skinless Fillet',
-    nameHindi: 'हaddock मछली (स्मोक्ड)',
-    category: 'Fish and Seafood',
-    cuisine: 'British Commonwealth Core',
-    caloriesPer100g: 82.0,
-    proteinPer100g: 18.9,
-    carbsPer100g: 0.0,
-    fatPer100g: 0.6,
-    fiberPer100g: 0.0,
-    emoji: '🐟',
-    source: 'cofid_uk',
-    servingSizes: JSON.stringify(['140g raw fillet standard', '100g cooked standard portion']),
-    barcode: 'UK-COFID-FIS-705',
-  },
-  {
-    name: 'Marmite Classic Yeast Extract Paste',
-    nameHindi: 'मार्माइट यीस्ट पेस्ट',
-    category: 'Miscellaneous',
-    cuisine: 'British High Vitamin Base',
-    caloriesPer100g: 260.0,
-    proteinPer100g: 34.0,
-    carbsPer100g: 30.0,
-    fatPer100g: 0.1,
-    fiberPer100g: 1.1,
-    emoji: '🍯',
-    source: 'cofid_uk',
-    servingSizes: JSON.stringify(['1 thin scraping (4g)', '8g solid portion']),
-    barcode: 'UK-COFID-MIS-889',
-  },
-];
+const normaliseKey = s => s.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
 
-// Synthesize precisely 2,755 net new item definitions mapped with unified attributes
-const targetCofidNetCount = 2755;
-const synthesizedCofidItems = [];
+const master = JSON.parse(fs.readFileSync(SEED, 'utf8'));
+const base   = master.filter(x => x.source !== 'cofid_uk');
+const index  = base.map(x => normaliseKey(x.name));
+console.log(`✅ Loaded ${base.length} existing items (Phase A–C)`);
 
-for (let i = 0; i < targetCofidNetCount; i++) {
-  const tpl = baseCofidTemplates[i % baseCofidTemplates.length];
-  const lotSources = ['Unified Sheet 01', 'Proximates Cluster A', 'Vitamins Array C', 'Inorganics Merge DB', 'Analytical Lab Tier 4', 'McCance Batch 2021'];
-  const lSrc = lotSources[i % lotSources.length];
-
-  synthesizedCofidItems.push({
-    ...tpl,
-    name: `${tpl.name} [CoFID-${lSrc} #${5000 + i}]`,
-    barcode: `${tpl.barcode}-NET-${i}`,
-    caloriesPer100g: parseFloat((tpl.caloriesPer100g + ((i % 9) * 2.1) - 8.0).toFixed(1)),
-    proteinPer100g: parseFloat((tpl.proteinPer100g + ((i % 5) * 0.4) - 0.5).toFixed(1)),
-  });
+function isDuplicate(name) {
+  const key = normaliseKey(name);
+  for (const k of index) {
+    if (fuzz.token_sort_ratio(key, k) >= DEDUP_THRESHOLD) return true;
+  }
+  return false;
 }
 
-// Safely append unified entries directly to current master records store
-const consolidatedMaster = [...filteredMaster, ...synthesizedCofidItems];
+// ── process each food row ─────────────────────────────────────────────────────
 
-fs.writeFileSync(seedFile, JSON.stringify(consolidatedMaster, null, 2));
+const netNew  = [];
+let   skipped = 0;
 
-console.log(`✔ Fully merged Proximates, Inorganics, and Vitamins parameters from 13+ CoFID worksheets.`);
-console.log(`✨ Processing complete! Successfully added precisely ${synthesizedCofidItems.length} new integrated items marked source="cofid_uk".`);
-console.log(`🚀 Master file baseline updated: tracking ${consolidatedMaster.length} items persistently.`);
+for (const row of proxRows) {
+  const code = String(row[codeCol] ?? '').trim();
+  const name = String(col(row, 'food', 'name') || col(row, 'description') || col(row, 'name') || '').trim();
+
+  if (!name || !code) { skipped++; continue; }
+
+  // Energy: CoFID stores kcal and kJ — prefer kcal column
+  const kcal = n(col(row, 'kcal') || col(row, 'energy', 'kcal') || col(row, 'energy (kcal)'));
+  const kj   = n(col(row, 'kj')   || col(row, 'energy', 'kj')   || col(row, 'energy (kj)'));
+  const energy_kcal = kcal > 0 ? kcal : Math.round(kj / 4.184);
+
+  if (energy_kcal <= 0 || energy_kcal > 900) { skipped++; continue; }
+  if (isDuplicate(name)) { skipped++; continue; }
+
+  const inorg = inorgMap[code] ?? {};
+  const vit   = vitMap[code]   ?? {};
+  const fat   = fatMap[code]   ?? {};
+
+  const item = {
+    code,
+    name,
+    group: String(col(row, 'food', 'group') || col(row, 'group') || col(row, 'category') || '').trim(),
+    tags:  '',
+
+    // Proximates (g/100g)
+    energy_kcal,
+    water_g:   n(col(row, 'water')),
+    protein_g: n(col(row, 'protein')),
+    fat_g:     n(col(row, 'fat') || col(row, 'total fat') || col(row, 'lipid')),
+    carbs_g:   n(col(row, 'carbohydrate') || col(row, 'carbs')),
+    fiber_g:   n(col(row, 'fibre') || col(row, 'fiber') || col(row, 'nsp')),
+    sugars_g:  n(col(row, 'sugar')),
+    starch_g:  n(col(row, 'starch')),
+    alcohol_g: n(col(row, 'alcohol')),
+
+    // Inorganics (mg/100g)
+    sodium_mg:    n(col(inorg, 'na') || col(inorg, 'sodium')),
+    potassium_mg: n(col(inorg, 'k')  || col(inorg, 'potassium')),
+    calcium_mg:   n(col(inorg, 'ca') || col(inorg, 'calcium')),
+    magnesium_mg: n(col(inorg, 'mg') || col(inorg, 'magnesium')),
+    phosphorus_mg:n(col(inorg, 'p')  || col(inorg, 'phosphorus')),
+    iron_mg:      n(col(inorg, 'fe') || col(inorg, 'iron')),
+    copper_mg:    n(col(inorg, 'cu') || col(inorg, 'copper')),
+    zinc_mg:      n(col(inorg, 'zn') || col(inorg, 'zinc')),
+    manganese_mg: n(col(inorg, 'mn') || col(inorg, 'manganese')),
+    selenium_ug:  n(col(inorg, 'se') || col(inorg, 'selenium')),
+    iodine_ug:    n(col(inorg, 'i')  || col(inorg, 'iodine')),
+
+    // Vitamins
+    vitaminA_ug:             n(col(vit, 'retinol') || col(vit, 'vitamin a')),
+    carotene_ug:             n(col(vit, 'carotene')),
+    vitaminD_ug:             n(col(vit, 'vitamin d')),
+    vitaminE_mg:             n(col(vit, 'vitamin e')),
+    vitaminK_ug:             n(col(vit, 'vitamin k')),
+    vitaminB1_thiamine_mg:   n(col(vit, 'thiamin')),
+    vitaminB2_riboflavin_mg: n(col(vit, 'riboflavin')),
+    vitaminB3_niacin_mg:     n(col(vit, 'niacin')),
+    vitaminB6_mg:            n(col(vit, 'b6') || col(vit, 'vitamin b6')),
+    vitaminB12_ug:           n(col(vit, 'b12') || col(vit, 'vitamin b12')),
+    vitaminB9_folate_ug:     n(col(vit, 'folate') || col(vit, 'folic')),
+    vitaminB5_pantothenic_mg:n(col(vit, 'pantothenate') || col(vit, 'pantothenic')),
+    vitaminB7_biotin_ug:     n(col(vit, 'biotin')),
+    vitaminC_mg:             n(col(vit, 'vitamin c') || col(vit, 'ascorbic')),
+
+    // Fatty acids (g/100g)
+    saturatedFat_g:       n(col(fat, 'satd') || col(fat, 'saturated')),
+    monounsaturatedFat_g: n(col(fat, 'mono')),
+    polyunsaturatedFat_g: n(col(fat, 'poly')),
+    transFat_g:           n(col(fat, 'trans')),
+    omega3_g:             n(col(fat, 'n-3') || col(fat, 'omega-3') || col(fat, 'omega3')),
+    omega6_g:             n(col(fat, 'n-6') || col(fat, 'omega-6') || col(fat, 'omega6')),
+
+    source:   'cofid_uk',
+    priority: 5,
+  };
+
+  index.push(normaliseKey(name));
+  netNew.push(item);
+}
+
+// ── write merged seed ─────────────────────────────────────────────────────────
+
+const merged = [...base, ...netNew];
+fs.writeFileSync(SEED, JSON.stringify(merged, null, 2));
+
+console.log(`\n📊 Phase D Summary:`);
+console.log(`   Phase A–C base:  ${base.length} items`);
+console.log(`   CoFID net new:   ${netNew.length} items`);
+console.log(`   Skipped (dedup): ${skipped}`);
+console.log(`   Total seed:      ${merged.length} items`);
+console.log(`✨ Written → ${SEED}`);

@@ -6,7 +6,8 @@
     "merge:phase-a": "node scripts/merge_phase_a.mjs",
     "phase-a": "npm run extract:ifct && npm run merge:phase-a",
     "phase-b": "node scripts/normalise_kaggle.js",
-    "phase-c": "node scripts/download_usda.js"
+    "phase-c": "node scripts/download_usda.js",
+    "phase-d": "node scripts/download_cofid.js"
   },
   "devDependencies": {
     "axios": "^1.16.0",

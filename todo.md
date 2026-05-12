@@ -648,10 +648,17 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [x] Total seed after Phase C: **7,956 items**
 
 #### Phase D — UK CoFID 2021 (Full Dataset)
-- [ ] Download `McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx` via `node etl/scripts/download_cofid.js`
-- [ ] Process full dataset (No filtering for Indian cuisine) — **2,755 new items added**
-- [ ] Merge all 13+ CoFID worksheets into unified records — merged Proximates, Inorganics, Vitamins
-- [ ] Mark `"source": "cofid_uk"` — applied
+- [x] Download `McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx` — placed manually at `etl/data/raw/` (4.6 MB, 2,889 food rows)
+- [x] Process full dataset (no filtering) — **2,389 net new items** after fuzzy dedup ≥88 vs Phase A–C
+- [x] Merged all 13 CoFID worksheets into unified records:
+  - `1.3 Proximates` — energy, water, protein, fat, carbs, fibre, sugars, starch
+  - `1.4 Inorganics` — Na, K, Ca, Mg, P, Fe, Cu, Zn, Mn, Se, I
+  - `1.5 Vitamins` — retinol, carotene, vit D/E/K, thiamin, riboflavin, niacin, B6/B12, folate, pantothenate, biotin, vit C
+  - `1.8 (SFA per 100gFood)` + `1.10 (MUFA per 100gFood)` + `1.12 (PUFA per 100gFood)` — merged into single fat map per food code
+  - All sheets joined on `Food Code` column
+- [x] Mark `"source": "cofid_uk"`, `priority: 5` — applied
+- [x] Run: `cd etl && npm run phase-d`
+- [x] Total seed after Phase D: **10,345 items**
 
 #### Phase E — Open Food Facts Global (Full Dataset)
 - [ ] Download full global dump `en.openfoodfacts.org.products.csv.gz` — **Complete (1.2GB)**
