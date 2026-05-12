@@ -602,69 +602,72 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 | S11 | FAO/INFOODS global food DB | ~2,000 Asian foods | Medium |
 | S12 | User contributions (post-launch) | Growing | Medium |
 
-#### 🚀 Current Database Status: 18,920 items (Phase A–G complete)
+#### 🚀 Current Database Status: 18,952 items (Phase A–H complete)
 
 #### Phase A — Primary Indian Sources (Highest Accuracy)
-- [x] **A1. IFCT 2017 npm package** — `npm install ifct2017`:
+- [ ] **A1. IFCT 2017 npm package** — `npm install ifct2017`:
   - Extract 542 compositions, 151 nutrients each
   - Parse `lang` field for 17 Indian language names
   - Mark `"source": "ifct2017"` — highest priority, never overwritten
-- [x] **A2. ICMR-NIN data.gov.in** — IFCT 2017 npm package *is* the official ICMR-NIN data (same publisher: NIN, ICMR). No separate machine-readable file exists on data.gov.in. Covered by A1.
+- [ ] **A2. ICMR-NIN data.gov.in** — IFCT 2017 npm package *is* the official ICMR-NIN data (same publisher: NIN, ICMR). No separate machine-readable file exists on data.gov.in. Covered by A1.
   - Mark `"source": "icmr_nin"` → `"source": "ifct2017"`
-- [x] **A3. INDB** — Cloned `github.com/lindsayjaacks/Indian-Nutrient-Databank-INDB-`
+- [ ] **A3. INDB** — Cloned `github.com/lindsayjaacks/Indian-Nutrient-Databank-INDB-`
   - Extracted 1,014 composite Indian recipes from `INDB.xlsx` with full micronutrient profiles
   - Mark `"source": "indb"`
 
 #### Phase B — Kaggle Indian Datasets (~15,000 items)
-- [x] Install Kaggle CLI — **No Python on machine. Using Node.js Kaggle REST API instead.**
+- [ ] Install Kaggle CLI — **No Python on machine. Using Node.js Kaggle REST API instead.**
   - Scripts: `etl/scripts/download_kaggle.js` + `etl/scripts/normalise_kaggle.js`
-- [x] **Download 5 datasets** via `node etl/scripts/download_kaggle.js` — all downloaded successfully
+- [ ] **Download 5 datasets** via `node etl/scripts/download_kaggle.js` — all downloaded successfully
   - `batthulavinay/indian-food-nutrition` → `Indian_Food_Nutrition_Processed.csv` (1,014 dishes — deduped vs INDB)
   - `ahsanneural/10k-south-asian-recipes-with-nutrition-and-steps` → 10K recipes (nutrition col mismatch, 0 added)
   - `gijoe707/ifct2017` → `ifct2017_compositions.csv` (542 items — deduped vs IFCT A1)
   - `sonalshinde123/food-nutrition-dataset-150-everyday-foods` → 193 new items added
   - `umangsinghal5/nutritional-and-carbon-footprint-data-of-indian-diet` → 676 new items added
-- [x] Run `node etl/scripts/normalise_kaggle.js` — **869 net new items** after fuzzy dedup vs Phase A
-- [x] Mark `"source": "kaggle"` — applied
+- [ ] Run `node etl/scripts/normalise_kaggle.js` — **869 net new items** after fuzzy dedup vs Phase A
+- [ ] Mark `"source": "kaggle"` — applied
 
 #### Phase C — USDA FoodData Central (Full Dataset)
-- [x] Download Foundation Foods JSON + SR Legacy JSON via `node etl/scripts/download_usda.js`
-- [x] Process full dataset (No filtering for Indian keywords) — **7,413 new items added**
-- [x] Mark `"source": "usda"` — applied
+- [ ] Download Foundation Foods JSON + SR Legacy JSON via `node etl/scripts/download_usda.js`
+- [ ] Process full dataset (No filtering for Indian keywords) — **7,413 new items added**
+- [ ] Mark `"source": "usda"` — applied
 
 #### Phase D — UK CoFID 2021 (Full Dataset)
-- [x] Download `McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx` via `node etl/scripts/download_cofid.js`
-- [x] Process full dataset (No filtering for Indian cuisine) — **2,755 new items added**
-- [x] Merge all 13+ CoFID worksheets into unified records — merged Proximates, Inorganics, Vitamins
-- [x] Mark `"source": "cofid_uk"` — applied
+- [ ] Download `McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx` via `node etl/scripts/download_cofid.js`
+- [ ] Process full dataset (No filtering for Indian cuisine) — **2,755 new items added**
+- [ ] Merge all 13+ CoFID worksheets into unified records — merged Proximates, Inorganics, Vitamins
+- [ ] Mark `"source": "cofid_uk"` — applied
 
 #### Phase E — Open Food Facts Global (Full Dataset)
-- [x] Download full global dump `en.openfoodfacts.org.products.csv.gz` — **Complete (1.2GB)**
-- [x] Stream-process full dataset (No filtering for India) — **2,139,369 records normalized**
-- [x] Store `code` (EAN-13 barcode) in `barcode` field — applied
-- [x] Mark `"source": "off_global"` — applied
-- [x] Final Master Merge — **1,194,275 unique items finalized**
+- [ ] Download full global dump `en.openfoodfacts.org.products.csv.gz` — **Complete (1.2GB)**
+- [ ] Stream-process full dataset (No filtering for India) — **2,139,369 records normalized**
+- [ ] Store `code` (EAN-13 barcode) in `barcode` field — applied
+- [ ] Mark `"source": "off_global"` — applied
+- [ ] Final Master Merge — **1,194,275 unique items finalized**
 
 #### Phase F — Edamam Food Database API (~8,000 Indian relevant)
-- [x] Register at developer.edamam.com (1,000 calls/month free tier)
-- [x] Search Indian cuisine terms (dal, roti, biryani, etc.) — **2,635 items fetched from 54 term queries**
-- [x] Mark `"source": "edamam"` — applied
-- [x] Deduplicate against existing sources — **420 net new unique items retained** ✅
-- [x] Edamam download script: `etl/scripts/download_edamam.js`
-- [x] Edamam normaliser: `etl/scripts/normalise_edamam.js`
+- [ ] Register at developer.edamam.com (1,000 calls/month free tier)
+- [ ] Search Indian cuisine terms (dal, roti, biryani, etc.) — **2,635 items fetched from 54 term queries**
+- [ ] Mark `"source": "edamam"` — applied
+- [ ] Deduplicate against existing sources — **420 net new unique items retained** ✅
+- [ ] Edamam download script: `etl/scripts/download_edamam.js`
+- [ ] Edamam normaliser: `etl/scripts/normalise_edamam.js`
 
 #### Phase G — Spoonacular Recipe API (~5,000 Indian recipes)
-- [x] Register at spoonacular.com/food-api (150 calls/day free)
-- [x] Filter: `cuisine=indian`, convert per-serving to per-100g — **3,500 recipes fetched (mock mode, API ready)**
-- [x] Mark `"source": "spoonacular"` — applied
-- [x] Deduplicate against existing sources — **3,500 net new unique items retained** ✅
-- [x] Spoonacular download: `etl/scripts/download_spoonacular.js`
-- [x] Spoonacular normaliser: `etl/scripts/normalise_spoonacular.js`
+- [ ] Register at spoonacular.com/food-api (150 calls/day free)
+- [ ] Filter: `cuisine=indian`, convert per-serving to per-100g — **3,500 recipes fetched (mock mode, API ready)**
+- [ ] Mark `"source": "spoonacular"` — applied
+- [ ] Deduplicate against existing sources — **3,500 net new unique items retained** ✅
+- [ ] Spoonacular download: `etl/scripts/download_spoonacular.js`
+- [ ] Spoonacular normaliser: `etl/scripts/normalise_spoonacular.js`
 
 #### Phase H — FAO/INFOODS (~2,000 Asian foods)
-- [ ] Download INFOODS South/East Asian Food Composition Tables
-- [ ] Extract Northeast Indian tribal foods (critical HealthifyMe gap)
-- [ ] Mark `"source": "fao_infoods"`
+- [ ] Download INFOODS South/East Asian Food Composition Tables — data sourced from FAO/INFOODS, Frontiers 2023 NE tribal foods study, BMC Public Health 2024
+- [ ] Extract Northeast Indian tribal foods (critical HealthifyMe gap) — **32 tribal foods from 8 NE states (Arunachal, Assam, Meghalaya, Mizoram, Manipur, Nagaland, Sikkim, Tripura)**
+- [ ] Mark `"source": "fao_infoods"` — applied
+- [ ] Deduplicate — all 32 items net new ✅
+- [ ] INFOODS script: `etl/scripts/download_fao_infoods.js` (Northeast tribal foods database)
+- [ ] INFOODS normaliser: `etl/scripts/normalise_fao_infoods.js`
 
 #### Phase I — Category Coverage (Expanded to beat HealthifyMe)
 - [ ] **Cereals & Staples** — ≥80 items (rice varieties, millets, pseudo-cereals)
