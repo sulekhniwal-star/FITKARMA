@@ -1,55 +1,99 @@
+/**
+ * download_kaggle.js — Download Phase B Kaggle datasets via REST API
+ *
+ * Reads credentials from ~/.kaggle/kaggle.json (username + key).
+ * Downloads zip, extracts target CSV into etl/data/raw/.
+ */
+
+import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import { fileURLToPath } from 'url';
+import { createWriteStream } from 'fs';
+import { pipeline } from 'stream/promises';
+import { createUnzip } from 'zlib';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const RAW_DIR = path.join(__dirname, '../data/raw');
 
-console.log('⚡ Initializing Kaggle REST API pipelines (Node.js engine fallback mode)...');
-
-const rawDir = path.join(__dirname, '../data/raw');
-if (!fs.existsSync(rawDir)) {
-  fs.mkdirSync(rawDir, { recursive: true });
+// Load Kaggle credentials
+const credPath = path.join(os.homedir(), '.kaggle', 'kaggle.json');
+if (!fs.existsSync(credPath)) {
+  console.error('❌ ~/.kaggle/kaggle.json not found');
+  process.exit(1);
 }
+const { username, key } = JSON.parse(fs.readFileSync(credPath, 'utf8'));
+const auth = { username, password: key };
 
-// Dummy/mock target CSV payloads representing successful REST API pull operations
-const mockDatasets = [
+const DATASETS = [
   {
-    repo: 'batthulavinay/indian-food-nutrition',
-    filename: 'Indian_Food_Nutrition_Processed.csv',
-    content: 'name,category,calories,protein\nButter Chicken Base,Composite Recipes,290.0,14.2\nDal Makhani Thick,Composite Recipes,210.0,8.5',
-    log: 'Downloaded Indian_Food_Nutrition_Processed.csv (1,014 dishes — deduped vs INDB)',
+    owner: 'batthulavinay',
+    dataset: 'indian-food-nutrition',
+    file: 'Indian_Food_Nutrition_Processed.csv',
+    dest: 'Indian_Food_Nutrition_Processed.csv',
   },
   {
-    repo: 'ahsanneural/10k-south-asian-recipes-with-nutrition-and-steps',
-    filename: '10k_south_asian_recipes.csv',
-    content: 'title,steps,meta\nSpicy Mutton Curry,"Boil meat, add base",malformed_nutrition_cols',
-    log: 'Downloaded 10K recipes (nutrition col mismatch detected, 0 items targeted for integration)',
+    owner: 'ahsanneural',
+    dataset: '10k-south-asian-recipes-with-nutrition-and-steps',
+    file: '10k_south_asian_recipes.csv',
+    dest: '10k_south_asian_recipes.csv',
   },
   {
-    repo: 'gijoe707/ifct2017',
-    filename: 'ifct2017_compositions.csv',
-    content: 'name,kcal,prot\nRice unpolished raw,364,7.9',
-    log: 'Downloaded ifct2017_compositions.csv (542 items — fully deduped vs IFCT Phase A primary seed)',
+    owner: 'gijoe707',
+    dataset: 'ifct2017',
+    file: 'ifct2017_compositions.csv',
+    dest: 'ifct2017_compositions.csv',
   },
   {
-    repo: 'sonalshinde123/food-nutrition-dataset-150-everyday-foods',
-    filename: 'everyday_foods_150.csv',
-    content: 'FoodItem,Category,Energy,Protein,Carbs,Fat\nPoha Homemade,Cereals,180.0,3.2,38.5,1.2\nUpma Semolina,Cereals,195.0,3.8,32.0,5.1',
-    log: 'Downloaded everyday_foods_150.csv (193 everyday item rows targeted successfully)',
+    owner: 'sonalshinde123',
+    dataset: 'food-nutrition-dataset-150-everyday-foods',
+    file: 'everyday_foods_150.csv',
+    dest: 'everyday_foods_150.csv',
   },
   {
-    repo: 'umangsinghal5/nutritional-and-carbon-footprint-data-of-indian-diet',
-    filename: 'indian_diet_footprint.csv',
-    content: 'item_name,group,calories_100g,protein_100g,carbon_g\nBesan Chilla Base,Legumes,165.0,8.2,120\nIdli Steamed Standard,Cereals,120.0,3.0,80',
-    log: 'Downloaded indian_diet_footprint.csv (676 unique diet items targeted successfully)',
+    owner: 'umangsinghal5',
+    dataset: 'nutritional-and-carbon-footprint-data-of-indian-diet',
+    file: 'indian_diet_footprint.csv',
+    dest: 'indian_diet_footprint.csv',
   },
 ];
 
-for (const d of mockDatasets) {
-  const dest = path.join(rawDir, d.filename);
-  fs.writeFileSync(dest, d.content);
-  console.log(`✔ [Kaggle Sync]: ${d.log}`);
+async function downloadFile(owner, dataset, file, dest) {
+  const url = `https://www.kaggle.com/api/v1/datasets/download/${owner}/${dataset}/${file}`;
+  const destPath = path.join(RAW_DIR, dest);
+
+  console.log(`⬇  ${owner}/${dataset}/${file}`);
+  const res = await axios.get(url, {
+    auth,
+    responseType: 'stream',
+    maxRedirects: 5,
+    timeout: 120_000,
+  });
+
+  // Response may be gzip-compressed even for CSV files
+  const contentEncoding = res.headers['content-encoding'];
+  const isGzip = contentEncoding === 'gzip' || file.endsWith('.gz');
+
+  const dest$ = createWriteStream(destPath);
+  if (isGzip) {
+    await pipeline(res.data, createUnzip(), dest$);
+  } else {
+    await pipeline(res.data, dest$);
+  }
+
+  const size = fs.statSync(destPath).size;
+  console.log(`   ✅ ${dest} (${(size / 1024).toFixed(1)} KB)`);
 }
 
-console.log('✨ Download execution complete! All 5 datasets cached securely inside etl/data/raw boundaries.');
+for (const d of DATASETS) {
+  try {
+    await downloadFile(d.owner, d.dataset, d.file, d.dest);
+  } catch (err) {
+    const status = err.response?.status;
+    console.error(`   ❌ ${d.owner}/${d.dataset}: HTTP ${status ?? err.message}`);
+    // Continue — normaliser will skip missing files
+  }
+}
+
+console.log('\n✨ Kaggle download complete.');
