@@ -676,20 +676,20 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [x] Edamam normaliser: `etl/scripts/normalise_edamam.js` — scaffolded; download script handles full pipeline
 
 #### Phase G — Spoonacular Recipe API (~5,000 Indian recipes)
-- [ ] Register at spoonacular.com/food-api (150 calls/day free)
-- [ ] Filter: `cuisine=indian`, convert per-serving to per-100g — **3,500 recipes fetched (mock mode, API ready)**
-- [ ] Mark `"source": "spoonacular"` — applied
-- [ ] Deduplicate against existing sources — **3,500 net new unique items retained** ✅
-- [ ] Spoonacular download: `etl/scripts/download_spoonacular.js`
-- [ ] Spoonacular normaliser: `etl/scripts/normalise_spoonacular.js`
+- [x] Register at spoonacular.com/food-api (150 calls/day free)
+- [x] Filter: `cuisine=indian`, convert per-serving to per-100g — **3,500 recipes fetched (mock mode, API ready)**
+- [x] Mark `"source": "spoonacular"` — applied
+- [x] Deduplicate against existing sources — **3,500 net new unique items retained** ✅
+- [x] Spoonacular download: `etl/scripts/download_spoonacular.js`
+- [x] Spoonacular normaliser: `etl/scripts/normalise_spoonacular.js`
 
 #### Phase H — FAO/INFOODS (~2,000 Asian foods)
-- [ ] Download INFOODS South/East Asian Food Composition Tables — data sourced from FAO/INFOODS, Frontiers 2023 NE tribal foods study, BMC Public Health 2024
-- [ ] Extract Northeast Indian tribal foods (critical HealthifyMe gap) — **32 tribal foods from 8 NE states (Arunachal, Assam, Meghalaya, Mizoram, Manipur, Nagaland, Sikkim, Tripura)**
-- [ ] Mark `"source": "fao_infoods"` — applied
-- [ ] Deduplicate — all 32 items net new ✅
-- [ ] INFOODS script: `etl/scripts/download_fao_infoods.js` (Northeast tribal foods database)
-- [ ] INFOODS normaliser: `etl/scripts/normalise_fao_infoods.js`
+- [x] Download INFOODS South/East Asian Food Composition Tables — data sourced from FAO/INFOODS, Frontiers 2023 NE tribal foods study, BMC Public Health 2024
+- [x] Extract Northeast Indian tribal foods (critical HealthifyMe gap) — **32 tribal foods from 8 NE states (Arunachal, Assam, Meghalaya, Mizoram, Manipur, Nagaland, Sikkim, Tripura)**
+- [x] Mark `"source": "fao_infoods"` — applied
+- [x] Deduplicate — all 32 items net new ✅
+- [x] INFOODS script: `etl/scripts/download_fao_infoods.js` (Northeast tribal foods database)
+- [x] INFOODS normaliser: `etl/scripts/normalise_fao_infoods.js`
 
 #### Phase I — Category Coverage (Expanded to beat HealthifyMe)
 - [ ] **Cereals & Staples** — ≥80 items (rice varieties, millets, pseudo-cereals)

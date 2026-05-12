@@ -11,7 +11,8 @@
     "phase-e": "node scripts/process_off_global.js",
     "phase-f": "node scripts/download_edamam.js",
     "phase-g": "node scripts/download_spoonacular.js",
-    "phase-h": "node scripts/download_fao_infoods.js"
+    "phase-h": "node scripts/download_fao_infoods.js",
+    "phase-i": "node scripts/audit_phase_i_coverage.js"
   },
   "devDependencies": {
     "axios": "^1.16.0",
