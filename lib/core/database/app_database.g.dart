@@ -5919,6 +5919,73 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     requiredDuringInsert: false,
     defaultValue: const Constant('onboarding'),
   );
+  static const VerificationMeta _dominantDoshaMeta = const VerificationMeta(
+    'dominantDosha',
+  );
+  @override
+  late final GeneratedColumn<String> dominantDosha = GeneratedColumn<String>(
+    'dominant_dosha',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _vataPercentageMeta = const VerificationMeta(
+    'vataPercentage',
+  );
+  @override
+  late final GeneratedColumn<double> vataPercentage = GeneratedColumn<double>(
+    'vata_percentage',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _pittaPercentageMeta = const VerificationMeta(
+    'pittaPercentage',
+  );
+  @override
+  late final GeneratedColumn<double> pittaPercentage = GeneratedColumn<double>(
+    'pitta_percentage',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _kaphaPercentageMeta = const VerificationMeta(
+    'kaphaPercentage',
+  );
+  @override
+  late final GeneratedColumn<double> kaphaPercentage = GeneratedColumn<double>(
+    'kapha_percentage',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _goalsMeta = const VerificationMeta('goals');
+  @override
+  late final GeneratedColumn<String> goals = GeneratedColumn<String>(
+    'goals',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _onboardingCompletedMeta =
+      const VerificationMeta('onboardingCompleted');
+  @override
+  late final GeneratedColumn<bool> onboardingCompleted = GeneratedColumn<bool>(
+    'onboarding_completed',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("onboarding_completed" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -5943,6 +6010,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     email,
     name,
     uxStage,
+    dominantDosha,
+    vataPercentage,
+    pittaPercentage,
+    kaphaPercentage,
+    goals,
+    onboardingCompleted,
     createdAt,
   ];
   @override
@@ -6025,6 +6098,57 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         uxStage.isAcceptableOrUnknown(data['ux_stage']!, _uxStageMeta),
       );
     }
+    if (data.containsKey('dominant_dosha')) {
+      context.handle(
+        _dominantDoshaMeta,
+        dominantDosha.isAcceptableOrUnknown(
+          data['dominant_dosha']!,
+          _dominantDoshaMeta,
+        ),
+      );
+    }
+    if (data.containsKey('vata_percentage')) {
+      context.handle(
+        _vataPercentageMeta,
+        vataPercentage.isAcceptableOrUnknown(
+          data['vata_percentage']!,
+          _vataPercentageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('pitta_percentage')) {
+      context.handle(
+        _pittaPercentageMeta,
+        pittaPercentage.isAcceptableOrUnknown(
+          data['pitta_percentage']!,
+          _pittaPercentageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('kapha_percentage')) {
+      context.handle(
+        _kaphaPercentageMeta,
+        kaphaPercentage.isAcceptableOrUnknown(
+          data['kapha_percentage']!,
+          _kaphaPercentageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('goals')) {
+      context.handle(
+        _goalsMeta,
+        goals.isAcceptableOrUnknown(data['goals']!, _goalsMeta),
+      );
+    }
+    if (data.containsKey('onboarding_completed')) {
+      context.handle(
+        _onboardingCompletedMeta,
+        onboardingCompleted.isAcceptableOrUnknown(
+          data['onboarding_completed']!,
+          _onboardingCompletedMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -6080,6 +6204,30 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         DriftSqlType.string,
         data['${effectivePrefix}ux_stage'],
       )!,
+      dominantDosha: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dominant_dosha'],
+      ),
+      vataPercentage: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}vata_percentage'],
+      ),
+      pittaPercentage: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}pitta_percentage'],
+      ),
+      kaphaPercentage: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}kapha_percentage'],
+      ),
+      goals: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}goals'],
+      ),
+      onboardingCompleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}onboarding_completed'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -6104,6 +6252,12 @@ class User extends DataClass implements Insertable<User> {
   final String email;
   final String name;
   final String uxStage;
+  final String? dominantDosha;
+  final double? vataPercentage;
+  final double? pittaPercentage;
+  final double? kaphaPercentage;
+  final String? goals;
+  final bool onboardingCompleted;
   final DateTime createdAt;
   const User({
     required this.id,
@@ -6116,6 +6270,12 @@ class User extends DataClass implements Insertable<User> {
     required this.email,
     required this.name,
     required this.uxStage,
+    this.dominantDosha,
+    this.vataPercentage,
+    this.pittaPercentage,
+    this.kaphaPercentage,
+    this.goals,
+    required this.onboardingCompleted,
     required this.createdAt,
   });
   @override
@@ -6133,6 +6293,22 @@ class User extends DataClass implements Insertable<User> {
     map['email'] = Variable<String>(email);
     map['name'] = Variable<String>(name);
     map['ux_stage'] = Variable<String>(uxStage);
+    if (!nullToAbsent || dominantDosha != null) {
+      map['dominant_dosha'] = Variable<String>(dominantDosha);
+    }
+    if (!nullToAbsent || vataPercentage != null) {
+      map['vata_percentage'] = Variable<double>(vataPercentage);
+    }
+    if (!nullToAbsent || pittaPercentage != null) {
+      map['pitta_percentage'] = Variable<double>(pittaPercentage);
+    }
+    if (!nullToAbsent || kaphaPercentage != null) {
+      map['kapha_percentage'] = Variable<double>(kaphaPercentage);
+    }
+    if (!nullToAbsent || goals != null) {
+      map['goals'] = Variable<String>(goals);
+    }
+    map['onboarding_completed'] = Variable<bool>(onboardingCompleted);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -6151,6 +6327,22 @@ class User extends DataClass implements Insertable<User> {
       email: Value(email),
       name: Value(name),
       uxStage: Value(uxStage),
+      dominantDosha: dominantDosha == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dominantDosha),
+      vataPercentage: vataPercentage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(vataPercentage),
+      pittaPercentage: pittaPercentage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pittaPercentage),
+      kaphaPercentage: kaphaPercentage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(kaphaPercentage),
+      goals: goals == null && nullToAbsent
+          ? const Value.absent()
+          : Value(goals),
+      onboardingCompleted: Value(onboardingCompleted),
       createdAt: Value(createdAt),
     );
   }
@@ -6171,6 +6363,14 @@ class User extends DataClass implements Insertable<User> {
       email: serializer.fromJson<String>(json['email']),
       name: serializer.fromJson<String>(json['name']),
       uxStage: serializer.fromJson<String>(json['uxStage']),
+      dominantDosha: serializer.fromJson<String?>(json['dominantDosha']),
+      vataPercentage: serializer.fromJson<double?>(json['vataPercentage']),
+      pittaPercentage: serializer.fromJson<double?>(json['pittaPercentage']),
+      kaphaPercentage: serializer.fromJson<double?>(json['kaphaPercentage']),
+      goals: serializer.fromJson<String?>(json['goals']),
+      onboardingCompleted: serializer.fromJson<bool>(
+        json['onboardingCompleted'],
+      ),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -6188,6 +6388,12 @@ class User extends DataClass implements Insertable<User> {
       'email': serializer.toJson<String>(email),
       'name': serializer.toJson<String>(name),
       'uxStage': serializer.toJson<String>(uxStage),
+      'dominantDosha': serializer.toJson<String?>(dominantDosha),
+      'vataPercentage': serializer.toJson<double?>(vataPercentage),
+      'pittaPercentage': serializer.toJson<double?>(pittaPercentage),
+      'kaphaPercentage': serializer.toJson<double?>(kaphaPercentage),
+      'goals': serializer.toJson<String?>(goals),
+      'onboardingCompleted': serializer.toJson<bool>(onboardingCompleted),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -6203,6 +6409,12 @@ class User extends DataClass implements Insertable<User> {
     String? email,
     String? name,
     String? uxStage,
+    Value<String?> dominantDosha = const Value.absent(),
+    Value<double?> vataPercentage = const Value.absent(),
+    Value<double?> pittaPercentage = const Value.absent(),
+    Value<double?> kaphaPercentage = const Value.absent(),
+    Value<String?> goals = const Value.absent(),
+    bool? onboardingCompleted,
     DateTime? createdAt,
   }) => User(
     id: id ?? this.id,
@@ -6215,6 +6427,20 @@ class User extends DataClass implements Insertable<User> {
     email: email ?? this.email,
     name: name ?? this.name,
     uxStage: uxStage ?? this.uxStage,
+    dominantDosha: dominantDosha.present
+        ? dominantDosha.value
+        : this.dominantDosha,
+    vataPercentage: vataPercentage.present
+        ? vataPercentage.value
+        : this.vataPercentage,
+    pittaPercentage: pittaPercentage.present
+        ? pittaPercentage.value
+        : this.pittaPercentage,
+    kaphaPercentage: kaphaPercentage.present
+        ? kaphaPercentage.value
+        : this.kaphaPercentage,
+    goals: goals.present ? goals.value : this.goals,
+    onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
     createdAt: createdAt ?? this.createdAt,
   );
   User copyWithCompanion(UsersCompanion data) {
@@ -6233,6 +6459,22 @@ class User extends DataClass implements Insertable<User> {
       email: data.email.present ? data.email.value : this.email,
       name: data.name.present ? data.name.value : this.name,
       uxStage: data.uxStage.present ? data.uxStage.value : this.uxStage,
+      dominantDosha: data.dominantDosha.present
+          ? data.dominantDosha.value
+          : this.dominantDosha,
+      vataPercentage: data.vataPercentage.present
+          ? data.vataPercentage.value
+          : this.vataPercentage,
+      pittaPercentage: data.pittaPercentage.present
+          ? data.pittaPercentage.value
+          : this.pittaPercentage,
+      kaphaPercentage: data.kaphaPercentage.present
+          ? data.kaphaPercentage.value
+          : this.kaphaPercentage,
+      goals: data.goals.present ? data.goals.value : this.goals,
+      onboardingCompleted: data.onboardingCompleted.present
+          ? data.onboardingCompleted.value
+          : this.onboardingCompleted,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -6250,6 +6492,12 @@ class User extends DataClass implements Insertable<User> {
           ..write('email: $email, ')
           ..write('name: $name, ')
           ..write('uxStage: $uxStage, ')
+          ..write('dominantDosha: $dominantDosha, ')
+          ..write('vataPercentage: $vataPercentage, ')
+          ..write('pittaPercentage: $pittaPercentage, ')
+          ..write('kaphaPercentage: $kaphaPercentage, ')
+          ..write('goals: $goals, ')
+          ..write('onboardingCompleted: $onboardingCompleted, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -6267,6 +6515,12 @@ class User extends DataClass implements Insertable<User> {
     email,
     name,
     uxStage,
+    dominantDosha,
+    vataPercentage,
+    pittaPercentage,
+    kaphaPercentage,
+    goals,
+    onboardingCompleted,
     createdAt,
   );
   @override
@@ -6283,6 +6537,12 @@ class User extends DataClass implements Insertable<User> {
           other.email == this.email &&
           other.name == this.name &&
           other.uxStage == this.uxStage &&
+          other.dominantDosha == this.dominantDosha &&
+          other.vataPercentage == this.vataPercentage &&
+          other.pittaPercentage == this.pittaPercentage &&
+          other.kaphaPercentage == this.kaphaPercentage &&
+          other.goals == this.goals &&
+          other.onboardingCompleted == this.onboardingCompleted &&
           other.createdAt == this.createdAt);
 }
 
@@ -6297,6 +6557,12 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<String> email;
   final Value<String> name;
   final Value<String> uxStage;
+  final Value<String?> dominantDosha;
+  final Value<double?> vataPercentage;
+  final Value<double?> pittaPercentage;
+  final Value<double?> kaphaPercentage;
+  final Value<String?> goals;
+  final Value<bool> onboardingCompleted;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
   const UsersCompanion({
@@ -6310,6 +6576,12 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.email = const Value.absent(),
     this.name = const Value.absent(),
     this.uxStage = const Value.absent(),
+    this.dominantDosha = const Value.absent(),
+    this.vataPercentage = const Value.absent(),
+    this.pittaPercentage = const Value.absent(),
+    this.kaphaPercentage = const Value.absent(),
+    this.goals = const Value.absent(),
+    this.onboardingCompleted = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -6324,6 +6596,12 @@ class UsersCompanion extends UpdateCompanion<User> {
     required String email,
     required String name,
     this.uxStage = const Value.absent(),
+    this.dominantDosha = const Value.absent(),
+    this.vataPercentage = const Value.absent(),
+    this.pittaPercentage = const Value.absent(),
+    this.kaphaPercentage = const Value.absent(),
+    this.goals = const Value.absent(),
+    this.onboardingCompleted = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -6341,6 +6619,12 @@ class UsersCompanion extends UpdateCompanion<User> {
     Expression<String>? email,
     Expression<String>? name,
     Expression<String>? uxStage,
+    Expression<String>? dominantDosha,
+    Expression<double>? vataPercentage,
+    Expression<double>? pittaPercentage,
+    Expression<double>? kaphaPercentage,
+    Expression<String>? goals,
+    Expression<bool>? onboardingCompleted,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
@@ -6355,6 +6639,13 @@ class UsersCompanion extends UpdateCompanion<User> {
       if (email != null) 'email': email,
       if (name != null) 'name': name,
       if (uxStage != null) 'ux_stage': uxStage,
+      if (dominantDosha != null) 'dominant_dosha': dominantDosha,
+      if (vataPercentage != null) 'vata_percentage': vataPercentage,
+      if (pittaPercentage != null) 'pitta_percentage': pittaPercentage,
+      if (kaphaPercentage != null) 'kapha_percentage': kaphaPercentage,
+      if (goals != null) 'goals': goals,
+      if (onboardingCompleted != null)
+        'onboarding_completed': onboardingCompleted,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -6371,6 +6662,12 @@ class UsersCompanion extends UpdateCompanion<User> {
     Value<String>? email,
     Value<String>? name,
     Value<String>? uxStage,
+    Value<String?>? dominantDosha,
+    Value<double?>? vataPercentage,
+    Value<double?>? pittaPercentage,
+    Value<double?>? kaphaPercentage,
+    Value<String?>? goals,
+    Value<bool>? onboardingCompleted,
     Value<DateTime>? createdAt,
     Value<int>? rowid,
   }) {
@@ -6385,6 +6682,12 @@ class UsersCompanion extends UpdateCompanion<User> {
       email: email ?? this.email,
       name: name ?? this.name,
       uxStage: uxStage ?? this.uxStage,
+      dominantDosha: dominantDosha ?? this.dominantDosha,
+      vataPercentage: vataPercentage ?? this.vataPercentage,
+      pittaPercentage: pittaPercentage ?? this.pittaPercentage,
+      kaphaPercentage: kaphaPercentage ?? this.kaphaPercentage,
+      goals: goals ?? this.goals,
+      onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
@@ -6423,6 +6726,24 @@ class UsersCompanion extends UpdateCompanion<User> {
     if (uxStage.present) {
       map['ux_stage'] = Variable<String>(uxStage.value);
     }
+    if (dominantDosha.present) {
+      map['dominant_dosha'] = Variable<String>(dominantDosha.value);
+    }
+    if (vataPercentage.present) {
+      map['vata_percentage'] = Variable<double>(vataPercentage.value);
+    }
+    if (pittaPercentage.present) {
+      map['pitta_percentage'] = Variable<double>(pittaPercentage.value);
+    }
+    if (kaphaPercentage.present) {
+      map['kapha_percentage'] = Variable<double>(kaphaPercentage.value);
+    }
+    if (goals.present) {
+      map['goals'] = Variable<String>(goals.value);
+    }
+    if (onboardingCompleted.present) {
+      map['onboarding_completed'] = Variable<bool>(onboardingCompleted.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -6445,6 +6766,12 @@ class UsersCompanion extends UpdateCompanion<User> {
           ..write('email: $email, ')
           ..write('name: $name, ')
           ..write('uxStage: $uxStage, ')
+          ..write('dominantDosha: $dominantDosha, ')
+          ..write('vataPercentage: $vataPercentage, ')
+          ..write('pittaPercentage: $pittaPercentage, ')
+          ..write('kaphaPercentage: $kaphaPercentage, ')
+          ..write('goals: $goals, ')
+          ..write('onboardingCompleted: $onboardingCompleted, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -9304,6 +9631,12 @@ typedef $$UsersTableCreateCompanionBuilder =
       required String email,
       required String name,
       Value<String> uxStage,
+      Value<String?> dominantDosha,
+      Value<double?> vataPercentage,
+      Value<double?> pittaPercentage,
+      Value<double?> kaphaPercentage,
+      Value<String?> goals,
+      Value<bool> onboardingCompleted,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -9319,6 +9652,12 @@ typedef $$UsersTableUpdateCompanionBuilder =
       Value<String> email,
       Value<String> name,
       Value<String> uxStage,
+      Value<String?> dominantDosha,
+      Value<double?> vataPercentage,
+      Value<double?> pittaPercentage,
+      Value<double?> kaphaPercentage,
+      Value<String?> goals,
+      Value<bool> onboardingCompleted,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -9378,6 +9717,36 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
 
   ColumnFilters<String> get uxStage => $composableBuilder(
     column: $table.uxStage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dominantDosha => $composableBuilder(
+    column: $table.dominantDosha,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get vataPercentage => $composableBuilder(
+    column: $table.vataPercentage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get pittaPercentage => $composableBuilder(
+    column: $table.pittaPercentage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get kaphaPercentage => $composableBuilder(
+    column: $table.kaphaPercentage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get goals => $composableBuilder(
+    column: $table.goals,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get onboardingCompleted => $composableBuilder(
+    column: $table.onboardingCompleted,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -9446,6 +9815,36 @@ class $$UsersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get dominantDosha => $composableBuilder(
+    column: $table.dominantDosha,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get vataPercentage => $composableBuilder(
+    column: $table.vataPercentage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get pittaPercentage => $composableBuilder(
+    column: $table.pittaPercentage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get kaphaPercentage => $composableBuilder(
+    column: $table.kaphaPercentage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get goals => $composableBuilder(
+    column: $table.goals,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get onboardingCompleted => $composableBuilder(
+    column: $table.onboardingCompleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -9495,6 +9894,34 @@ class $$UsersTableAnnotationComposer
   GeneratedColumn<String> get uxStage =>
       $composableBuilder(column: $table.uxStage, builder: (column) => column);
 
+  GeneratedColumn<String> get dominantDosha => $composableBuilder(
+    column: $table.dominantDosha,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get vataPercentage => $composableBuilder(
+    column: $table.vataPercentage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get pittaPercentage => $composableBuilder(
+    column: $table.pittaPercentage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get kaphaPercentage => $composableBuilder(
+    column: $table.kaphaPercentage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get goals =>
+      $composableBuilder(column: $table.goals, builder: (column) => column);
+
+  GeneratedColumn<bool> get onboardingCompleted => $composableBuilder(
+    column: $table.onboardingCompleted,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
@@ -9537,6 +9964,12 @@ class $$UsersTableTableManager
                 Value<String> email = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> uxStage = const Value.absent(),
+                Value<String?> dominantDosha = const Value.absent(),
+                Value<double?> vataPercentage = const Value.absent(),
+                Value<double?> pittaPercentage = const Value.absent(),
+                Value<double?> kaphaPercentage = const Value.absent(),
+                Value<String?> goals = const Value.absent(),
+                Value<bool> onboardingCompleted = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion(
@@ -9550,6 +9983,12 @@ class $$UsersTableTableManager
                 email: email,
                 name: name,
                 uxStage: uxStage,
+                dominantDosha: dominantDosha,
+                vataPercentage: vataPercentage,
+                pittaPercentage: pittaPercentage,
+                kaphaPercentage: kaphaPercentage,
+                goals: goals,
+                onboardingCompleted: onboardingCompleted,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -9565,6 +10004,12 @@ class $$UsersTableTableManager
                 required String email,
                 required String name,
                 Value<String> uxStage = const Value.absent(),
+                Value<String?> dominantDosha = const Value.absent(),
+                Value<double?> vataPercentage = const Value.absent(),
+                Value<double?> pittaPercentage = const Value.absent(),
+                Value<double?> kaphaPercentage = const Value.absent(),
+                Value<String?> goals = const Value.absent(),
+                Value<bool> onboardingCompleted = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion.insert(
@@ -9578,6 +10023,12 @@ class $$UsersTableTableManager
                 email: email,
                 name: name,
                 uxStage: uxStage,
+                dominantDosha: dominantDosha,
+                vataPercentage: vataPercentage,
+                pittaPercentage: pittaPercentage,
+                kaphaPercentage: kaphaPercentage,
+                goals: goals,
+                onboardingCompleted: onboardingCompleted,
                 createdAt: createdAt,
                 rowid: rowid,
               ),

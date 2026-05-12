@@ -507,19 +507,19 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 8.12 Emergency Card (`/emergency`) — Calm Zone
 
-- [ ] 108 Ambulance button (tel link)
-- [ ] AIIMS Delhi number
-- [ ] 2 user-configured emergency contacts (name + number)
-- [ ] Editable in Settings
+- [x] 108 Ambulance button (tel link)
+- [x] AIIMS Delhi number
+- [x] 2 user-configured emergency contacts (name + number)
+- [x] Editable in Settings
 
 ### 8.13 Lab Reports (`/lab-reports`) — Calm Zone
 
-- [ ] Biometric re-auth on first enter
-- [ ] Upload PDF/image via Appwrite Storage — bucket: `fitkarma-vault`, filename: `labreport_{userId}_{uuid}.ext`
-- [ ] Manual value entry (HbA1c, cholesterol, creatinine, etc.)
-- [ ] Report list with date + type
-- [ ] 7-day expiring share link — calls `fitkarma-coress` with `action: 'generate_share_link'`
-- [ ] Free tier: max 3 reports enforced in app logic (count `lab_reports` docs before upload); Pro: unlimited
+- [x] Biometric re-auth on first enter
+- [x] Upload PDF/image via Appwrite Storage — bucket: `fitkarma-vault`, filename: `labreport_{userId}_{uuid}.ext`
+- [x] Manual value entry (HbA1c, cholesterol, creatinine, etc.)
+- [x] Report list with date + type
+- [x] 7-day expiring share link — calls `fitkarma-coress` with `action: 'generate_share_link'`
+- [x] Free tier: max 3 reports enforced in app logic (count `lab_reports` docs before upload); Pro: unlimited
 
 ### 8.14 Water Tracking
 

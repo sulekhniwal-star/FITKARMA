@@ -23,6 +23,9 @@ import '../../features/mental_health/mental_health_screen.dart';
 import '../../features/mental_health/breathing_circle_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/workout/active_workout_screen.dart';
+import '../../features/emergency/emergency_screen.dart';
+import '../../features/settings/settings_screen.dart';
+import '../../features/reports/lab_reports_screen.dart';
 import 'transitions.dart';
 
 part 'app_router.g.dart';
@@ -160,17 +163,17 @@ GoRouter appRouter(Ref ref) {
           return ActiveWorkoutScreen(workoutId: id);
         },
       ),
-      GoRoute(path: '/emergency', builder: (context, state) => const _PlaceholderScreen(title: 'Emergency')),
+      GoRoute(path: '/emergency', builder: (context, state) => const EmergencyScreen()),
       GoRoute(
         path: '/lab-reports',
         builder: (context, state) => const SensitiveScreenGuard(
           screenId: 'lab-reports',
-          child: _PlaceholderScreen(title: 'Lab Reports'),
+          child: LabReportsScreen(),
         ),
       ),
       GoRoute(path: '/ai-coach', builder: (context, state) => const _PlaceholderScreen(title: 'AI Coach')),
       GoRoute(path: '/subscription', builder: (context, state) => const _PlaceholderScreen(title: 'Subscription')),
-      GoRoute(path: '/settings', builder: (context, state) => const _PlaceholderScreen(title: 'Settings')),
+      GoRoute(path: '/settings', builder: (context, state) => const SettingsScreen()),
       GoRoute(path: '/water', builder: (context, state) => const _PlaceholderScreen(title: 'Water Log')),
       GoRoute(path: '/medication', builder: (context, state) => const _PlaceholderScreen(title: 'Medication')),
       GoRoute(path: '/festival', builder: (context, state) => const _PlaceholderScreen(title: 'Festival')),

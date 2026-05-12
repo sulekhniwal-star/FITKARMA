@@ -35,7 +35,7 @@ final class AuthProvider extends $AsyncNotifierProvider<Auth, models.User?> {
   Auth create() => Auth();
 }
 
-String _$authHash() => r'8f7870db878e861b2e5fef44ad33dcabb5a0ce77';
+String _$authHash() => r'a0b5f6062d355f91402d290239c758188e1f2d1e';
 
 /// AuthNotifier — Manages user authentication state via Appwrite.
 
@@ -50,6 +50,121 @@ abstract class _$Auth extends $AsyncNotifier<models.User?> {
             as $ClassProviderElement<
               AnyNotifier<AsyncValue<models.User?>, models.User?>,
               AsyncValue<models.User?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// DoshaQuizNotifier — Manages the state of the 10-question quiz.
+
+@ProviderFor(DoshaQuiz)
+final doshaQuizProvider = DoshaQuizProvider._();
+
+/// DoshaQuizNotifier — Manages the state of the 10-question quiz.
+final class DoshaQuizProvider
+    extends $NotifierProvider<DoshaQuiz, Map<int, DoshaType>> {
+  /// DoshaQuizNotifier — Manages the state of the 10-question quiz.
+  DoshaQuizProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'doshaQuizProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$doshaQuizHash();
+
+  @$internal
+  @override
+  DoshaQuiz create() => DoshaQuiz();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<int, DoshaType> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<int, DoshaType>>(value),
+    );
+  }
+}
+
+String _$doshaQuizHash() => r'cf6073be730e102d5eb0db914b33472ed7ba9ddd';
+
+/// DoshaQuizNotifier — Manages the state of the 10-question quiz.
+
+abstract class _$DoshaQuiz extends $Notifier<Map<int, DoshaType>> {
+  Map<int, DoshaType> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<Map<int, DoshaType>, Map<int, DoshaType>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Map<int, DoshaType>, Map<int, DoshaType>>,
+              Map<int, DoshaType>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// GoalsNotifier — Manages the multi-selection of health goals.
+
+@ProviderFor(Goals)
+final goalsProvider = GoalsProvider._();
+
+/// GoalsNotifier — Manages the multi-selection of health goals.
+final class GoalsProvider extends $NotifierProvider<Goals, List<String>> {
+  /// GoalsNotifier — Manages the multi-selection of health goals.
+  GoalsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'goalsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$goalsHash();
+
+  @$internal
+  @override
+  Goals create() => Goals();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+}
+
+String _$goalsHash() => r'031c72d33f28f4d85a7a82c55838c58e5a69481a';
+
+/// GoalsNotifier — Manages the multi-selection of health goals.
+
+abstract class _$Goals extends $Notifier<List<String>> {
+  List<String> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<List<String>, List<String>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<String>, List<String>>,
+              List<String>,
               Object?,
               Object?
             >;
