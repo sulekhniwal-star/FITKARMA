@@ -1,5 +1,15 @@
 {
+  "type": "module",
+  "scripts": {
+    "extract:ifct": "node scripts/extract_phase_a.mjs",
+    "extract:indb": "node scripts/extract_indb.mjs",
+    "merge:phase-a": "node scripts/merge_phase_a.mjs",
+    "phase-a": "npm run extract:ifct && npm run merge:phase-a"
+  },
   "devDependencies": {
+    "axios": "^1.16.0",
+    "csv-parser": "^3.2.1",
+    "fuzzball": "^2.2.6",
     "ifct2017": "^2.0.15",
     "xlsx": "^0.18.5"
   }
