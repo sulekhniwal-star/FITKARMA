@@ -575,8 +575,8 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 9.1 Appwrite `food_database` Collection
 
-- [ ] Run full CLI commands per §F1 (14 attributes + fulltext index on `name` + unique index on `barcode`)
-- [ ] Permissions: `read("users")` only — authenticated users can read, no write from client
+- [x] Run full CLI commands per §F1 (14 attributes + fulltext index on `name` + unique index on `barcode`)
+- [x] Permissions: `read("users")` only — authenticated users can read, no write from client
 
 ### 9.2 Indian Food Seed Data (`assets/data/indian_foods_seed.json`) — §9.2 Expanded
 
@@ -605,13 +605,13 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 #### 🚀 Current Database Status: 1,194,275 items (Phase A-E complete)
 
 #### Phase A — Primary Indian Sources (Highest Accuracy)
-- [ ] **A1. IFCT 2017 npm package** — `npm install ifct2017`:
+- [x] **A1. IFCT 2017 npm package** — `npm install ifct2017`:
   - Extract 542 compositions, 151 nutrients each
   - Parse `lang` field for 17 Indian language names
   - Mark `"source": "ifct2017"` — highest priority, never overwritten
-- [ ] **A2. ICMR-NIN data.gov.in** — IFCT 2017 npm package *is* the official ICMR-NIN data (same publisher: NIN, ICMR). No separate machine-readable file exists on data.gov.in. Covered by A1.
+- [x] **A2. ICMR-NIN data.gov.in** — IFCT 2017 npm package *is* the official ICMR-NIN data (same publisher: NIN, ICMR). No separate machine-readable file exists on data.gov.in. Covered by A1.
   - Mark `"source": "icmr_nin"` → `"source": "ifct2017"`
-- [ ] **A3. INDB** — Cloned `github.com/lindsayjaacks/Indian-Nutrient-Databank-INDB-`
+- [x] **A3. INDB** — Cloned `github.com/lindsayjaacks/Indian-Nutrient-Databank-INDB-`
   - Extracted 1,014 composite Indian recipes from `INDB.xlsx` with full micronutrient profiles
   - Mark `"source": "indb"`
 
