@@ -628,9 +628,9 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [x] Mark `"source": "kaggle"` — applied
 
 #### Phase C — USDA FoodData Central (Full Dataset)
-- [ ] Download Foundation Foods JSON + SR Legacy JSON via `node etl/scripts/download_usda.js`
-- [ ] Process full dataset (No filtering for Indian keywords) — **7,413 new items added**
-- [ ] Mark `"source": "usda"` — applied
+- [x] Download Foundation Foods JSON + SR Legacy JSON via `node etl/scripts/download_usda.js`
+- [x] Process full dataset (No filtering for Indian keywords) — **7,413 new items added**
+- [x] Mark `"source": "usda"` — applied
 
 #### Phase D — UK CoFID 2021 (Full Dataset)
 - [ ] Download `McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx` via `node etl/scripts/download_cofid.js`
