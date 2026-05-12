@@ -4,7 +4,9 @@
     "extract:ifct": "node scripts/extract_phase_a.mjs",
     "extract:indb": "node scripts/extract_indb.mjs",
     "merge:phase-a": "node scripts/merge_phase_a.mjs",
-    "phase-a": "npm run extract:ifct && npm run merge:phase-a"
+    "phase-a": "npm run extract:ifct && npm run merge:phase-a",
+    "phase-b": "node scripts/normalise_kaggle.js",
+    "phase-c": "node scripts/download_usda.js"
   },
   "devDependencies": {
     "axios": "^1.16.0",

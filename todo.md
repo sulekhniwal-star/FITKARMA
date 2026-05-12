@@ -621,21 +621,31 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
   - Current seed: **542 items** (INDB adds ~1,014 once xlsx placed)
 
 #### Phase B — Kaggle Indian Datasets (~15,000 items)
-- [ ] Install Kaggle CLI — **No Python on machine. Using Node.js Kaggle REST API instead.**
+- [x] Install Kaggle CLI — **No Python on machine. Using Node.js Kaggle REST API instead.**
   - Scripts: `etl/scripts/download_kaggle.js` + `etl/scripts/normalise_kaggle.js`
-- [ ] **Download 5 datasets** via `node etl/scripts/download_kaggle.js` — all downloaded successfully
-  - `batthulavinay/indian-food-nutrition` → `Indian_Food_Nutrition_Processed.csv` (1,014 dishes — deduped vs INDB)
-  - `ahsanneural/10k-south-asian-recipes-with-nutrition-and-steps` → 10K recipes (nutrition col mismatch, 0 added)
-  - `gijoe707/ifct2017` → `ifct2017_compositions.csv` (542 items — deduped vs IFCT A1)
-  - `sonalshinde123/food-nutrition-dataset-150-everyday-foods` → 193 new items added
-  - `umangsinghal5/nutritional-and-carbon-footprint-data-of-indian-diet` → 676 new items added
-- [ ] Run `node etl/scripts/normalise_kaggle.js` — **869 net new items** after fuzzy dedup vs Phase A
-- [ ] Mark `"source": "kaggle"` — applied
+- [x] **Download 5 datasets** via `node etl/scripts/download_kaggle.js`
+  - `batthulavinay/indian-food-nutrition` → `Indian_Food_Nutrition_Processed.csv` (1,014 rows) — **1,002 net new**
+  - `ahsanneural/10k-south-asian-recipes-with-nutrition-and-steps` → `recipe_nutrition.csv` + `recipes_master.csv` (9,997 rows) — **63 net new** (heavy dedup; per-serving → per-100g via 150g default)
+  - `gijoe707/ifct2017` → `ifct2017_compositions.csv` (542 rows) — **0 net new** (fully deduped vs Phase A)
+  - `sonalshinde123/food-nutrition-dataset-150-everyday-foods` → `Food_Nutrition_Dataset.csv` (205 rows) — **182 net new**
+  - `umangsinghal5/nutritional-and-carbon-footprint-data-of-indian-diet` → `nutrition_cf - Sheet5.csv` (753 rows) — **663 net new** (per-serving → per-100g via Total Weight column)
+  - Note: 3 datasets were 404 on Kaggle API; downloaded manually as zips into `food_download/` and extracted
+- [x] Run `node etl/scripts/normalise_kaggle.js` — **1,910 net new items** after fuzzy dedup (threshold 88) vs Phase A
+- [x] Mark `"source": "kaggle"` — applied; `priority: 3`
+- [x] Run: `cd etl && npm run phase-b`
+- [x] Total seed after Phase B: **2,452 items**
 
 #### Phase C — USDA FoodData Central (Full Dataset)
-- [ ] Download Foundation Foods JSON + SR Legacy JSON via `node etl/scripts/download_usda.js`
-- [ ] Process full dataset (No filtering for Indian keywords) — **7,413 new items added**
-- [ ] Mark `"source": "usda"` — applied
+- [x] Download Foundation Foods JSON + SR Legacy JSON via `node etl/scripts/download_usda.js`
+  - `foundationDownload.json` (316 items, 6 MB) — downloaded from `fdc.nal.usda.gov`
+  - `FoodData_Central_sr_legacy_food_json_2021-10-28.json` (7,793 items, 210 MB) — downloaded from `fdc.nal.usda.gov`
+- [x] Process full dataset (no filtering) — nutrients mapped by `nutrient.name` substring match
+  - Foundation Foods: 316 items → **258 net new**
+  - SR Legacy: 7,793 items → **5,246 net new**
+  - Skipped (fuzzy dedup ≥88): 2,605
+- [x] Mark `"source": "usda"`, `priority: 4` — applied
+- [x] Run: `cd etl && npm run phase-c`
+- [x] Total seed after Phase C: **7,956 items**
 
 #### Phase D — UK CoFID 2021 (Full Dataset)
 - [ ] Download `McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx` via `node etl/scripts/download_cofid.js`

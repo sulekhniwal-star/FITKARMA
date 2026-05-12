@@ -1,159 +1,265 @@
+/**
+ * normalise_kaggle.js — Phase B Kaggle normaliser
+ *
+ * Sources (all per-100g unless noted):
+ *   1. Indian_Food_Nutrition_Processed.csv   — batthulavinay (1,014 rows)
+ *   2. ifct2017_compositions.csv             — gijoe707 (542 rows, deduped vs Phase A)
+ *   3. Food_Nutrition_Dataset.csv            — sonalshinde123 (205 rows)
+ *   4. nutrition_cf - Sheet5.csv             — umangsinghal5 (753 rows, per-serving → per-100g)
+ *   5. recipe_nutrition.csv + recipes_master — ahsanneural (9,997 rows, per-serving → per-100g)
+ *
+ * Dedup: token-sort fuzzy match ≥88 against existing seed names (fuzzball)
+ * Output: assets/data/indian_foods_seed.json  (Phase A + net-new kaggle items)
+ */
+
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createReadStream } from 'fs';
+import csvParser from 'csv-parser';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const fuzz = require('fuzzball');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const RAW = path.join(__dirname, '../data/raw');
+const SEED = path.join(__dirname, '../../assets/data/indian_foods_seed.json');
 
-console.log('⚡ Executing fuzzy deduplication & normalization pipelines targeting raw Kaggle CSV bundles...');
+const DEDUP_THRESHOLD = 88;
 
-const seedFile = path.join(__dirname, '../../assets/data/indian_foods_seed.json');
-let currentMaster = [];
+// ── helpers ──────────────────────────────────────────────────────────────────
 
-if (fs.existsSync(seedFile)) {
-  try {
-    currentMaster = JSON.parse(fs.readFileSync(seedFile, 'utf8'));
-    console.log(`✔ Loaded current master seed store containing ${currentMaster.length} items.`);
-  } catch (e) {
-    console.warn('⚠ Could not read base JSON structure cleanly. Starting fresh bundle integration array.');
-  }
-}
+const n = (v, fallback = 0) => {
+  const f = parseFloat(v);
+  return isNaN(f) || f < 0 ? fallback : f;
+};
 
-// Base authentic everyday food templates representing unique normalized rows extracted from everyday Kaggle feeds
-const baseKaggleTemplates = [
-  {
-    name: 'Poha (Flattened Rice Cooked with Peanuts)',
-    nameHindi: 'पोहा (मूंगफली के साथ)',
-    category: 'Cereals and Millets',
-    cuisine: 'Maharashtrian & Central Indian Core',
-    caloriesPer100g: 180.0,
-    proteinPer100g: 3.2,
-    carbsPer100g: 38.5,
-    fatPer100g: 1.2,
-    fiberPer100g: 1.8,
-    emoji: '🍛',
-    source: 'kaggle',
-    servingSizes: JSON.stringify(['1 katori standard (150g)', '1 plate full serving (250g)']),
-    barcode: 'KAG-EVD-001',
-  },
-  {
-    name: 'Upma (Roasted Semolina with Vegetables)',
-    nameHindi: 'उपमा (सूजी)',
-    category: 'Cereals and Millets',
-    cuisine: 'South Indian Breakfast Core',
-    caloriesPer100g: 195.0,
-    proteinPer100g: 3.8,
-    carbsPer100g: 32.0,
-    fatPer100g: 5.1,
-    fiberPer100g: 2.1,
-    emoji: '🥣',
-    source: 'kaggle',
-    servingSizes: JSON.stringify(['1 medium bowl (180g)', '1 cup compact (120g)']),
-    barcode: 'KAG-EVD-002',
-  },
-  {
-    name: 'Besan Chilla (Gram Flour Savory Pancake)',
-    nameHindi: 'बेसन का चीला',
-    category: 'Pulses and Legumes',
-    cuisine: 'North Indian Quick Breakfast',
-    caloriesPer100g: 165.0,
-    proteinPer100g: 8.2,
-    carbsPer100g: 22.0,
-    fatPer100g: 4.8,
-    fiberPer100g: 3.5,
-    emoji: '🥞',
-    source: 'kaggle',
-    servingSizes: JSON.stringify(['1 medium Chilla (60g)', '2 standard Chillas (120g)']),
-    barcode: 'KAG-EVD-003',
-  },
-  {
-    name: 'Steamed Idli (Standard Parboiled Rice & Urad Base)',
-    nameHindi: 'इडली (स्टीम्ड)',
-    category: 'Cereals and Millets',
-    cuisine: 'South Indian Heritage Base',
-    caloriesPer100g: 120.0,
-    proteinPer100g: 3.0,
-    carbsPer100g: 25.4,
-    fatPer100g: 0.4,
-    fiberPer100g: 1.2,
-    emoji: '🥠',
-    source: 'kaggle',
-    servingSizes: JSON.stringify(['1 medium Idli (45g)', '3 Idlis plate normal (135g)']),
-    barcode: 'KAG-EVD-004',
-  },
-  {
-    name: 'Spongy Khaman Dhokla (Steamed Gram Flour Solid)',
-    nameHindi: 'खमण ढोकला',
-    category: 'Composite Recipes',
-    cuisine: 'Gujarati Heritage Base',
-    caloriesPer100g: 160.0,
-    proteinPer100g: 5.5,
-    carbsPer100g: 28.0,
-    fatPer100g: 2.8,
-    fiberPer100g: 2.5,
-    emoji: '🧽',
-    source: 'kaggle',
-    servingSizes: JSON.stringify(['2 standard pieces (80g)', '100g market box']),
-    barcode: 'KAG-EVD-005',
-  },
-  {
-    name: 'Methi Thepla (Spiced Fenugreek Wheat Flatbread)',
-    nameHindi: 'मेथी थेपला',
-    category: 'Composite Recipes',
-    cuisine: 'Gujarati Universal Travel Base',
-    caloriesPer100g: 280.0,
-    proteinPer100g: 6.8,
-    carbsPer100g: 46.2,
-    fatPer100g: 7.5,
-    fiberPer100g: 4.2,
-    emoji: '🫓',
-    source: 'kaggle',
-    servingSizes: JSON.stringify(['1 medium Thepla (35g)', '2 Theplas standard serving (70g)']),
-    barcode: 'KAG-EVD-006',
-  },
-  {
-    name: 'Authentic Rajma Masala (Red Kidney Bean Thick Gravy)',
-    nameHindi: 'राजमा मसाला',
-    category: 'Pulses and Legumes',
-    cuisine: 'Punjabi Sunday Core',
-    caloriesPer100g: 140.0,
-    proteinPer100g: 6.2,
-    carbsPer100g: 21.0,
-    fatPer100g: 3.5,
-    fiberPer100g: 5.8,
-    emoji: '🍲',
-    source: 'kaggle',
-    servingSizes: JSON.stringify(['1 standard deep bowl (200g)', '1 small cup side (100g)']),
-    barcode: 'KAG-EVD-007',
-  },
-];
-
-// Deduplicate existing source="kaggle" rows if script executes multiple cycles to preserve net stability
-const filteredMaster = currentMaster.filter(item => item.source !== 'kaggle');
-
-// Generate precisely 869 net new items simulating fuzzy string matching and multi-region SKU combinations
-const netNewKaggleItems = [];
-const targetNetNewCount = 869;
-
-for (let i = 0; i < targetNetNewCount; i++) {
-  const tpl = baseKaggleTemplates[i % baseKaggleTemplates.length];
-  const regionTags = ['Standard Retail', 'Urban Fresh', 'Organic Select', 'Heritage Recipe Batch', 'Local Vendor Assorted', 'Packaged Store Base'];
-  const rTag = regionTags[i % regionTags.length];
-  
-  netNewKaggleItems.push({
-    ...tpl,
-    name: `${tpl.name} [SKU-${rTag} #${1000 + i}]`,
-    barcode: `${tpl.barcode}-NET-${i}`,
-    caloriesPer100g: parseFloat((tpl.caloriesPer100g + ((i % 11) * 0.8) - 4.0).toFixed(1)),
-    proteinPer100g: parseFloat((tpl.proteinPer100g + ((i % 7) * 0.1) - 0.3).toFixed(1)),
+function readCsv(file) {
+  return new Promise((resolve, reject) => {
+    const rows = [];
+    createReadStream(path.join(RAW, file))
+      .pipe(csvParser())
+      .on('data', r => rows.push(r))
+      .on('end', () => resolve(rows))
+      .on('error', reject);
   });
 }
 
-// Append deduplicated net new matrices directly to base dataset
-const consolidatedMaster = [...filteredMaster, ...netNewKaggleItems];
+function normaliseKey(name) {
+  return name.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
+}
 
-fs.writeFileSync(seedFile, JSON.stringify(consolidatedMaster, null, 2));
+function isDuplicate(name, existingKeys) {
+  const key = normaliseKey(name);
+  for (const k of existingKeys) {
+    if (fuzz.token_sort_ratio(key, k) >= DEDUP_THRESHOLD) return true;
+  }
+  return false;
+}
 
-console.log(`✔ Executed fuzzy deduplication vs Phase A primary seeds successfully.`);
-console.log(`✨ Normalization complete! Synthesized precisely ${netNewKaggleItems.length} net new everyday items marked source="kaggle".`);
-console.log(`🚀 Updated master DB size: ${consolidatedMaster.length} items recorded cleanly.`);
+// ── load existing seed ────────────────────────────────────────────────────────
+
+const master = JSON.parse(fs.readFileSync(SEED, 'utf8'));
+// Remove any stale kaggle entries from previous runs
+const base = master.filter(x => x.source !== 'kaggle');
+const existingKeys = base.map(x => normaliseKey(x.name));
+console.log(`✅ Loaded ${base.length} Phase A items`);
+
+const netNew = [];
+let skipped = 0;
+
+function tryAdd(item) {
+  if (!item.name || item.energy_kcal <= 0 || item.energy_kcal > 900) { skipped++; return; }
+  if (isDuplicate(item.name, existingKeys)) { skipped++; return; }
+  existingKeys.push(normaliseKey(item.name));
+  netNew.push(item);
+}
+
+// ── S1: Indian_Food_Nutrition_Processed.csv (batthulavinay) ──────────────────
+// Columns: Dish Name, Calories (kcal), Carbohydrates (g), Protein (g), Fats (g),
+//          Free Sugar (g), Fibre (g), Sodium (mg), Calcium (mg), Iron (mg),
+//          Vitamin C (mg), Folate (µg)
+// Values are per-serving; dataset notes serving = 100g equivalent for most dishes
+
+{
+  const rows = await readCsv('Indian_Food_Nutrition_Processed.csv');
+  for (const r of rows) {
+    tryAdd({
+      name: r['Dish Name']?.trim(),
+      group: 'Indian Dishes',
+      tags: 'vegetarian',
+      energy_kcal: n(r['Calories (kcal)']),
+      protein_g: n(r['Protein (g)']),
+      fat_g: n(r['Fats (g)']),
+      carbs_g: n(r['Carbohydrates (g)']),
+      fiber_g: n(r['Fibre (g)']),
+      sodium_mg: n(r['Sodium (mg)']),
+      calcium_mg: n(r['Calcium (mg)']),
+      iron_mg: n(r['Iron (mg)']),
+      vitaminC_mg: n(r['Vitamin C (mg)']),
+      vitaminB9_folate_ug: n(r['Folate (µg)']),
+      source: 'kaggle',
+      priority: 3,
+    });
+  }
+  console.log(`   batthulavinay: ${rows.length} rows → ${netNew.length} added so far`);
+}
+
+// ── S2: ifct2017_compositions.csv (gijoe707) ─────────────────────────────────
+// Columns: food_name, food_code, food_group, energy_kcal, protein_g, fat_g,
+//          carbohydrate_g, fiber_g, calcium_mg, iron_mg, ...
+// Fully deduped against Phase A IFCT 2017 — expect ~0 net new
+
+{
+  const before = netNew.length;
+  const rows = await readCsv('ifct2017_compositions.csv');
+  // Detect actual columns from first row
+  const cols = Object.keys(rows[0] || {});
+  const nameCol = cols.find(c => /name|food/i.test(c)) || cols[0];
+  const kcalCol = cols.find(c => /kcal|energy|calori/i.test(c));
+  const protCol = cols.find(c => /prot/i.test(c));
+  const fatCol  = cols.find(c => /^fat/i.test(c));
+  const carbCol = cols.find(c => /carb|cho/i.test(c));
+  const fibCol  = cols.find(c => /fib/i.test(c));
+
+  for (const r of rows) {
+    tryAdd({
+      name: r[nameCol]?.trim(),
+      group: r['food_group'] || r['group'] || 'Indian Foods',
+      tags: 'vegetarian',
+      energy_kcal: n(kcalCol ? r[kcalCol] : 0),
+      protein_g: n(protCol ? r[protCol] : 0),
+      fat_g: n(fatCol ? r[fatCol] : 0),
+      carbs_g: n(carbCol ? r[carbCol] : 0),
+      fiber_g: n(fibCol ? r[fibCol] : 0),
+      source: 'kaggle',
+      priority: 3,
+    });
+  }
+  console.log(`   gijoe707/ifct2017: ${rows.length} rows → ${netNew.length - before} net new (rest deduped vs Phase A)`);
+}
+
+// ── S3: Food_Nutrition_Dataset.csv (sonalshinde123) ──────────────────────────
+// Columns: food_name, category, calories, protein, carbs, fat, iron, vitamin_c
+// Per 100g
+
+{
+  const before = netNew.length;
+  const rows = await readCsv('Food_Nutrition_Dataset.csv');
+  for (const r of rows) {
+    tryAdd({
+      name: r['food_name']?.trim(),
+      group: r['category']?.trim() || 'General',
+      tags: 'vegetarian',
+      energy_kcal: n(r['calories']),
+      protein_g: n(r['protein']),
+      fat_g: n(r['fat']),
+      carbs_g: n(r['carbs']),
+      fiber_g: 0,
+      iron_mg: n(r['iron']),
+      vitaminC_mg: n(r['vitamin_c']),
+      source: 'kaggle',
+      priority: 3,
+    });
+  }
+  console.log(`   sonalshinde123: ${rows.length} rows → ${netNew.length - before} net new`);
+}
+
+// ── S4: nutrition_cf - Sheet5.csv (umangsinghal5) ────────────────────────────
+// Columns: Food, Associativity, Region, Type, Category, Allergy, Serving,
+//          Total Weight (gms), Energy(kcal), Proteins, Carbohydrates, Fats,
+//          Fiber, Carbon Footprint(kg CO2e), Ingredients
+// Values are per-serving → convert to per-100g using Total Weight
+
+{
+  const before = netNew.length;
+  const rows = await readCsv('nutrition_cf - Sheet5.csv');
+  for (const r of rows) {
+    const weight = n(r['Total Weight (gms)'], 100);
+    const scale = weight > 0 ? 100 / weight : 1;
+    const isVeg = (r['Type'] || '').toLowerCase().includes('veg');
+    tryAdd({
+      name: r['Food']?.trim(),
+      group: r['Category']?.trim() || 'Indian Dishes',
+      region: r['Region']?.trim(),
+      tags: isVeg ? 'vegetarian' : 'non-vegetarian',
+      energy_kcal: parseFloat((n(r['Energy(kcal)']) * scale).toFixed(1)),
+      protein_g: parseFloat((n(r['Proteins']) * scale).toFixed(2)),
+      fat_g: parseFloat((n(r['Fats']) * scale).toFixed(2)),
+      carbs_g: parseFloat((n(r['Carbohydrates']) * scale).toFixed(2)),
+      fiber_g: parseFloat((n(r['Fiber']) * scale).toFixed(2)),
+      source: 'kaggle',
+      priority: 3,
+    });
+  }
+  console.log(`   umangsinghal5: ${rows.length} rows → ${netNew.length - before} net new`);
+}
+
+// ── S5: recipe_nutrition.csv + recipes_master.csv (ahsanneural) ──────────────
+// recipe_nutrition: recipe_id, calories, protein_g, carbohydrates_g, fat_g,
+//                   fiber_g, sugar_g, sodium_mg, cholesterol_mg, ...
+// recipes_master:   recipe_id, recipe_name, cuisine, category, is_vegetarian,
+//                   is_vegan, is_gluten_free, calories_per_serving, servings
+// Values are per-serving → convert to per-100g using calories_per_serving ratio
+
+{
+  const before = netNew.length;
+  const [nutrition, master_rows] = await Promise.all([
+    readCsv('recipe_nutrition.csv'),
+    readCsv('recipes_master.csv'),
+  ]);
+
+  // Build nutrition lookup by recipe_id
+  const nutMap = {};
+  for (const r of nutrition) nutMap[r['recipe_id']] = r;
+
+  for (const r of master_rows) {
+    const nut = nutMap[r['recipe_id']];
+    if (!nut) continue;
+
+    const servings = n(r['servings'], 1);
+    const calPerServing = n(nut['calories']);
+    // Estimate serving weight: use 150g as default for Indian dishes
+    const servingWeight = 150;
+    const scale = servingWeight > 0 ? 100 / servingWeight : 1;
+
+    const isVeg = r['is_vegetarian'] === 'True';
+    const isVegan = r['is_vegan'] === 'True';
+    const cuisine = r['cuisine']?.trim();
+
+    tryAdd({
+      name: r['recipe_name']?.trim(),
+      group: r['category']?.trim() || 'Recipes',
+      cuisine,
+      tags: [
+        isVeg ? 'vegetarian' : 'non-vegetarian',
+        isVegan ? 'vegan' : '',
+        r['is_gluten_free'] === 'True' ? 'gluten-free' : '',
+        r['is_halal'] === 'True' ? 'halal' : '',
+      ].filter(Boolean).join(' '),
+      energy_kcal: parseFloat((n(nut['calories']) * scale).toFixed(1)),
+      protein_g: parseFloat((n(nut['protein_g']) * scale).toFixed(2)),
+      fat_g: parseFloat((n(nut['fat_g']) * scale).toFixed(2)),
+      carbs_g: parseFloat((n(nut['carbohydrates_g']) * scale).toFixed(2)),
+      fiber_g: parseFloat((n(nut['fiber_g']) * scale).toFixed(2)),
+      sugars_g: parseFloat((n(nut['sugar_g']) * scale).toFixed(2)),
+      sodium_mg: parseFloat((n(nut['sodium_mg']) * scale).toFixed(1)),
+      cholesterol_mg: parseFloat((n(nut['cholesterol_mg']) * scale).toFixed(1)),
+      source: 'kaggle',
+      priority: 3,
+    });
+  }
+  console.log(`   ahsanneural 10k: ${master_rows.length} rows → ${netNew.length - before} net new`);
+}
+
+// ── merge & write ─────────────────────────────────────────────────────────────
+
+const merged = [...base, ...netNew];
+fs.writeFileSync(SEED, JSON.stringify(merged, null, 2));
+
+console.log(`\n📊 Phase B Summary:`);
+console.log(`   Phase A base:    ${base.length} items`);
+console.log(`   Kaggle net new:  ${netNew.length} items`);
+console.log(`   Skipped (dedup): ${skipped}`);
+console.log(`   Total seed:      ${merged.length} items`);
+console.log(`✨ Written → ${SEED}`);

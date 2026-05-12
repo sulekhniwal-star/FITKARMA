@@ -58,3 +58,6 @@ GoogleService-Info.plist
 
 # Appwrite CLI cache / session
 .appwrite/
+
+# Large ETL raw data files (>100MB)
+FoodData_Central_sr_legacy_food_json_2021-10-28.json
