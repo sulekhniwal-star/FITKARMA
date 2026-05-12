@@ -224,6 +224,23 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
+  Stream<List<Medication>> watchAllMedications() {
+    return (select(medications)..orderBy([(t) => OrderingTerm(expression: t.startDate, mode: OrderingMode.desc)])).watch();
+  }
+
+  Future<void> addMedicationSchedule(String name, String dosage, String schedule) async {
+    await into(medications).insert(
+      MedicationsCompanion.insert(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        userId: 'client_user',
+        name: name,
+        dosage: dosage,
+        schedule: schedule,
+        startDate: DateTime.now(),
+      ),
+    );
+  }
+
   Future<List<dynamic>> getPendingSync() async {
     // This is a simplified version; in a real app, you'd probably 
     // union all tables or iterate through them.

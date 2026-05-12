@@ -530,23 +530,23 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 8.15 Medication Tracking
 
-- [ ] Accessible via Quick Log FAB
-- [ ] Medication list with dosage + schedule
-- [ ] Mark as taken → logs to Drift → awards karma XP
-- [ ] Local notification reminders per schedule
+- [x] Accessible via Quick Log FAB
+- [x] Medication list with dosage + schedule
+- [x] Mark as taken → logs to Drift → awards karma XP
+- [x] Local notification reminders per schedule
 
 ### 8.16 Festival Calendar (`/festival`)
 
-- [ ] Indian festival list with dates (seeded from Appwrite `festivals` collection)
-- [ ] For each festival: nutrition tips, special foods, activity recommendations
-- [ ] BilingualLabel on festival headers
+- [x] Indian festival list with dates (seeded from Appwrite `festivals` collection)
+- [x] For each festival: nutrition tips, special foods, activity recommendations
+- [x] BilingualLabel on festival headers
 
 ### 8.17 Wedding Planner (`/wedding`) — Pro only
 
-- [ ] Wedding countdown (days remaining from `weddingDate`)
-- [ ] Customised fitness milestones for wedding timeline
-- [ ] Special meal plan suggestions
-- [ ] ProGate wrapper
+- [x] Wedding countdown (days remaining from `weddingDate`)
+- [x] Customised fitness milestones for wedding timeline
+- [x] Special meal plan suggestions
+- [x] ProGate wrapper
 
 ### 8.18 Social Groups (`/social`) — Pro only
 

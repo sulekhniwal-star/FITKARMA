@@ -27,6 +27,9 @@ import '../../features/emergency/emergency_screen.dart';
 import '../../features/settings/settings_screen.dart';
 import '../../features/reports/lab_reports_screen.dart';
 import '../../features/water/water_screen.dart';
+import '../../features/medication/medication_screen.dart';
+import '../../features/festival/festival_screen.dart';
+import '../../features/wedding/wedding_screen.dart';
 import 'transitions.dart';
 
 part 'app_router.g.dart';
@@ -176,9 +179,9 @@ GoRouter appRouter(Ref ref) {
       GoRoute(path: '/subscription', builder: (context, state) => const _PlaceholderScreen(title: 'Subscription')),
       GoRoute(path: '/settings', builder: (context, state) => const SettingsScreen()),
       GoRoute(path: '/water', builder: (context, state) => const WaterScreen()),
-      GoRoute(path: '/medication', builder: (context, state) => const _PlaceholderScreen(title: 'Medication')),
-      GoRoute(path: '/festival', builder: (context, state) => const _PlaceholderScreen(title: 'Festival')),
-      GoRoute(path: '/wedding', builder: (context, state) => const _PlaceholderScreen(title: 'Wedding')),
+      GoRoute(path: '/medication', builder: (context, state) => const MedicationScreen()),
+      GoRoute(path: '/festival', builder: (context, state) => const FestivalScreen()),
+      GoRoute(path: '/wedding', builder: (context, state) => const WeddingScreen()),
       GoRoute(path: '/social', builder: (context, state) => const _PlaceholderScreen(title: 'Social')),
 
       GoRoute(
