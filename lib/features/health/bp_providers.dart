@@ -70,7 +70,7 @@ class BpMetadataService {
 }
 
 @riverpod
-BpMetadataService bpMetadataService(BpMetadataServiceRef ref) {
+BpMetadataService bpMetadataService(Ref ref) {
   return BpMetadataService();
 }
 

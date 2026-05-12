@@ -231,14 +231,14 @@ class KarmaState {
   }
 }
 
-class KarmaNotifier extends StateNotifier<KarmaState> {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+class KarmaNotifier extends Notifier<KarmaState> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   static const _storageKey = 'karma_state_cache';
 
-  KarmaNotifier() : super(KarmaState.initial()) {
-    _loadState();
+  @override
+  KarmaState build() {
+    Future.microtask(() => _loadState());
+    return KarmaState.initial();
   }
 
   Future<void> _loadState() async {
@@ -333,6 +333,4 @@ class KarmaNotifier extends StateNotifier<KarmaState> {
   }
 }
 
-final karmaStateProvider = StateNotifierProvider<KarmaNotifier, KarmaState>((ref) {
-  return KarmaNotifier();
-});
+final karmaStateProvider = NotifierProvider<KarmaNotifier, KarmaState>(KarmaNotifier.new);

@@ -74,14 +74,14 @@ class SystemSettingsState {
       );
 }
 
-class SystemSettingsNotifier extends StateNotifier<SystemSettingsState> {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+class SystemSettingsNotifier extends Notifier<SystemSettingsState> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   static const _storeKey = 'app_system_settings_preferences_v1';
 
-  SystemSettingsNotifier() : super(SystemSettingsState()) {
-    _loadPrefs();
+  @override
+  SystemSettingsState build() {
+    Future.microtask(() => _loadPrefs());
+    return SystemSettingsState();
   }
 
   Future<void> _loadPrefs() async {
@@ -111,6 +111,4 @@ class SystemSettingsNotifier extends StateNotifier<SystemSettingsState> {
   void updateStepGoal(int steps) => _savePrefs(state.copyWith(stepDailyGoal: steps));
 }
 
-final systemSettingsProvider = StateNotifierProvider<SystemSettingsNotifier, SystemSettingsState>((ref) {
-  return SystemSettingsNotifier();
-});
+final systemSettingsProvider = NotifierProvider<SystemSettingsNotifier, SystemSettingsState>(SystemSettingsNotifier.new);

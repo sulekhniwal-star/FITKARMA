@@ -33,7 +33,7 @@ final class AiCoachProvider
   AiCoach create() => AiCoach();
 }
 
-String _$aiCoachHash() => r'3ce97d9c5350269f6b42d8ed73a2f775d03985ad';
+String _$aiCoachHash() => r'6aed783df4b5ddeda974c13eee53bb12eeffa7dc';
 
 abstract class _$AiCoach extends $AsyncNotifier<List<Map<String, String>>> {
   FutureOr<List<Map<String, String>>> build();

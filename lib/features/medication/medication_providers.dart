@@ -5,15 +5,14 @@ import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
 import '../karma/karma_providers.dart';
 
-class MedicationTakenNotifier extends StateNotifier<Set<String>> {
-  final Ref ref;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+class MedicationTakenNotifier extends Notifier<Set<String>> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   static const _cachePrefix = 'med_taken_ids_';
 
-  MedicationTakenNotifier(this.ref) : super(<String>{}) {
-    _loadTakenToday();
+  @override
+  Set<String> build() {
+    Future.microtask(() => _loadTakenToday());
+    return <String>{};
   }
 
   String get _todayKey {
@@ -53,9 +52,7 @@ class MedicationTakenNotifier extends StateNotifier<Set<String>> {
   bool isTakenToday(String medId) => state.contains(medId);
 }
 
-final medicationTakenProvider = StateNotifierProvider<MedicationTakenNotifier, Set<String>>((ref) {
-  return MedicationTakenNotifier(ref);
-});
+final medicationTakenProvider = NotifierProvider<MedicationTakenNotifier, Set<String>>(MedicationTakenNotifier.new);
 
 final medicationsStreamProvider = StreamProvider<List<Medication>>((ref) {
   final db = ref.watch(appDatabaseProvider);

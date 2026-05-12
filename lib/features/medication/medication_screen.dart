@@ -235,6 +235,10 @@ class _MedicationScreenState extends ConsumerState<MedicationScreen> {
                   dosage: '500 mg (1 Tablet)',
                   schedule: 'Morning (8:00 AM)',
                   startDate: DateTime.now().subtract(const Duration(days: 30)),
+                  syncStatus: 'synced',
+                  failedAttempts: 0,
+                  isDeleted: false,
+                  updatedAt: DateTime.now(),
                 ),
                 Medication(
                   id: 'med_stub_2',
@@ -243,6 +247,10 @@ class _MedicationScreenState extends ConsumerState<MedicationScreen> {
                   dosage: '10 mg',
                   schedule: 'Bedtime (10:00 PM)',
                   startDate: DateTime.now().subtract(const Duration(days: 60)),
+                  syncStatus: 'synced',
+                  failedAttempts: 0,
+                  isDeleted: false,
+                  updatedAt: DateTime.now(),
                 ),
               ];
 

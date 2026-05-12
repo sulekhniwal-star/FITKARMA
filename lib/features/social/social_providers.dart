@@ -106,15 +106,14 @@ class SocialGroup {
       );
 }
 
-class SocialGroupsNotifier extends StateNotifier<List<SocialGroup>> {
-  final Ref ref;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+class SocialGroupsNotifier extends Notifier<List<SocialGroup>> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   static const _cacheKey = 'social_groups_network_data_cache';
 
-  SocialGroupsNotifier(this.ref) : super([]) {
-    _loadGroups();
+  @override
+  List<SocialGroup> build() {
+    Future.microtask(() => _loadGroups());
+    return [];
   }
 
   Future<void> _loadGroups() async {
@@ -190,7 +189,7 @@ class SocialGroupsNotifier extends StateNotifier<List<SocialGroup>> {
 
   Future<void> createGroup(String name) async {
     final auth = ref.read(authProvider);
-    final user = auth.valueOrNull;
+    final user = auth.value;
     final myName = user?.name?.isNotEmpty == true ? user!.name : 'You';
 
     final newGrp = SocialGroup(
@@ -217,7 +216,7 @@ class SocialGroupsNotifier extends StateNotifier<List<SocialGroup>> {
 
   Future<void> addPost(String groupId, String content) async {
     final auth = ref.read(authProvider);
-    final user = auth.valueOrNull;
+    final user = auth.value;
     final myName = user?.name?.isNotEmpty == true ? user!.name : 'You';
 
     final newPost = GroupPost(
@@ -251,6 +250,4 @@ class SocialGroupsNotifier extends StateNotifier<List<SocialGroup>> {
   }
 }
 
-final socialGroupsProvider = StateNotifierProvider<SocialGroupsNotifier, List<SocialGroup>>((ref) {
-  return SocialGroupsNotifier(ref);
-});
+final socialGroupsProvider = NotifierProvider<SocialGroupsNotifier, List<SocialGroup>>(SocialGroupsNotifier.new);

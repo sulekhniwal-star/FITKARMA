@@ -21,10 +21,8 @@ class BiometricLock {
 
       return await _auth.authenticate(
         localizedReason: reason,
-        options: const AuthenticationOptions(
-          biometricOnly: false,
-          stickyAuth: true,
-        ),
+        biometricOnly: false,
+        stickyAuth: true,
       );
     } catch (_) {
       return false;

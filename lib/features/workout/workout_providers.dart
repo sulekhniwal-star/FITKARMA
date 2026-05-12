@@ -100,20 +100,28 @@ class ActiveWorkoutState {
   }
 }
 
-class ActiveWorkoutNotifier extends StateNotifier<ActiveWorkoutState> {
+class ActiveWorkoutNotifier extends FamilyNotifier<ActiveWorkoutState, String> {
   Timer? _timer;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  ActiveWorkoutNotifier(String id, String type) : super(ActiveWorkoutState.initial(id, type)) {
-    _startTimer();
+  @override
+  ActiveWorkoutState build(String arg) {
+    final parts = arg.split('_');
+    final typeStr = parts.length > 1 ? Uri.decodeComponent(parts.sublist(1).join('_')) : 'Hypertrophy Power Circuit';
+    final stateObj = ActiveWorkoutState.initial(parts[0], typeStr);
+
+    ref.onDispose(() {
+      _timer?.cancel();
+    });
+
+    _startTimer(stateObj);
+    return stateObj;
   }
 
-  void _startTimer() {
+  void _startTimer(ActiveWorkoutState initialState) {
     _timer?.cancel();
+    // Schedule periodic update
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!mounted) return;
       state = ActiveWorkoutState(
         workoutId: state.workoutId,
         workoutType: state.workoutType,
@@ -122,12 +130,6 @@ class ActiveWorkoutNotifier extends StateNotifier<ActiveWorkoutState> {
         exercises: state.exercises,
       );
     });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
   }
 
   void logSet(double weightKg, int reps) {
@@ -213,9 +215,4 @@ class ActiveWorkoutNotifier extends StateNotifier<ActiveWorkoutState> {
   }
 }
 
-final activeWorkoutProvider = StateNotifierProvider.family<ActiveWorkoutNotifier, ActiveWorkoutState, String>((ref, idParam) {
-  // Decode potential custom type identifiers appended or defaults
-  final parts = idParam.split('_');
-  final typeStr = parts.length > 1 ? Uri.decodeComponent(parts.sublist(1).join('_')) : 'Hypertrophy Power Circuit';
-  return ActiveWorkoutNotifier(parts[0], typeStr);
-});
+final activeWorkoutProvider = NotifierProvider.family<ActiveWorkoutNotifier, ActiveWorkoutState, String>(ActiveWorkoutNotifier.new);

@@ -34,20 +34,20 @@ class UserProfileMetrics {
       );
 }
 
-class ProfileNotifier extends StateNotifier<UserProfileMetrics> {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+class ProfileNotifier extends Notifier<UserProfileMetrics> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   static const _storageKey = 'user_profile_editable_metrics';
 
-  ProfileNotifier() : super(UserProfileMetrics(
-    name: 'Aanya Patel',
-    gender: 'Female',
-    age: 28,
-    heightCm: 165.0,
-    weightKg: 62.0,
-  )) {
-    _loadState();
+  @override
+  UserProfileMetrics build() {
+    Future.microtask(() => _loadState());
+    return UserProfileMetrics(
+      name: 'Aanya Patel',
+      gender: 'Female',
+      age: 28,
+      heightCm: 165.0,
+      weightKg: 62.0,
+    );
   }
 
   Future<void> _loadState() async {
@@ -80,6 +80,4 @@ class ProfileNotifier extends StateNotifier<UserProfileMetrics> {
   }
 }
 
-final userProfileMetricsProvider = StateNotifierProvider<ProfileNotifier, UserProfileMetrics>((ref) {
-  return ProfileNotifier();
-});
+final userProfileMetricsProvider = NotifierProvider<ProfileNotifier, UserProfileMetrics>(ProfileNotifier.new);

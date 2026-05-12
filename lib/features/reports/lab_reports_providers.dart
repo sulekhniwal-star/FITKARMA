@@ -46,15 +46,14 @@ class LabReportItem {
       );
 }
 
-class LabReportsNotifier extends StateNotifier<AsyncValue<List<LabReportItem>>> {
-  final Ref ref;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+class LabReportsNotifier extends Notifier<AsyncValue<List<LabReportItem>>> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   static const _cacheKey = 'local_lab_reports_vault_cache';
 
-  LabReportsNotifier(this.ref) : super(const AsyncValue.loading()) {
-    fetchReports();
+  @override
+  AsyncValue<List<LabReportItem>> build() {
+    Future.microtask(() => fetchReports());
+    return const AsyncValue.loading();
   }
 
   Future<void> fetchReports() async {
@@ -62,7 +61,7 @@ class LabReportsNotifier extends StateNotifier<AsyncValue<List<LabReportItem>>> 
     try {
       final databases = ref.read(appwriteDatabasesProvider);
       final auth = ref.read(authProvider);
-      final user = auth.valueOrNull;
+      final user = auth.value;
       final uId = user?.$id ?? 'client_user';
 
       // Attempt Appwrite Cloud collection fetch
@@ -140,7 +139,7 @@ class LabReportsNotifier extends StateNotifier<AsyncValue<List<LabReportItem>>> 
     if (isProUser) return true; // Unlimited
 
     // Free tier enforcement: count lab_reports docs before upload max 3
-    final currentList = state.valueOrNull ?? [];
+    final currentList = state.value ?? [];
     return currentList.length < 3;
   }
 
@@ -156,7 +155,7 @@ class LabReportsNotifier extends StateNotifier<AsyncValue<List<LabReportItem>>> 
     }
 
     final auth = ref.read(authProvider);
-    final user = auth.valueOrNull;
+    final user = auth.value;
     final uId = user?.$id ?? 'client_user';
     final uuid = const Uuid().v4();
 
@@ -204,7 +203,7 @@ class LabReportsNotifier extends StateNotifier<AsyncValue<List<LabReportItem>>> 
       // Offline fallback processing
     }
 
-    final currentList = state.valueOrNull ?? [];
+    final currentList = state.value ?? [];
     final updatedList = [newItem, ...currentList];
     state = AsyncValue.data(updatedList);
     _cacheLocally(updatedList);
@@ -238,6 +237,4 @@ class LabReportsNotifier extends StateNotifier<AsyncValue<List<LabReportItem>>> 
   }
 }
 
-final labReportsListProvider = StateNotifierProvider<LabReportsNotifier, AsyncValue<List<LabReportItem>>>((ref) {
-  return LabReportsNotifier(ref);
-});
+final labReportsListProvider = NotifierProvider<LabReportsNotifier, AsyncValue<List<LabReportItem>>>(LabReportsNotifier.new);

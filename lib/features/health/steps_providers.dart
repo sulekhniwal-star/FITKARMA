@@ -30,9 +30,11 @@ class StepsData {
   }
 }
 
-class StepsNotifier extends StateNotifier<AsyncValue<StepsData>> {
-  StepsNotifier() : super(const AsyncValue.loading()) {
-    loadData();
+class StepsNotifier extends Notifier<AsyncValue<StepsData>> {
+  @override
+  AsyncValue<StepsData> build() {
+    Future.microtask(() => loadData());
+    return const AsyncValue.loading();
   }
 
   Future<void> loadData({bool forceSimulate = false}) async {
@@ -92,6 +94,4 @@ class StepsNotifier extends StateNotifier<AsyncValue<StepsData>> {
   }
 }
 
-final stepsDataProvider = StateNotifierProvider<StepsNotifier, AsyncValue<StepsData>>((ref) {
-  return StepsNotifier();
-});
+final stepsDataProvider = NotifierProvider<StepsNotifier, AsyncValue<StepsData>>(StepsNotifier.new);

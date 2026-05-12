@@ -41,24 +41,30 @@ class StepArcPainter extends CustomPainter {
         startAngle: pi,
         endAngle: pi * 2,
         colors: [
-          fillColor.withOpacity(0.8),
+          fillColor.withValues(alpha: 0.8),
           fillColor,
           Colors.orangeAccent,
         ],
       ).createShader(rect)
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round
-      ..shadow = const Shadow(
-        color: AppColorsDark.primaryGlow,
-        blurRadius: 12,
-      );
+      ..strokeCap = StrokeCap.round;
 
     // Clamp progress between 0 and 1
     final clampedProgress = progress.clamp(0.0, 1.0);
     final sweepAngle = pi * clampedProgress;
 
     if (sweepAngle > 0) {
+      // Draw shadow glow arc first
+      final glowPaint = Paint()
+        ..color = AppColorsDark.primaryGlow
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth
+        ..strokeCap = StrokeCap.round
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
+      canvas.drawArc(rect, pi, sweepAngle, false, glowPaint);
+
+      // Draw primary filled arc
       canvas.drawArc(rect, pi, sweepAngle, false, fillPaint);
     }
   }

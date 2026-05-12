@@ -55,15 +55,15 @@ class WeddingState {
   }
 }
 
-class WeddingNotifier extends StateNotifier<WeddingState> {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+class WeddingNotifier extends Notifier<WeddingState> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   static const _dateKey = 'user_configured_wedding_date';
   static const _completedMilestonesKey = 'wedding_completed_milestones_ids';
 
-  WeddingNotifier() : super(_defaultState()) {
-    _loadState();
+  @override
+  WeddingState build() {
+    Future.microtask(() => _loadState());
+    return _defaultState();
   }
 
   static WeddingState _defaultState() {
@@ -172,6 +172,4 @@ class WeddingNotifier extends StateNotifier<WeddingState> {
   }
 }
 
-final weddingPlannerProvider = StateNotifierProvider<WeddingNotifier, WeddingState>((ref) {
-  return WeddingNotifier();
-});
+final weddingPlannerProvider = NotifierProvider<WeddingNotifier, WeddingState>(WeddingNotifier.new);

@@ -132,14 +132,14 @@ class MentalHealthState {
   }
 }
 
-class MentalHealthNotifier extends StateNotifier<MentalHealthState> {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+class MentalHealthNotifier extends Notifier<MentalHealthState> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   static const _storageKey = 'mh_burnout_score';
 
-  MentalHealthNotifier() : super(MentalHealthState.initial()) {
-    _loadState();
+  @override
+  MentalHealthState build() {
+    Future.microtask(() => _loadState());
+    return MentalHealthState.initial();
   }
 
   Future<void> _loadState() async {
@@ -169,9 +169,7 @@ class MentalHealthNotifier extends StateNotifier<MentalHealthState> {
   }
 }
 
-final mentalHealthStateProvider = StateNotifierProvider<MentalHealthNotifier, MentalHealthState>((ref) {
-  return MentalHealthNotifier();
-});
+final mentalHealthStateProvider = NotifierProvider<MentalHealthNotifier, MentalHealthState>(MentalHealthNotifier.new);
 
 final selectedBreathingExerciseProvider = StateProvider<BreathingExercise?>((ref) {
   return null;

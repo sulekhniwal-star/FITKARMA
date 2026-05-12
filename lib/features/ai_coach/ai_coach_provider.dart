@@ -31,7 +31,7 @@ class AiCoach extends _$AiCoach {
         }),
       );
 
-      if (execution.status == 'completed') {
+      if (execution.status.toString().contains('completed')) {
         final data = jsonDecode(execution.responseBody);
         final reply = data['reply'] as String;
         state = AsyncValue.data([...state.value!, {'role': 'coach', 'content': reply}]);

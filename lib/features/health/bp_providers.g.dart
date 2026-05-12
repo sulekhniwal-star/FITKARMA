@@ -54,7 +54,7 @@ final class BpMetadataServiceProvider
   }
 }
 
-String _$bpMetadataServiceHash() => r'544c2271d65bacd5698957c93d415bd64086545b';
+String _$bpMetadataServiceHash() => r'00786c25c170e48875d99431a0b5f45594eed36a';
 
 @ProviderFor(BpMetadataCache)
 final bpMetadataCacheProvider = BpMetadataCacheProvider._();

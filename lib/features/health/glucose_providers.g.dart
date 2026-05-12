@@ -55,7 +55,7 @@ final class GlucoseMetadataServiceProvider
 }
 
 String _$glucoseMetadataServiceHash() =>
-    r'678ff9552b0385a38bfea661dc866b9853342a63';
+    r'317bce51c09758fcbbfc46ca8c377710fb0c253b';
 
 @ProviderFor(GlucoseMetadataCache)
 final glucoseMetadataCacheProvider = GlucoseMetadataCacheProvider._();

@@ -7,9 +7,7 @@ import '../../core/providers/core_providers.dart';
 import '../onboarding/onboarding_providers.dart';
 
 class JournalMetadataService {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   static const _prefix = 'jrn_meta_';
 
@@ -40,17 +38,17 @@ final journalEntriesStreamProvider = StreamProvider<List<JournalEntry>>((ref) {
   return db.watchJournalEntries();
 });
 
-class JournalMetadataCacheNotifier extends StateNotifier<Map<String, List<String>>> {
-  final JournalMetadataService _service;
-
-  JournalMetadataCacheNotifier(this._service) : super({});
+class JournalMetadataCacheNotifier extends Notifier<Map<String, List<String>>> {
+  @override
+  Map<String, List<String>> build() => {};
 
   Future<void> loadForEntries(List<JournalEntry> entries) async {
+    final service = ref.read(journalMetadataServiceProvider);
     final updated = {...state};
     bool changed = false;
     for (final e in entries) {
       if (!updated.containsKey(e.id)) {
-        updated[e.id] = await _service.getTags(e.id);
+        updated[e.id] = await service.getTags(e.id);
         changed = true;
       }
     }
@@ -60,7 +58,8 @@ class JournalMetadataCacheNotifier extends StateNotifier<Map<String, List<String
   }
 
   Future<void> saveTags(String entryId, List<String> tags) async {
-    await _service.saveTags(entryId, tags);
+    final service = ref.read(journalMetadataServiceProvider);
+    await service.saveTags(entryId, tags);
     state = {
       ...state,
       entryId: tags,
@@ -68,10 +67,7 @@ class JournalMetadataCacheNotifier extends StateNotifier<Map<String, List<String
   }
 }
 
-final journalMetadataCacheProvider = StateNotifierProvider<JournalMetadataCacheNotifier, Map<String, List<String>>>((ref) {
-  final service = ref.watch(journalMetadataServiceProvider);
-  return JournalMetadataCacheNotifier(service);
-});
+final journalMetadataCacheProvider = NotifierProvider<JournalMetadataCacheNotifier, Map<String, List<String>>>(JournalMetadataCacheNotifier.new);
 
 Future<void> saveJournalEntry(
   WidgetRef ref, {
@@ -89,7 +85,7 @@ Future<void> saveJournalEntry(
           id: id,
           userId: userId,
           content: content,
-          mood: moodEmoji,
+          mood: Value(moodEmoji),
           createdAt: DateTime.now(),
         ),
       );

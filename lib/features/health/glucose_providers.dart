@@ -76,7 +76,7 @@ class GlucoseMetadataService {
 }
 
 @riverpod
-GlucoseMetadataService glucoseMetadataService(GlucoseMetadataServiceRef ref) {
+GlucoseMetadataService glucoseMetadataService(Ref ref) {
   return GlucoseMetadataService();
 }
 

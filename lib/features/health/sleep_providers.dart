@@ -8,7 +8,6 @@ import '../onboarding/onboarding_providers.dart';
 
 class SleepMetadataService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
     iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
   );
 
@@ -71,17 +70,17 @@ final sleepLogsStreamProvider = StreamProvider<List<SleepLog>>((ref) {
   return db.watchRecentSleepLogs(limit: 30);
 });
 
-class SleepMetadataCacheNotifier extends StateNotifier<Map<String, Map<String, dynamic>>> {
-  final SleepMetadataService _service;
-
-  SleepMetadataCacheNotifier(this._service) : super({});
+class SleepMetadataCacheNotifier extends Notifier<Map<String, Map<String, dynamic>>> {
+  @override
+  Map<String, Map<String, dynamic>> build() => {};
 
   Future<void> loadForLogs(List<SleepLog> logs) async {
+    final service = ref.read(sleepMetadataServiceProvider);
     final updated = {...state};
     bool changed = false;
     for (final l in logs) {
       if (!updated.containsKey(l.id)) {
-        updated[l.id] = await _service.getMetadata(l.id);
+        updated[l.id] = await service.getMetadata(l.id);
         changed = true;
       }
     }
@@ -97,7 +96,8 @@ class SleepMetadataCacheNotifier extends StateNotifier<Map<String, Map<String, d
     String? notes,
     Map<String, int>? stagesMinutes,
   }) async {
-    await _service.saveMetadata(
+    final service = ref.read(sleepMetadataServiceProvider);
+    await service.saveMetadata(
       logId,
       spO2: spO2,
       heartRate: heartRate,
@@ -116,10 +116,7 @@ class SleepMetadataCacheNotifier extends StateNotifier<Map<String, Map<String, d
   }
 }
 
-final sleepMetadataCacheProvider = StateNotifierProvider<SleepMetadataCacheNotifier, Map<String, Map<String, dynamic>>>((ref) {
-  final service = ref.watch(sleepMetadataServiceProvider);
-  return SleepMetadataCacheNotifier(service);
-});
+final sleepMetadataCacheProvider = NotifierProvider<SleepMetadataCacheNotifier, Map<String, Map<String, dynamic>>>(SleepMetadataCacheNotifier.new);
 
 Future<void> logSleepSession(
   WidgetRef ref, {
