@@ -70,3 +70,6 @@ etl/**/*.zip
 etl/**/*.gz
 etl/**/*.parquet
 etl/**/*.xlsx
+
+# Ignore large generated seed files
+assets/data/indian_foods_seed.json

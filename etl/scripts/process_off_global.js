@@ -8,8 +8,8 @@
  * Strategy:
  *   - Stream-decompress gz → pipe through CSV parser (never loads full file into RAM)
  *   - Accept rows where energy_100g > 0 and product_name is non-empty
- *   - Deduplicate: exact barcode match first, then fuzzy name ≥88 against running index
- *   - Write final merged seed JSON once stream ends
+ *   - Deduplicate: exact barcode match first, then exact normalised-name Set (O(1))
+ *   - Stream-write final merged seed JSON to avoid V8 string length limit on 1M+ items
  *
  * OFF CSV key columns (tab-separated):
  *   code, product_name, generic_name, categories, countries,
@@ -24,20 +24,15 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createGunzip } from 'zlib';
-import { createRequire } from 'module';
 import { parse } from 'csv-parse';
 import { pipeline } from 'stream/promises';
 import { Transform } from 'stream';
-
-const require = createRequire(import.meta.url);
-const fuzz = require('fuzzball');
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const GZ_PATH = path.join(__dirname, '../data/raw/en.openfoodfacts.org.products.csv.gz');
 const SEED    = path.join(__dirname, '../../assets/data/indian_foods_seed.json');
 
-const DEDUP_THRESHOLD = 88;
-const LOG_INTERVAL    = 100_000;
+const LOG_INTERVAL = 100_000;
 
 // ── guard ─────────────────────────────────────────────────────────────────────
 
@@ -54,20 +49,12 @@ const master = JSON.parse(fs.readFileSync(SEED, 'utf8'));
 const base   = master.filter(x => x.source !== 'off_global');
 console.log(`✅ Loaded ${base.length} existing items (Phase A–D)`);
 
-// Build dedup indexes
+// Build dedup indexes — O(1) exact normalised-key dedup (required for 2M+ OFF rows)
 const barcodeSet = new Set(base.map(x => x.barcode).filter(Boolean));
-const nameIndex  = base.map(x => normaliseKey(x.name));
+const nameSet    = new Set(base.map(x => normaliseKey(x.name)));
 
 function normaliseKey(s) {
   return (s ?? '').toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
-}
-
-function isDuplicateName(name) {
-  const key = normaliseKey(name);
-  for (const k of nameIndex) {
-    if (fuzz.token_sort_ratio(key, k) >= DEDUP_THRESHOLD) return true;
-  }
-  return false;
 }
 
 const n = (v, fallback = 0) => {
@@ -99,12 +86,13 @@ const processor = new Transform({
     // Barcode dedup (fast path)
     if (barcode && barcodeSet.has(barcode)) { skipped++; cb(); return; }
 
-    // Name fuzzy dedup (slower — only if barcode is new/absent)
-    if (isDuplicateName(name)) { skipped++; cb(); return; }
+    // Name exact-normalised dedup (O(1) — required for 2M+ row scale)
+    const nameKey = normaliseKey(name);
+    if (nameSet.has(nameKey)) { skipped++; cb(); return; }
 
     // Accept
     if (barcode) barcodeSet.add(barcode);
-    nameIndex.push(normaliseKey(name));
+    nameSet.add(nameKey);
 
     netNew.push({
       name,
@@ -149,6 +137,8 @@ await pipeline(
     columns: true,
     skip_empty_lines: true,
     relax_column_count: true,
+    relax_quotes: true,
+    quote: false,
     bom: true,
   }),
   processor
@@ -158,15 +148,31 @@ const elapsed = ((Date.now() - startMs) / 1000).toFixed(1);
 process.stdout.write('\n');
 console.log(`   Done in ${elapsed}s`);
 
-// ── write merged seed ─────────────────────────────────────────────────────────
+// ── stream-write merged seed (avoids V8 string length limit on 1M+ items) ────
 
-const merged = [...base, ...netNew];
-fs.writeFileSync(SEED, JSON.stringify(merged, null, 2));
+console.log('💾 Writing merged seed…');
+const writeStart = Date.now();
+const out = fs.createWriteStream(SEED);
+out.write('[');
+let first = true;
+for (const item of base) {
+  out.write((first ? '\n' : ',\n') + JSON.stringify(item));
+  first = false;
+}
+for (const item of netNew) {
+  out.write(',\n' + JSON.stringify(item));
+}
+out.write('\n]\n');
+out.end();
+await new Promise((res, rej) => out.on('finish', res).on('error', rej));
+const writeElapsed = ((Date.now() - writeStart) / 1000).toFixed(1);
+console.log(`   Written in ${writeElapsed}s`);
 
+const total = base.length + netNew.length;
 console.log(`\n📊 Phase E Summary:`);
 console.log(`   Phase A–D base:  ${base.length} items`);
 console.log(`   OFF rows seen:   ${rowsSeen.toLocaleString()}`);
 console.log(`   OFF net new:     ${netNew.length.toLocaleString()} items`);
 console.log(`   Skipped (dedup): ${skipped.toLocaleString()}`);
-console.log(`   Total seed:      ${merged.length.toLocaleString()} items`);
+console.log(`   Total seed:      ${total.toLocaleString()} items`);
 console.log(`✨ Written → ${SEED}`);
