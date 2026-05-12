@@ -244,7 +244,7 @@ class _PrimaryButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColorsDark.primary.withOpacity(0.3),
+            color: AppColorsDark.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -254,7 +254,7 @@ class _PrimaryButton extends StatelessWidget {
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColorsDark.primary,
-          disabledBackgroundColor: AppColorsDark.primary.withOpacity(0.5),
+          disabledBackgroundColor: AppColorsDark.primary.withValues(alpha: 0.5),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),

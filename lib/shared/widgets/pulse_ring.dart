@@ -48,7 +48,7 @@ class _PulseRingState extends State<PulseRing> with SingleTickerProviderStateMix
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: widget.color.withOpacity(1.0 - _animation.value),
+              color: widget.color.withValues(alpha: 1.0 - _animation.value),
               width: 1 + (4 * _animation.value),
             ),
           ),

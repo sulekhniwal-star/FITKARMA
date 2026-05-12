@@ -76,7 +76,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: AppColorsDark.accent.withOpacity(0.2), shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: AppColorsDark.accent.withValues(alpha: 0.2), shape: BoxShape.circle),
                   child: const Icon(Icons.fitness_center_rounded, size: 48, color: AppColorsDark.accent),
                 ),
                 const SizedBox(height: 20),
@@ -216,7 +216,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  color: AppColorsDark.surface0.withOpacity(0.6),
+                  color: AppColorsDark.surface0.withValues(alpha: 0.6),
                   borderRadius: BorderRadius.circular(28),
                   border: Border.all(color: AppColorsDark.divider),
                 ),
@@ -284,7 +284,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                                 return Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                   decoration: BoxDecoration(
-                                    color: AppColorsDark.surface1.withOpacity(0.5),
+                                    color: AppColorsDark.surface1.withValues(alpha: 0.5),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Row(

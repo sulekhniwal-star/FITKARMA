@@ -31,7 +31,7 @@ class _BreathingCircleState extends State<BreathingCircle> {
                 height: 280,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColorsDark.teal.withOpacity(0.1),
+                  color: AppColorsDark.teal.withValues(alpha: 0.1),
                 ),
               )
                   .animate(onPlay: (c) => c.repeat(reverse: true))

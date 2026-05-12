@@ -78,9 +78,9 @@ class WaterScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
-                    color: AppColorsDark.accent.withOpacity(0.15),
+                    color: AppColorsDark.accent.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(100),
-                    border: Border.all(color: AppColorsDark.accent.withOpacity(0.3)),
+                    border: Border.all(color: AppColorsDark.accent.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

@@ -346,7 +346,7 @@ class _LabReportsScreenState extends ConsumerState<LabReportsScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: isProUser ? AppColorsDark.accent.withOpacity(0.15) : AppColorsDark.surface1,
+                      color: isProUser ? AppColorsDark.accent.withValues(alpha: 0.15) : AppColorsDark.surface1,
                       borderRadius: BorderRadius.circular(100),
                       border: Border.all(color: isProUser ? AppColorsDark.accent : AppColorsDark.surface2),
                     ),

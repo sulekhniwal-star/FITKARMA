@@ -93,12 +93,12 @@ class _WeddingContentScreen extends ConsumerWidget {
           ),
           Text(
             'Days Remaining',
-            style: AppTypography.h3(color: Colors.black.withOpacity(0.7)),
+            style: AppTypography.h3(color: Colors.black.withValues(alpha: 0.7)),
           ),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(color: Colors.black.withOpacity(0.15), borderRadius: BorderRadius.circular(100)),
+            decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(100)),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

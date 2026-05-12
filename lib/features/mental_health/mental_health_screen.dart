@@ -79,9 +79,9 @@ class _MentalHealthScreenState extends ConsumerState<MentalHealthScreen> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppColorsDark.rose.withOpacity(0.08),
+              color: AppColorsDark.rose.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppColorsDark.rose.withOpacity(0.3)),
+              border: Border.all(color: AppColorsDark.rose.withValues(alpha: 0.3)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -162,9 +162,9 @@ class _MentalHealthScreenState extends ConsumerState<MentalHealthScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: gaugeColor.withOpacity(0.15),
+                  color: gaugeColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(100),
-                  border: Border.all(color: gaugeColor.withOpacity(0.3)),
+                  border: Border.all(color: gaugeColor.withValues(alpha: 0.3)),
                 ),
                 child: Text(
                   state.burnoutScore.toStringAsFixed(1),
@@ -237,9 +237,9 @@ class _MentalHealthScreenState extends ConsumerState<MentalHealthScreen> {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: ringColor.withOpacity(0.12),
+                      color: ringColor.withValues(alpha: 0.12),
                       shape: BoxShape.circle,
-                      border: Border.all(color: ringColor.withOpacity(0.4)),
+                      border: Border.all(color: ringColor.withValues(alpha: 0.4)),
                     ),
                     child: Icon(Icons.air_rounded, color: ringColor, size: 22),
                   ),
@@ -329,9 +329,9 @@ class _MentalHealthScreenState extends ConsumerState<MentalHealthScreen> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: AppColorsDark.teal.withOpacity(0.1),
+                          color: AppColorsDark.teal.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColorsDark.teal.withOpacity(0.2)),
+                          border: Border.all(color: AppColorsDark.teal.withValues(alpha: 0.2)),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -384,7 +384,7 @@ class _MentalHealthScreenState extends ConsumerState<MentalHealthScreen> {
               const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: AppColorsDark.rose.withOpacity(0.15), borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(color: AppColorsDark.rose.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
                 child: const Icon(Icons.phone_in_talk_rounded, size: 16, color: AppColorsDark.rose),
               ),
             ],

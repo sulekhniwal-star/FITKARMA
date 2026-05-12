@@ -75,7 +75,7 @@ class StepsScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: AppColorsDark.surface1.withOpacity(0.8),
+                color: AppColorsDark.surface1.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: AppColorsDark.surface2),
               ),

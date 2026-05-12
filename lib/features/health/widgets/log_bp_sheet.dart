@@ -190,9 +190,9 @@ class _LogBpSheetState extends ConsumerState<LogBpSheet> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColorsDark.error.withOpacity(0.1),
+                  color: AppColorsDark.error.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColorsDark.error.withOpacity(0.3)),
+                  border: Border.all(color: AppColorsDark.error.withValues(alpha: 0.3)),
                 ),
                 child: Text(
                   _errorMessage!,
@@ -257,7 +257,7 @@ class _LogBpSheetState extends ConsumerState<LogBpSheet> {
                       onSelected: (val) {
                         if (val) setState(() => _selectedArm = arm);
                       },
-                      selectedColor: AppColorsDark.primary.withOpacity(0.2),
+                      selectedColor: AppColorsDark.primary.withValues(alpha: 0.2),
                       backgroundColor: AppColorsDark.surface1,
                       side: BorderSide(
                         color: isSelected ? AppColorsDark.primary : AppColorsDark.surface2,

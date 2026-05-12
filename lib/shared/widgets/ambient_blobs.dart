@@ -22,7 +22,7 @@ class AmbientBlobs extends ConsumerWidget {
           top: -100,
           right: -100,
           child: _Blob(
-            color: AppColorsDark.primaryMuted.withOpacity(0.15),
+            color: AppColorsDark.primaryMuted.withValues(alpha: 0.15),
             size: 400,
           ),
         ),
@@ -30,7 +30,7 @@ class AmbientBlobs extends ConsumerWidget {
           bottom: -50,
           left: -100,
           child: _Blob(
-            color: AppColorsDark.secondaryGlow.withOpacity(0.1),
+            color: AppColorsDark.secondaryGlow.withValues(alpha: 0.1),
             size: 350,
           ),
         ),
@@ -38,7 +38,7 @@ class AmbientBlobs extends ConsumerWidget {
           top: 300,
           left: -50,
           child: _Blob(
-            color: AppColorsDark.tealGlow.withOpacity(0.08),
+            color: AppColorsDark.tealGlow.withValues(alpha: 0.08),
             size: 250,
           ),
         ),

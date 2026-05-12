@@ -37,7 +37,7 @@ class GlowingMetric extends ConsumerWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: glowColor.withOpacity(tier == DeviceTier.high ? 0.25 : 0.15),
+                  color: glowColor.withValues(alpha: tier == DeviceTier.high ? 0.25 : 0.15),
                   blurRadius: tier == DeviceTier.high ? 80 : 40,
                   spreadRadius: 0,
                 ),

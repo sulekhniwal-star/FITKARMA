@@ -45,7 +45,7 @@ class GlassCard extends ConsumerWidget {
         boxShadow: glowColor != null
             ? [
                 BoxShadow(
-                  color: glowColor!.withOpacity(tier == DeviceTier.low ? 0.15 : 0.25),
+                  color: glowColor!.withValues(alpha: tier == DeviceTier.low ? 0.15 : 0.25),
                   blurRadius: tier == DeviceTier.low ? 12 : 24,
                   spreadRadius: -4,
                 )

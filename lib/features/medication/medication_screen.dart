@@ -174,15 +174,15 @@ class _MedicationScreenState extends ConsumerState<MedicationScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColorsDark.rose.withOpacity(0.12),
+              color: AppColorsDark.rose.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColorsDark.rose.withOpacity(0.3)),
+              border: Border.all(color: AppColorsDark.rose.withValues(alpha: 0.3)),
             ),
             child: Row(
               children: [
                 Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: AppColorsDark.rose.withOpacity(0.2), shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: AppColorsDark.rose.withValues(alpha: 0.2), shape: BoxShape.circle),
                   child: const Icon(Icons.notifications_active_rounded, color: AppColorsDark.rose, size: 24),
                 ),
                 const SizedBox(width: 16),
@@ -268,9 +268,9 @@ class _MedicationScreenState extends ConsumerState<MedicationScreen> {
                             width: 44,
                             height: 44,
                             decoration: BoxDecoration(
-                              color: taken ? AppColorsDark.teal.withOpacity(0.15) : AppColorsDark.rose.withOpacity(0.12),
+                              color: taken ? AppColorsDark.teal.withValues(alpha: 0.15) : AppColorsDark.rose.withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: taken ? AppColorsDark.teal.withOpacity(0.4) : AppColorsDark.rose.withOpacity(0.3)),
+                              border: Border.all(color: taken ? AppColorsDark.teal.withValues(alpha: 0.4) : AppColorsDark.rose.withValues(alpha: 0.3)),
                             ),
                             child: Icon(
                               taken ? Icons.check_circle_rounded : Icons.medication_rounded,
@@ -309,7 +309,7 @@ class _MedicationScreenState extends ConsumerState<MedicationScreen> {
                           if (taken)
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(color: AppColorsDark.teal.withOpacity(0.15), borderRadius: BorderRadius.circular(6)),
+                              decoration: BoxDecoration(color: AppColorsDark.teal.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(6)),
                               child: Text('Logged', style: AppTypography.labelSm(color: AppColorsDark.teal)),
                             )
                           else

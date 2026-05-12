@@ -17,7 +17,7 @@ class LevelUpAnimation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.black.withOpacity(0.8),
+      color: Colors.black.withValues(alpha: 0.8),
       child: InkWell(
         onTap: onComplete,
         child: Center(

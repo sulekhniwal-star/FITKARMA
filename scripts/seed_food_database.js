@@ -21,6 +21,7 @@ const APPWRITE_COLLECTION_ID = process.env.APPWRITE_COLLECTION_ID || 'food_datab
 const ENABLE_REAL_UPLOAD = process.env.ENABLE_REAL_UPLOAD === 'true';
 
 let appwriteDatabases = null;
+let ID = null;
 let batchesForUpload = [];
 let totalProcessed = 0;
 let tier1Count = 0;
@@ -36,7 +37,8 @@ async function initAppwrite() {
         } catch (err) {
             nodeAppwrite = require('../etl/node_modules/node-appwrite');
         }
-        const { Client, Databases } = nodeAppwrite;
+        const { Client, Databases, ID: AppwriteID } = nodeAppwrite;
+        ID = AppwriteID;
         appwriteDatabases = new Databases(
             new Client()
                 .setEndpoint(APPWRITE_ENDPOINT)
@@ -67,7 +69,7 @@ async function uploadBatch(batch, batchIndex, totalBatches) {
             await appwriteDatabases.createDocument(
                 APPWRITE_DATABASE_ID,
                 APPWRITE_COLLECTION_ID,
-                'unique()',
+                ID ? ID.unique() : 'unique()',
                 appwriteDoc
             );
             successCount++;

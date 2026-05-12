@@ -153,7 +153,7 @@ class _BreathingCircleScreenState extends ConsumerState<BreathingCircleScreen> w
     return AppScaffold.patternC(
       gradient: LinearGradient(
         colors: [
-          focalColor.withOpacity(0.2),
+          focalColor.withValues(alpha: 0.2),
           const Color(0xFF0F2027),
           const Color(0xFF203A43),
         ],
@@ -200,10 +200,10 @@ class _BreathingCircleScreenState extends ConsumerState<BreathingCircleScreen> w
                         height: 280 * _scaleAnimation.value,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: focalColor.withOpacity(0.12),
+                          color: focalColor.withValues(alpha: 0.12),
                           boxShadow: [
                             BoxShadow(
-                              color: focalColor.withOpacity(0.2),
+                              color: focalColor.withValues(alpha: 0.2),
                               blurRadius: 40,
                               spreadRadius: 10 * _scaleAnimation.value,
                             ),
@@ -217,11 +217,11 @@ class _BreathingCircleScreenState extends ConsumerState<BreathingCircleScreen> w
                         height: 200 * _scaleAnimation.value,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: focalColor.withOpacity(0.6), width: 2),
+                          border: Border.all(color: focalColor.withValues(alpha: 0.6), width: 2),
                           gradient: RadialGradient(
                             colors: [
-                              focalColor.withOpacity(0.3),
-                              focalColor.withOpacity(0.05),
+                              focalColor.withValues(alpha: 0.3),
+                              focalColor.withValues(alpha: 0.05),
                             ],
                           ),
                         ),
@@ -240,7 +240,7 @@ class _BreathingCircleScreenState extends ConsumerState<BreathingCircleScreen> w
                           ],
                         )
                       else
-                        Icon(Icons.self_improvement_rounded, size: 64, color: focalColor.withOpacity(0.8)),
+                        Icon(Icons.self_improvement_rounded, size: 64, color: focalColor.withValues(alpha: 0.8)),
                     ],
                   );
                 },
@@ -252,7 +252,7 @@ class _BreathingCircleScreenState extends ConsumerState<BreathingCircleScreen> w
           Container(
             padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
             decoration: BoxDecoration(
-              color: AppColorsDark.surface0.withOpacity(0.4),
+              color: AppColorsDark.surface0.withValues(alpha: 0.4),
               borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
               border: Border.all(color: AppColorsDark.divider),
             ),

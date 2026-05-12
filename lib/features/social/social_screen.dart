@@ -310,7 +310,7 @@ class _SocialContentScreenState extends ConsumerState<_SocialContentScreen> {
                                   if (post.bonusKarma > 0) ...[
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                      decoration: BoxDecoration(color: AppColorsDark.accent.withOpacity(0.2), borderRadius: BorderRadius.circular(4)),
+                                      decoration: BoxDecoration(color: AppColorsDark.accent.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(4)),
                                       child: Text('+${post.bonusKarma} XP', style: AppTypography.monoMd(color: AppColorsDark.accent).copyWith(fontSize: 9)),
                                     ),
                                     const SizedBox(width: 8),

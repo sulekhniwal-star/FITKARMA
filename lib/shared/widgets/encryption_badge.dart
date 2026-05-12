@@ -15,9 +15,9 @@ class EncryptionBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColorsDark.teal.withOpacity(0.1),
+        color: AppColorsDark.teal.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: AppColorsDark.teal.withOpacity(0.2)),
+        border: Border.all(color: AppColorsDark.teal.withValues(alpha: 0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

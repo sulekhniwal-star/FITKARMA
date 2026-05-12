@@ -86,7 +86,7 @@ class _FeedbackButton extends StatelessWidget {
       visualDensity: VisualDensity.compact,
       color: AppColorsDark.textSecondary,
       style: IconButton.styleFrom(
-        backgroundColor: AppColorsDark.surface2.withOpacity(0.5),
+        backgroundColor: AppColorsDark.surface2.withValues(alpha: 0.5),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),

@@ -29,12 +29,12 @@ class LogoReveal extends StatelessWidget {
             borderRadius: BorderRadius.circular(32),
             boxShadow: [
               BoxShadow(
-                color: AppColorsDark.primary.withOpacity(0.4),
+                color: AppColorsDark.primary.withValues(alpha: 0.4),
                 blurRadius: 40,
                 spreadRadius: 2,
               ),
               BoxShadow(
-                color: AppColorsDark.accent.withOpacity(0.2),
+                color: AppColorsDark.accent.withValues(alpha: 0.2),
                 blurRadius: 20,
                 offset: const Offset(10, 10),
               ),

@@ -77,7 +77,7 @@ class _ActivityRingsPainter extends CustomPainter {
       (size.width / 2) - strokeWidth * 1.5 - spacing,
       strokeWidth,
       AppColorsDark.secondary,
-      AppColorsDark.secondaryGlow.withOpacity(0.1),
+      AppColorsDark.secondaryGlow.withValues(alpha: 0.1),
       caloriesProgress,
     );
 
@@ -87,7 +87,7 @@ class _ActivityRingsPainter extends CustomPainter {
       (size.width / 2) - strokeWidth * 2.5 - spacing * 2,
       strokeWidth,
       AppColorsDark.purple,
-      AppColorsDark.purple.withOpacity(0.1),
+      AppColorsDark.purple.withValues(alpha: 0.1),
       minutesProgress,
     );
   }

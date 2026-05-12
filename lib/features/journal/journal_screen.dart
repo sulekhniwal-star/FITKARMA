@@ -167,9 +167,9 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: AppColorsDark.surface0.withOpacity(0.6),
+                  color: AppColorsDark.surface0.withValues(alpha: 0.6),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColorsDark.teal.withOpacity(0.3)),
+                  border: Border.all(color: AppColorsDark.teal.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
@@ -207,7 +207,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                             duration: const Duration(milliseconds: 200),
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             decoration: BoxDecoration(
-                              color: isSelected ? AppColorsDark.teal.withOpacity(0.2) : AppColorsDark.surface1,
+                              color: isSelected ? AppColorsDark.teal.withValues(alpha: 0.2) : AppColorsDark.surface1,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: isSelected ? AppColorsDark.teal : AppColorsDark.surface2,
@@ -235,7 +235,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                     if (_errorMessage != null) ...[
                       Container(
                         padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(color: AppColorsDark.rose.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+                        decoration: BoxDecoration(color: AppColorsDark.rose.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
                         child: Text(_errorMessage!, style: AppTypography.bodySm(color: AppColorsDark.rose)),
                       ),
                       const SizedBox(height: 12),
@@ -285,7 +285,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                         hintText: 'Pour your thoughts safely here. Use toolbar to format rich emphasis...',
                         hintStyle: AppTypography.bodyLg(color: AppColorsDark.textMuted),
                         filled: true,
-                        fillColor: AppColorsDark.surface1.withOpacity(0.5),
+                        fillColor: AppColorsDark.surface1.withValues(alpha: 0.5),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                         contentPadding: const EdgeInsets.all(16),
                       ),
@@ -303,7 +303,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                         hintStyle: AppTypography.labelSm(color: AppColorsDark.textMuted),
                         prefixIcon: const Icon(Icons.tag_rounded, size: 14, color: AppColorsDark.textMuted),
                         filled: true,
-                        fillColor: AppColorsDark.surface1.withOpacity(0.5),
+                        fillColor: AppColorsDark.surface1.withValues(alpha: 0.5),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       ),

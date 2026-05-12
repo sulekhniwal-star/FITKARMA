@@ -172,7 +172,7 @@ class _OptionCard extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: isSelected ? AppColorsDark.primary.withOpacity(0.1) : AppColorsDark.surface0,
+          color: isSelected ? AppColorsDark.primary.withValues(alpha: 0.1) : AppColorsDark.surface0,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? AppColorsDark.primary : Colors.transparent,

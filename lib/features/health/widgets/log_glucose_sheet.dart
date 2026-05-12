@@ -189,9 +189,9 @@ class _LogGlucoseSheetState extends ConsumerState<LogGlucoseSheet> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColorsDark.error.withOpacity(0.1),
+                  color: AppColorsDark.error.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColorsDark.error.withOpacity(0.3)),
+                  border: Border.all(color: AppColorsDark.error.withValues(alpha: 0.3)),
                 ),
                 child: Text(
                   _errorMessage!,
@@ -276,7 +276,7 @@ class _LogGlucoseSheetState extends ConsumerState<LogGlucoseSheet> {
                               _selectedFoodName = selected ? food.name : null;
                             });
                           },
-                          selectedColor: AppColorsDark.teal.withOpacity(0.2),
+                          selectedColor: AppColorsDark.teal.withValues(alpha: 0.2),
                           backgroundColor: AppColorsDark.surface1,
                           checkmarkColor: AppColorsDark.teal,
                           side: BorderSide(color: isSelected ? AppColorsDark.teal : AppColorsDark.surface2),
@@ -344,7 +344,7 @@ class _LogGlucoseSheetState extends ConsumerState<LogGlucoseSheet> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
-          color: isSelected ? AppColorsDark.primary.withOpacity(0.15) : AppColorsDark.surface1,
+          color: isSelected ? AppColorsDark.primary.withValues(alpha: 0.15) : AppColorsDark.surface1,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? AppColorsDark.primary : AppColorsDark.surface2,

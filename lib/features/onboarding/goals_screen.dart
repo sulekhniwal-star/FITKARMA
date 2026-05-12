@@ -159,7 +159,7 @@ class _ContinueButton extends StatelessWidget {
         boxShadow: isEnabled
             ? [
                 BoxShadow(
-                  color: AppColorsDark.primary.withOpacity(0.3),
+                  color: AppColorsDark.primary.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),

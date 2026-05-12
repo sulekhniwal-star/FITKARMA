@@ -71,7 +71,7 @@ class _PermissionsScreenState extends ConsumerState<PermissionsScreen> {
               decoration: BoxDecoration(
                 color: AppColorsDark.surface0,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColorsDark.primary.withOpacity(0.2)),
+                border: Border.all(color: AppColorsDark.primary.withValues(alpha: 0.2)),
               ),
               child: Row(
                 children: [
@@ -143,7 +143,7 @@ class _PermissionTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppColorsDark.primary.withOpacity(0.1),
+              color: AppColorsDark.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: AppColorsDark.primary),
@@ -190,7 +190,7 @@ class _FinishButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColorsDark.primary.withOpacity(0.3),
+            color: AppColorsDark.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

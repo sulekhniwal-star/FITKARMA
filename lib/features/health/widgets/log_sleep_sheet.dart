@@ -192,7 +192,7 @@ class _LogSleepSheetState extends ConsumerState<LogSleepSheet> {
             OutlinedButton.icon(
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColorsDark.purple,
-                side: BorderSide(color: AppColorsDark.purple.withOpacity(0.4)),
+                side: BorderSide(color: AppColorsDark.purple.withValues(alpha: 0.4)),
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
@@ -205,7 +205,7 @@ class _LogSleepSheetState extends ConsumerState<LogSleepSheet> {
             if (_errorMessage != null) ...[
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: AppColorsDark.rose.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(color: AppColorsDark.rose.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
                 child: Text(_errorMessage!, style: AppTypography.bodySm(color: AppColorsDark.rose)),
               ),
               const SizedBox(height: 16),

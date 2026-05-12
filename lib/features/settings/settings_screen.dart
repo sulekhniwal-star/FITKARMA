@@ -137,7 +137,7 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     CircleAvatar(
                       radius: 24,
-                      backgroundColor: AppColorsDark.teal.withOpacity(0.2),
+                      backgroundColor: AppColorsDark.teal.withValues(alpha: 0.2),
                       child: const Icon(Icons.person_rounded, color: AppColorsDark.teal, size: 28),
                     ),
                     const SizedBox(width: 16),
@@ -374,11 +374,11 @@ class SettingsScreen extends ConsumerWidget {
 
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColorsDark.rose.withOpacity(0.15),
+                        backgroundColor: AppColorsDark.rose.withValues(alpha: 0.15),
                         foregroundColor: AppColorsDark.rose,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        side: BorderSide(color: AppColorsDark.rose.withOpacity(0.3)),
+                        side: BorderSide(color: AppColorsDark.rose.withValues(alpha: 0.3)),
                       ),
                       icon: const Icon(Icons.delete_forever_rounded, size: 18),
                       label: const Text('Delete Account & Purge Data', style: TextStyle(fontWeight: FontWeight.bold)),
