@@ -633,10 +633,10 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [x] Mark `"source": "usda"` — applied
 
 #### Phase D — UK CoFID 2021 (Full Dataset)
-- [ ] Download `McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx` via `node etl/scripts/download_cofid.js`
-- [ ] Process full dataset (No filtering for Indian cuisine) — **2,755 new items added**
-- [ ] Merge all 13+ CoFID worksheets into unified records — merged Proximates, Inorganics, Vitamins
-- [ ] Mark `"source": "cofid_uk"` — applied
+- [x] Download `McCance_and_Widdowson_Composition_of_Foods_Integrated_Dataset_2021.xlsx` via `node etl/scripts/download_cofid.js`
+- [x] Process full dataset (No filtering for Indian cuisine) — **2,755 new items added**
+- [x] Merge all 13+ CoFID worksheets into unified records — merged Proximates, Inorganics, Vitamins
+- [x] Mark `"source": "cofid_uk"` — applied
 
 #### Phase E — Open Food Facts Global (Full Dataset)
 - [ ] Download full global dump `en.openfoodfacts.org.products.csv.gz` — **Complete (1.2GB)**
