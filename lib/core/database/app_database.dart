@@ -171,6 +171,13 @@ class AppDatabase extends _$AppDatabase {
         .watch();
   }
 
+  Stream<List<SleepLog>> watchRecentSleepLogs({int limit = 30}) {
+    return (select(sleepLogs)
+          ..orderBy([(t) => OrderingTerm(expression: t.startTime, mode: OrderingMode.desc)])
+          ..limit(limit))
+        .watch();
+  }
+
   Future<int> getTodayWaterMl() async {
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);

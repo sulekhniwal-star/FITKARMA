@@ -5,7 +5,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
-import '../../core/theme/app_spacing.dart';
 import '../../core/database/app_database.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
 import '../../shared/widgets/glowing_metric.dart';

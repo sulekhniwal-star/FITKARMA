@@ -443,21 +443,21 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 8.5 Steps (`/home/steps`) — Pattern C
 
-- [ ] Full-bleed heroDeep gradient
-- [ ] `heroDisplay` step count 72sp, white, glow
-- [ ] Distance (km) + calories burned monoLg
-- [ ] Progress arc: CustomPainter semicircle 0→daily goal (orange fill)
-- [ ] Hourly bar chart (fl_chart) — last 12h
-- [ ] Health Connect / HealthKit integration for real step data
+- [x] Full-bleed heroDeep gradient
+- [x] `heroDisplay` step count 72sp, white, glow
+- [x] Distance (km) + calories burned monoLg
+- [x] Progress arc: CustomPainter semicircle 0→daily goal (orange fill)
+- [x] Hourly bar chart (fl_chart) — last 12h
+- [x] Health Connect / HealthKit integration for real step data
 
 ### 8.6 Sleep (`/sleep`) — Pattern B (heroSleep gradient)
 
-- [ ] Hero: metricXL "7h 24m", sleep score monoLg
-- [ ] Sleep stages chart (REM/deep/light/awake)
-- [ ] Bedtime + wake time cards
-- [ ] Avg SpO2, avg heart rate
-- [ ] 7-day trend chart
-- [ ] Manual log bottom sheet (or pull from HealthKit)
+- [x] Hero: metricXL "7h 24m", sleep score monoLg
+- [x] Sleep stages chart (REM/deep/light/awake)
+- [x] Bedtime + wake time cards
+- [x] Avg SpO2, avg heart rate
+- [x] 7-day trend chart
+- [x] Manual log bottom sheet (or pull from HealthKit)
 
 ### 8.7 Karma Hub (`/karma`) — Pattern B
 

@@ -15,6 +15,8 @@ import '../../shared/widgets/scaffold_patterns.dart';
 import '../security/biometric_lock.dart';
 import '../../features/health/blood_pressure_screen.dart';
 import '../../features/health/glucose_screen.dart';
+import '../../features/health/steps_screen.dart';
+import '../../features/health/sleep_screen.dart';
 import 'transitions.dart';
 
 part 'app_router.g.dart';
@@ -99,7 +101,7 @@ GoRouter appRouter(Ref ref) {
           GoRoute(path: '/home/dashboard', builder: (context, state) => const DashboardScreen()),
           GoRoute(path: '/home/food', builder: (context, state) => const FoodHomeScreen()),
           GoRoute(path: '/home/workout', builder: (context, state) => const _PlaceholderScreen(title: 'Workouts')),
-          GoRoute(path: '/home/steps', builder: (context, state) => const _PlaceholderScreen(title: 'Steps')),
+          GoRoute(path: '/home/steps', builder: (context, state) => const StepsScreen()),
           GoRoute(path: '/karma', builder: (context, state) => const _PlaceholderScreen(title: 'Karma')),
         ],
       ),
@@ -123,7 +125,7 @@ GoRouter appRouter(Ref ref) {
         path: '/sleep',
         builder: (context, state) => const SensitiveScreenGuard(
           screenId: 'sleep',
-          child: _PlaceholderScreen(title: 'Sleep'),
+          child: SleepScreen(),
         ),
       ),
       GoRoute(

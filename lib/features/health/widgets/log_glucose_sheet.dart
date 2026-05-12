@@ -251,7 +251,7 @@ class _LogGlucoseSheetState extends ConsumerState<LogGlucoseSheet> {
                 padding: EdgeInsets.all(8.0),
                 child: SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2)),
               )),
-              error: (_, __) => Text('Could not load meals', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
+              error: (_, _) => Text('Could not load meals', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
               data: (foods) {
                 if (foods.isEmpty) {
                   return Container(
