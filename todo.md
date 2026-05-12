@@ -498,12 +498,12 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 8.11 Workout Active (`/workout/active/{workoutId}`) — Pattern C
 
-- [ ] Full-screen timer (mm:ss)
-- [ ] Current exercise name + set/rep tracker
-- [ ] Log sets with weight + reps
-- [ ] Calories burned (estimated)
-- [ ] Stop/complete workout button
-- [ ] Save to Drift on complete → sync to Appwrite
+- [x] Full-screen timer (mm:ss)
+- [x] Current exercise name + set/rep tracker
+- [x] Log sets with weight + reps
+- [x] Calories burned (estimated)
+- [x] Stop/complete workout button
+- [x] Save to Drift on complete → sync to Appwrite
 
 ### 8.12 Emergency Card (`/emergency`) — Calm Zone
 

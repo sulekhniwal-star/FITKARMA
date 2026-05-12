@@ -184,6 +184,13 @@ class AppDatabase extends _$AppDatabase {
         .watch();
   }
 
+  Stream<List<Workout>> watchRecentWorkouts({int limit = 20}) {
+    return (select(workouts)
+          ..orderBy([(t) => OrderingTerm(expression: t.startedAt, mode: OrderingMode.desc)])
+          ..limit(limit))
+        .watch();
+  }
+
   Future<int> getTodayWaterMl() async {
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);

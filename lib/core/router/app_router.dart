@@ -22,6 +22,7 @@ import '../../features/journal/journal_screen.dart';
 import '../../features/mental_health/mental_health_screen.dart';
 import '../../features/mental_health/breathing_circle_screen.dart';
 import '../../features/profile/profile_screen.dart';
+import '../../features/workout/active_workout_screen.dart';
 import 'transitions.dart';
 
 part 'app_router.g.dart';
@@ -105,7 +106,7 @@ GoRouter appRouter(Ref ref) {
         routes: [
           GoRoute(path: '/home/dashboard', builder: (context, state) => const DashboardScreen()),
           GoRoute(path: '/home/food', builder: (context, state) => const FoodHomeScreen()),
-          GoRoute(path: '/home/workout', builder: (context, state) => const _PlaceholderScreen(title: 'Workouts')),
+          GoRoute(path: '/home/workout', builder: (context, state) => const ActiveWorkoutScreen(workoutId: 'wkt_tab_Hypertrophy Strength Focus')),
           GoRoute(path: '/home/steps', builder: (context, state) => const StepsScreen()),
           GoRoute(path: '/karma', builder: (context, state) => const KarmaScreen()),
         ],
@@ -152,6 +153,13 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) => const BreathingCircleScreen(),
       ),
       GoRoute(path: '/profile', builder: (context, state) => const ProfileScreen()),
+      GoRoute(
+        path: '/workout/active/:workoutId',
+        builder: (context, state) {
+          final id = state.pathParameters['workoutId'] ?? 'default_wkt';
+          return ActiveWorkoutScreen(workoutId: id);
+        },
+      ),
       GoRoute(path: '/emergency', builder: (context, state) => const _PlaceholderScreen(title: 'Emergency')),
       GoRoute(
         path: '/lab-reports',
