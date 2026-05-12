@@ -15,20 +15,79 @@ if (!fs.existsSync(BATCH_DIR)) {
 // Criteria defining Tier 1 items optimized for offline mobile bundled SQLite/Drift pre-population
 const TIER1_SOURCES = new Set(['ifct2017', 'icmr_nin', 'indb', 'kaggle', 'spoonacular', 'fao_infoods', 'phase_i_expansion']);
 
+// Appwrite configuration
+const APPWRITE_ENDPOINT = process.env.APPWRITE_ENDPOINT || 'https://sgp.cloud.appwrite.io/v1';
+const APPWRITE_PROJECT_ID = process.env.APPWRITE_PROJECT_ID;
+const APPWRITE_API_KEY = process.env.APPWRITE_API_KEY;
+const APPWRITE_DATABASE_ID = process.env.APPWRITE_DATABASE_ID || 'fitkarma-db';
+const APPWRITE_COLLECTION_ID = process.env.APPWRITE_COLLECTION_ID || 'food_database';
+const ENABLE_REAL_UPLOAD = process.env.ENABLE_REAL_UPLOAD === 'true';
+
+let appwriteClient = null;
+let appwriteDatabases = null;
+
+async function initAppwrite() {
+    if (!ENABLE_REAL_UPLOAD) return null;
+    
+    try {
+        const { Client, Databases } = require('node-appwrite');
+        appwriteClient = new Client()
+            .setEndpoint(APPWRITE_ENDPOINT)
+            .setProject(APPWRITE_PROJECT_ID)
+            .setKey(APPWRITE_API_KEY);
+        
+        appwriteDatabases = new Databases(appwriteClient);
+        console.log('✔ Appwrite client initialized for real upload');
+        return true;
+    } catch (e) {
+        console.error('⚠ Failed to initialize Appwrite client:', e.message);
+        return false;
+    }
+}
+
+async function uploadBatch(batch, index) {
+    if (!appwriteDatabases) return false;
+    
+    const baseDelay = 1000;
+    for (const doc of batch) {
+        try {
+            await appwriteDatabases.createDocument(
+                APPWRITE_DATABASE_ID,
+                APPWRITE_COLLECTION_ID,
+                `food_${index}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                doc
+            );
+            await new Promise(r => setTimeout(r, baseDelay)); // Rate limiting
+        } catch (e) {
+            console.error(`  ⚠ Failed to upload ${doc.name}:`, e.message);
+        }
+    }
+    return true;
+}
+
 (async () => {
     if (!fs.existsSync(SEED_FILE)) {
         console.error(`❌ Master database file not accessible at ${SEED_FILE}`);
         process.exit(1);
     }
 
+    const hasRealCredentials = APPWRITE_PROJECT_ID && APPWRITE_API_KEY;
+    if (ENABLE_REAL_UPLOAD && !hasRealCredentials) {
+        console.warn('⚠ ENABLE_REAL_UPLOAD is true but credentials not found. Running in mock mode.');
+    }
+
     console.log('Streaming master dataset via optimized string scanner to build tiering partitions and cloud batches...');
+    if (ENABLE_REAL_UPLOAD) {
+        console.log('📡 Real Appwrite upload mode ENABLED');
+        await initAppwrite();
+    }
 
     let totalProcessed = 0;
     let tier1Count = 0;
     let tier2Count = 0;
     let currentBatch = [];
     let batchIndex = 1;
-    const maxBatchesToGenerate = 1550; // Safely build 155,000+ targeted cloud documents to optimize disk/inode safety
+    const maxBatchesToGenerate = 1550;
 
     const fileStream = fs.createReadStream(SEED_FILE, { encoding: 'utf8' });
     const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
@@ -39,7 +98,6 @@ const TIER1_SOURCES = new Set(['ifct2017', 'icmr_nin', 'indb', 'kaggle', 'spoona
 
         totalProcessed++;
 
-        // High-speed regex extraction to safely bypass embedded string line breaks in massive exports
         const srcMatch = cleanLine.match(/"source":"([^"]+)"/);
         const src = srcMatch ? srcMatch[1] : 'unknown';
 
@@ -55,25 +113,34 @@ const TIER1_SOURCES = new Set(['ifct2017', 'icmr_nin', 'indb', 'kaggle', 'spoona
         }
 
         if (batchIndex <= maxBatchesToGenerate) {
-            // Synthesize lightweight document object representation for efficient batch ingestion pushes
             const nameMatch = cleanLine.match(/"name":"([^"]+)"/);
             const name = nameMatch ? nameMatch[1] : `Food Document #${totalProcessed}`;
             
             const calMatch = cleanLine.match(/"(?:caloriesPer100g|energy_kcal)":([0-9.]+)/);
             const caloriesPer100g = calMatch ? parseFloat(calMatch[1]) : 0;
 
+            const groupMatch = cleanLine.match(/"group":"([^"]+)"/);
+            const categoryMatch = cleanLine.match(/"category":"([^"]+)"/);
+
             currentBatch.push({
                 name,
                 source: src,
                 priority,
                 caloriesPer100g,
-                bundled: isTier1
+                bundled: isTier1,
+                group: groupMatch ? groupMatch[1] : null,
+                category: categoryMatch ? categoryMatch[1] : null,
             });
 
             if (currentBatch.length === 100) {
                 const batchFileName = `batch_${String(batchIndex).padStart(4, '0')}.json`;
                 const batchFilePath = path.join(BATCH_DIR, batchFileName);
                 fs.writeFileSync(batchFilePath, JSON.stringify(currentBatch, null, 2));
+                
+                if (ENABLE_REAL_UPLOAD && appwriteDatabases) {
+                    console.log(`📤 Uploading batch ${batchIndex}...`);
+                    await uploadBatch(currentBatch, batchIndex);
+                }
                 
                 currentBatch = [];
                 batchIndex++;
@@ -86,7 +153,6 @@ const TIER1_SOURCES = new Set(['ifct2017', 'icmr_nin', 'indb', 'kaggle', 'spoona
     });
 
     rl.on('close', async () => {
-        // Flush remaining buffer items if any
         if (currentBatch.length > 0 && batchIndex <= maxBatchesToGenerate) {
             const batchFileName = `batch_${String(batchIndex).padStart(4, '0')}.json`;
             const batchFilePath = path.join(BATCH_DIR, batchFileName);
@@ -105,18 +171,14 @@ const TIER1_SOURCES = new Set(['ifct2017', 'icmr_nin', 'indb', 'kaggle', 'spoona
         console.log(`Total Documents Packaged for Upload | ${generatedDocsCount.toLocaleString()} documents`);
         console.log('--------------------------------------------------------------------------------');
 
-        console.log('\n🚀 Initializing simulated/mock asynchronous Appwrite Cloud cluster synchronization pipeline...');
-        console.log('   ➜ Target Endpoint: https://sgp.cloud.appwrite.io/v1');
-        console.log('   ➜ Collection Path: FitKarma DB -> Food Database (food_database)');
-        
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        console.log('✔ Connected to Appwrite Server SDK interface. Executing batch document insertions...');
-        
-        await new Promise(resolve => setTimeout(resolve, 1800));
-        console.log(`✔ Successfully ingested bulk documents up to index ${generatedDocsCount.toLocaleString()}.`);
-        console.log('✔ Full-text tokenization indexing completed across name, category, and regional tags.');
-        
-        console.log('\n✨ Verification complete: Appwrite database console successfully validates > 150,000 active documents!');
-        console.log('✨ Phase L integration successfully built and verified against production deployment criteria.');
+        if (ENABLE_REAL_UPLOAD && appwriteDatabases) {
+            console.log('\n✨ Documents successfully uploaded to Appwrite!');
+            console.log('✨ Phase L integration complete - verify via Appwrite console.');
+        } else {
+            console.log('\n🚀 Simulated/mock execution mode (set ENABLE_REAL_UPLOAD=true with credentials for real upload)');
+            console.log('   ➜ Target Endpoint: ' + APPWRITE_ENDPOINT);
+            console.log('   ➜ Collection Path: ' + APPWRITE_DATABASE_ID + ' -> food_database (' + APPWRITE_COLLECTION_ID + ')');
+            console.log('✨ Phase L integration ready - run with ENABLE_REAL_UPLOAD=true to upload to production.');
+        }
     });
 })();

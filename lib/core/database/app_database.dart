@@ -85,6 +85,21 @@ class Medications extends Table with SyncableColumns {
   DateTimeColumn get startDate => dateTime()();
 }
 
+class FoodItems extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get source => text()();
+  IntColumn get priority => integer()();
+  RealColumn get caloriesPer100g => real()();
+  TextColumn get group => text().nullable()();
+  TextColumn get category => text().nullable()();
+  TextColumn get barcode => text().nullable()();
+  BoolColumn get isBundled => boolean().withDefault(const Constant(true))();
+
+  @override
+  Set<Column> get primaryKey => {id, source};
+}
+
 class Users extends Table with SyncableColumns {
   TextColumn get email => text()();
   TextColumn get name => text()();
@@ -116,6 +131,7 @@ class Users extends Table with SyncableColumns {
   JournalEntries,
   WaterLogs,
   Medications,
+  FoodItems,
   Users,
 ])
 class AppDatabase extends _$AppDatabase {
@@ -242,10 +258,36 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<List<dynamic>> getPendingSync() async {
-    // This is a simplified version; in a real app, you'd probably 
-    // union all tables or iterate through them.
     final pendingFood = await (select(foodLogs)..where((t) => t.syncStatus.equals('pending'))).get();
     return [...pendingFood];
+  }
+
+  Future<int> insertFoodItem(FoodItemsCompanion item) async {
+    return await into(foodItems).insert(item, mode: InsertMode.insertOrIgnore);
+  }
+
+  Future<void> insertFoodItems(List<FoodItemsCompanion> items) async {
+    await batch((b) {
+      for (final item in items) {
+        b.insert(foodItems, item, mode: InsertMode.insertOrIgnore);
+      }
+    });
+  }
+
+  Stream<List<FoodItem>> searchFoodItems(String query) {
+    return (select(foodItems)
+          ..where((t) => t.name.contains(query.toLowerCase()))
+          ..orderBy([(t) => OrderingTerm(expression: t.priority)])
+          ..limit(50))
+        .watch();
+  }
+
+  Future<List<FoodItem>> getTier1FoodItems() {
+    return (select(foodItems)..where((t) => t.isBundled.equals(true))).get();
+  }
+
+  Future<int> clearAllFoodItems() async {
+    return await delete(foodItems).go();
   }
 }
 
