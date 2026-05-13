@@ -40,7 +40,6 @@ dependencies:
   local_auth: ^3.0.1
   flutter_secure_storage: ^10.1.0
   pointycastle: ^4.0.0
-  flutter_windowmanager: ^0.2.0
 
   # ── Food / Barcode ────────────────────────────────────────────────────────────
   mobile_scanner: ^7.2.0

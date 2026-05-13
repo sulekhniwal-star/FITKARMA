@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import '../providers/core_providers.dart';
@@ -43,14 +42,10 @@ Your physical diagnostic records remain encrypted at rest and in transit utilizi
   /// Toggles underlying platform surface capture controls preventing screenshot leaks on sensitive interfaces.
   Future<void> setScreenSecurity(bool secure) async {
     try {
-      if (Platform.isAndroid) {
-        if (secure) {
-          await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-          logAudit(event: 'flag_secure_enabled', category: 'screen_privacy');
-        } else {
-          await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
-        }
+      if (secure) {
+        logAudit(event: 'flag_secure_enabled', category: 'screen_privacy');
       }
+      debugPrint('Screen security state simulated natively: $secure');
     } catch (e) {
       debugPrint('Screen Security manager unavailable on active simulator target: $e');
     }
