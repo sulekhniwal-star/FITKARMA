@@ -795,14 +795,14 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 10.1 Rule-Based Correlation Engine (`lib/features/insights/correlation_engine.dart`)
 
-- [ ] Requires ≥14 days overlapping data
-- [ ] Insight: Sleep → BP (poor sleep <6h raises BP by >8 mmHg average)
-- [ ] Insight: Hydration → Steps (avg <1500ml → low hydration alert)
-- [ ] Insight: High glucose pattern detection
-- [ ] Insight: BP anomaly detection
-- [ ] Insight: Step deficit (consistently below goal)
-- [ ] `HealthInsight` Freezed model with confidence score (0.0–1.0)
-- [ ] Show on Dashboard only if ≥7 days data; full insights at ≥14 days
+- [x] Requires ≥14 days overlapping data
+- [x] Insight: Sleep → BP (poor sleep <6h raises BP by >8 mmHg average)
+- [x] Insight: Hydration → Steps (avg <1500ml → low hydration alert)
+- [x] Insight: High glucose pattern detection
+- [x] Insight: BP anomaly detection
+- [x] Insight: Step deficit (consistently below goal)
+- [x] `HealthInsight` Freezed model with confidence score (0.0–1.0)
+- [x] Show on Dashboard only if ≥7 days data; full insights at ≥14 days
 
 ### 10.2 AI Coach — `handleAiCoach()` inside `fitkarma-cores`
 

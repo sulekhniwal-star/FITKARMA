@@ -11,6 +11,7 @@ import '../../shared/widgets/activity_rings.dart';
 import '../../shared/widgets/streak_flame.dart';
 import '../../shared/widgets/insight_card.dart';
 import '../onboarding/onboarding_providers.dart';
+import '../insights/correlation_engine.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -18,6 +19,7 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).value;
+    final insightsAsync = ref.watch(correlationEngineProvider);
 
     return AppScaffold.patternA(
       appBar: _buildAppBar(context, user),
@@ -43,11 +45,27 @@ class DashboardScreen extends ConsumerWidget {
 
           const SizedBox(height: AppSpacing.lg),
 
-          // AI Insight (Simulated check for 7 days + flag)
-          const InsightCard(
-            title: 'NUTRITION INSIGHT',
-            body: 'You\'ve hit your protein goal 3 days in a row! Increasing your intake by 10g tomorrow could help with muscle recovery after your planned leg day.',
-          ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.1, end: 0),
+          // AI Insight Evaluation block
+          insightsAsync.when(
+            data: (insightsList) {
+              if (insightsList.isEmpty) {
+                // Display premium placeholder info card if logging limits pending
+                return const InsightCard(
+                  title: 'NUTRITION INSIGHT',
+                  body: 'Log at least 7 days of synchronized physical metrics to automatically activate customized rule-based systemic correlations.',
+                ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.1, end: 0);
+              }
+              final topInsight = insightsList.first;
+              return InsightCard(
+                title: '${topInsight.title} (${(topInsight.confidence * 100).toInt()}% Confidence)',
+                body: topInsight.description,
+                onUpvote: () {},
+                onDownvote: () {},
+              ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.1, end: 0);
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
 
           const SizedBox(height: AppSpacing.lg),
 
