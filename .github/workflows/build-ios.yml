@@ -65,8 +65,11 @@ jobs:
             --dart-define=REVENUECAT_API_KEY=${{ secrets.REVENUECAT_API_KEY }} \
             --no-codesign # Removes hard code signing error if running locally/testing without full profile setup
 
-      - name: Upload IPA artifact
+      - name: Upload iOS Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-ipa
-          path: build/ios/ipa/
+          name: app-release-ios
+          path: |
+            build/ios/ipa/
+            build/ios/archive/
+          if-no-files-found: warn
