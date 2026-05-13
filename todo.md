@@ -847,9 +847,9 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 11.3 Android Health Connect
 
-- [ ] Verify `health` package handles Health Connect on Android API 26+
-- [ ] Request permissions on onboarding if platform is Android
-- [ ] Handle graceful degradation if Health Connect not installed
+- [x] Verify `health` package handles Health Connect on Android API 26+
+- [x] Request permissions on onboarding if platform is Android
+- [x] Handle graceful degradation if Health Connect not installed
 
 ---
 

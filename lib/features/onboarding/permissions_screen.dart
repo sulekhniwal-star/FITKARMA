@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:health/health.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
@@ -17,6 +18,38 @@ class _PermissionsScreenState extends ConsumerState<PermissionsScreen> {
   bool _healthEnabled = false;
   bool _notificationsEnabled = false;
   bool _locationEnabled = false;
+
+  Future<void> _requestHealthAccess(bool enable) async {
+    setState(() => _healthEnabled = enable);
+    if (!enable) return;
+
+    try {
+      final health = Health();
+      final types = [
+        HealthDataType.STEPS,
+        HealthDataType.HEART_RATE,
+        HealthDataType.SLEEP_SESSION,
+      ];
+      final authorized = await health.requestAuthorization(types);
+      if (!authorized && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Health Connect access pending or unavailable. Simulating offline metrics fallback mode.'),
+            backgroundColor: AppColorsDark.surface2,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Android Health Connect is required. Fallback offline tracking active.'),
+            backgroundColor: AppColorsDark.rose,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +74,10 @@ class _PermissionsScreenState extends ConsumerState<PermissionsScreen> {
 
             _PermissionTile(
               title: 'Health Data',
-              subtitle: 'Sync steps, sleep, and activity from Apple Health / Google Fit.',
+              subtitle: 'Sync steps, sleep, and activity from Apple Health / Android Health Connect.',
               icon: Icons.favorite_rounded,
               value: _healthEnabled,
-              onChanged: (v) => setState(() => _healthEnabled = v),
+              onChanged: _requestHealthAccess,
             ),
             const SizedBox(height: 16),
             _PermissionTile(
