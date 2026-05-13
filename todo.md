@@ -759,35 +759,35 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 9.4 Open Food Facts Client (`lib/features/food/data/open_food_facts_client.dart`)
 
-- [ ] `searchByName()` — GET `/cgi/search.pl` with correct params
-- [ ] `searchByBarcode()` — GET `/api/v0/product/{barcode}.json`
-- [ ] Dio with 5-second timeout, proper error handling
+- [x] `searchByName()` — GET `/cgi/search.pl` with correct params
+- [x] `searchByBarcode()` — GET `/api/v0/product/{barcode}.json`
+- [x] Dio with 5-second timeout, proper error handling
 
 ### 9.5 FoodItem Model (`lib/features/food/data/models/food_item.dart`)
 
-- [ ] Implement `FoodItem` Freezed class — all 12 fields
-- [ ] `FoodItem.fromOpenFoodFacts()` factory — map nutriments correctly
-- [ ] `FoodItem.fromAppwriteDoc()` factory — decode servingSizes JSON
-- [ ] `isValid` getter: `name.isNotEmpty && caloriesPer100g > 0`
-- [ ] `ServingSize` Freezed class
+- [x] Implement `FoodItem` Freezed class — all 12 fields
+- [x] `FoodItem.fromOpenFoodFacts()` factory — map nutriments correctly
+- [x] `FoodItem.fromAppwriteDoc()` factory — decode servingSizes JSON
+- [x] `isValid` getter: `name.isNotEmpty && caloriesPer100g > 0`
+- [x] `ServingSize` Freezed class
 
 ### 9.6 Food Search UI
 
-- [ ] `FoodSearchSheet` — DraggableScrollableSheet (0.9/0.5/0.95)
-- [ ] Search TextField (autofocus) with debounce 300ms (min 2 chars)
-- [ ] LinearProgressIndicator while searching
-- [ ] Results list with `_FoodResultTile` (emoji, name, kcal/100g)
-- [ ] Barcode scanner button → `mobile_scanner` → `searchByBarcode()`
-- [ ] "Add manually" TextButton → manual entry bottom sheet
-- [ ] Portion selector after item tap (serving size picker)
-- [ ] `FoodLogNotifier.logFood()` → Drift insert → XP award → sync
+- [x] `FoodSearchSheet` — DraggableScrollableSheet (0.9/0.5/0.95)
+- [x] Search TextField (autofocus) with debounce 300ms (min 2 chars)
+- [x] LinearProgressIndicator while searching
+- [x] Results list with `_FoodResultTile` (emoji, name, kcal/100g)
+- [x] Barcode scanner button → `mobile_scanner` → `searchByBarcode()`
+- [x] "Add manually" TextButton → manual entry bottom sheet
+- [x] Portion selector after item tap (serving size picker)
+- [x] `FoodLogNotifier.logFood()` → Drift insert → XP award → sync
 
 ### 9.7 Food Search — `handleFoodSearch()` inside `fitkarma-cores`
 
-- [ ] Implement `handleFoodSearch()` handler in `functions/fitkarma-cores/src/main.js`
-- [ ] Accepts `{ action: 'search_food', query?, barcode? }` — name search or barcode lookup
-- [ ] Proxies Open Food Facts API (avoids CORS on mobile), caches result in `food_database` collection
-- [ ] Flutter `FoodDatabaseService` fallback path calls `functionId: 'fitkarma-cores'` with `action: 'search_food'`
+- [x] Implement `handleFoodSearch()` handler in `functions/fitkarma-cores/src/main.js`
+- [x] Accepts `{ action: 'search_food', query?, barcode? }` — name search or barcode lookup
+- [x] Proxies Open Food Facts API (avoids CORS on mobile), caches result in `food_database` collection
+- [x] Flutter `FoodDatabaseService` fallback path calls `functionId: 'fitkarma-cores'` with `action: 'search_food'`
 
 ---
 

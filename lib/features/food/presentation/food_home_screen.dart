@@ -45,12 +45,12 @@ class FoodHomeScreen extends ConsumerWidget {
     );
   }
 
-  void _showSearch(BuildContext context) {
+  void _showSearch(BuildContext context, [String? mealType]) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const FoodSearchSheet(),
+      builder: (context) => FoodSearchSheet(initialMealType: mealType),
     );
   }
 
@@ -103,13 +103,13 @@ class FoodHomeScreen extends ConsumerWidget {
         const SizedBox(height: AppSpacing.lg),
 
         // Meal Sections
-        _MealSection(title: 'Breakfast', icon: '🍳', logs: logs.where((l) => l.mealType == 'breakfast').toList(), onAdd: () => _showSearch(context)),
+        _MealSection(title: 'Breakfast', icon: '🍳', logs: logs.where((l) => l.mealType == 'breakfast').toList(), onAdd: () => _showSearch(context, 'breakfast')),
         const SizedBox(height: AppSpacing.md),
-        _MealSection(title: 'Lunch', icon: '🥗', logs: logs.where((l) => l.mealType == 'lunch').toList(), onAdd: () => _showSearch(context)),
+        _MealSection(title: 'Lunch', icon: '🥗', logs: logs.where((l) => l.mealType == 'lunch').toList(), onAdd: () => _showSearch(context, 'lunch')),
         const SizedBox(height: AppSpacing.md),
-        _MealSection(title: 'Dinner', icon: '🥘', logs: logs.where((l) => l.mealType == 'dinner').toList(), onAdd: () => _showSearch(context)),
+        _MealSection(title: 'Dinner', icon: '🥘', logs: logs.where((l) => l.mealType == 'dinner').toList(), onAdd: () => _showSearch(context, 'dinner')),
         const SizedBox(height: AppSpacing.md),
-        _MealSection(title: 'Snacks', icon: '🍎', logs: logs.where((l) => l.mealType == 'snacks').toList(), onAdd: () => _showSearch(context)),
+        _MealSection(title: 'Snacks', icon: '🍎', logs: logs.where((l) => l.mealType == 'snacks').toList(), onAdd: () => _showSearch(context, 'snacks')),
 
         const SizedBox(height: AppSpacing.xl),
 
