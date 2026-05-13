@@ -24,7 +24,7 @@ dependencies:
 
   # ── Appwrite Sync ─────────────────────────────────────────────────────────────
   appwrite: ^24.0.0
-  connectivity_plus: ^7.1.1
+  connectivity_plus: ^6.1.0
 
   # ── UI & Animation ────────────────────────────────────────────────────────────
   flutter_animate: ^4.5.0
