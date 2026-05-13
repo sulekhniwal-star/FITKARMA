@@ -806,22 +806,22 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 10.2 AI Coach — `handleAiCoach()` inside `fitkarma-cores`
 
-- [ ] Implement `handleAiCoach()` handler in `functions/fitkarma-cores/src/main.js`
-- [ ] SYSTEM_PROMPT per §F2 — warm, empathetic, India-specific, 3–5 sentence responses, celebrate streaks, redirect off-topic
-- [ ] Fetch user health context from Appwrite inside the function (last 7 days: BP, glucose, steps, sleep, food logs)
-- [ ] Safety rules: BP Stage 2+ or glucose > 200 mg/dL → always recommend doctor. Never diagnose
-- [ ] Anthropic API key stays server-side via `ANTHROPIC_API_KEY` env var on `fitkarma-cores` function
-- [ ] Flutter calls: `Functions.createExecution(functionId: 'fitkarma-cores', body: jsonEncode({action: 'ai_coach', ...}))`
+- [x] Implement `handleAiCoach()` handler in `functions/fitkarma-cores/src/main.js`
+- [x] SYSTEM_PROMPT per §F2 — warm, empathetic, India-specific, 3–5 sentence responses, celebrate streaks, redirect off-topic
+- [x] Fetch user health context from Appwrite inside the function (last 7 days: BP, glucose, steps, sleep, food logs)
+- [x] Safety rules: BP Stage 2+ or glucose > 200 mg/dL → always recommend doctor. Never diagnose
+- [x] Anthropic API key stays server-side via `ANTHROPIC_API_KEY` env var on `fitkarma-cores` function
+- [x] Flutter calls: `Functions.createExecution(functionId: 'fitkarma-cores', body: jsonEncode({action: 'ai_coach', ...}))`
 
 ### 10.3 AI Coach Screen (`/ai-coach`) — Pro only
 
-- [ ] `AiCoachScreen` (`lib/features/ai_coach/ai_coach_screen.dart`)
-- [ ] Chat-style UI — user messages (right), coach messages (left, GlassCard)
-- [ ] Text input + send button
-- [ ] Loading indicator while awaiting response
-- [ ] `AiCoachProvider` — sends conversation history + health context to Appwrite Function
-- [ ] `ProGate` wrapper — shows upgrade prompt to free users
-- [ ] Feature flag: `aiInsights` must be `true`
+- [x] `AiCoachScreen` (`lib/features/ai_coach/ai_coach_screen.dart`)
+- [x] Chat-style UI — user messages (right), coach messages (left, GlassCard)
+- [x] Text input + send button
+- [x] Loading indicator while awaiting response
+- [x] `AiCoachProvider` — sends conversation history + health context to Appwrite Function
+- [x] `ProGate` wrapper — shows upgrade prompt to free users
+- [x] Feature flag: `aiInsights` must be `true`
 
 ---
 

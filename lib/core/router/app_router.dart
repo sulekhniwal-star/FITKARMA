@@ -31,6 +31,7 @@ import '../../features/medication/medication_screen.dart';
 import '../../features/festival/festival_screen.dart';
 import '../../features/wedding/wedding_screen.dart';
 import '../../features/social/social_screen.dart';
+import '../../features/ai_coach/ai_coach_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -179,7 +180,7 @@ GoRouter appRouter(Ref ref) {
           child: LabReportsScreen(),
         ),
       ),
-      GoRoute(path: '/ai-coach', builder: (context, state) => const _PlaceholderScreen(title: 'AI Coach')),
+      GoRoute(path: '/ai-coach', builder: (context, state) => const AiCoachScreen()),
       GoRoute(path: '/subscription', builder: (context, state) => const _PlaceholderScreen(title: 'Subscription')),
       GoRoute(path: '/settings', builder: (context, state) => const SettingsScreen()),
       GoRoute(path: '/water', builder: (context, state) => const WaterScreen()),
