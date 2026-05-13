@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/foundation.dart' show compute;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:appwrite/appwrite.dart' show Query, ID;
@@ -38,7 +39,7 @@ class FoodDatabaseService extends _$FoodDatabaseService {
     final db = ref.read(appDatabaseProvider);
     final String jsonString = await rootBundle.loadString('assets/data/indian_foods_seed.json');
     
-    final List<dynamic> jsonList = json.decode(jsonString);
+    final List<dynamic> jsonList = await compute(jsonDecode, jsonString) as List<dynamic>;
     final companions = <FoodItemsCompanion>[];
     
     for (final jsonItem in jsonList.take(500)) {

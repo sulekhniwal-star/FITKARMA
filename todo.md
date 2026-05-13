@@ -976,13 +976,13 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ### 17.1 Performance Rules
 
-- [ ] All network images via `CachedNetworkImage` — never `Image.network`
-- [ ] All reactive data via Drift `.watch()` — never poll
-- [ ] All lists via `ListView.builder` — lazy rendering
-- [ ] Narrow rebuilds: `ref.watch(provider.select(...))`
-- [ ] `RepaintBoundary` on `ActivityRings`, `BreathingCircle`, `ActivityRings`
-- [ ] Parse large JSON (food seed) in `compute()` isolates
-- [ ] Verify cold launch < 2.5s, frame render < 16ms, Drift date-range query < 50ms
+- [x] All network images via `CachedNetworkImage` — never `Image.network`
+- [x] All reactive data via Drift `.watch()` — never poll
+- [x] All lists via `ListView.builder` — lazy rendering
+- [x] Narrow rebuilds: `ref.watch(provider.select(...))`
+- [x] `RepaintBoundary` on `ActivityRings`, `BreathingCircle`, `ActivityRings`
+- [x] Parse large JSON (food seed) in `compute()` isolates
+- [x] Verify cold launch < 2.5s, frame render < 16ms, Drift date-range query < 50ms
 
 ### 17.2 Accessibility
 
