@@ -76,7 +76,6 @@ void main() {
       test('timing is case-insensitive', () {
         expect(GlucoseClassification.classify(100, 'FASTING'), GlucoseClassification.preDiabetic);
         expect(GlucoseClassification.classify(100, 'Fasting'), GlucoseClassification.preDiabetic);
-        expect(GlucoseClassification.classify(100, 'FASTING'), GlucoseClassification.preDiabetic);
       });
 
       test('high values are diabetic', () {

@@ -52,18 +52,36 @@ console.log(`\n📡 Target Appwrite Project: ${APPWRITE_PROJECT_ID}`);
 console.log(`📂 Collection: ${APPWRITE_COLLECTION_ID}`);
 console.log('--------------------------------------------------------------------------------');
 
+async function executeWithRetry(operation, maxRetries = 5, baseDelay = 1000) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            return await operation();
+        } catch (err) {
+            const isTransient = !err.code || err.code >= 500 || err.code === 429 || (err.message && err.message.includes('fetch failed'));
+            if (!isTransient || attempt === maxRetries) {
+                throw err;
+            }
+            const delay = baseDelay * Math.pow(2, attempt - 1) + Math.random() * 200;
+            console.warn(`    ⚠ Transient error (${err.message}). Retrying attempt ${attempt}/${maxRetries} in ${Math.round(delay)}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+    }
+}
+
 async function clearCollection() {
     console.log('🗑️ Phase 1: Deleting all previously uploaded documents to start fresh...');
     let deletedCount = 0;
     
     while (true) {
         try {
-            // Fetch up to 100 documents at a time using the official Query helper
-            const response = await databases.listDocuments(
-                APPWRITE_DATABASE_ID,
-                APPWRITE_COLLECTION_ID,
-                [Query.limit(100)]
-            );
+            // Fetch up to 100 documents at a time using the official Query helper with retries
+            const response = await executeWithRetry(async () => {
+                return await databases.listDocuments(
+                    APPWRITE_DATABASE_ID,
+                    APPWRITE_COLLECTION_ID,
+                    [Query.limit(100)]
+                );
+            });
 
             if (!response.documents || response.documents.length === 0) {
                 break;
@@ -71,11 +89,13 @@ async function clearCollection() {
 
             for (const doc of response.documents) {
                 try {
-                    await databases.deleteDocument(
-                        APPWRITE_DATABASE_ID,
-                        APPWRITE_COLLECTION_ID,
-                        doc.$id
-                    );
+                    await executeWithRetry(async () => {
+                        await databases.deleteDocument(
+                            APPWRITE_DATABASE_ID,
+                            APPWRITE_COLLECTION_ID,
+                            doc.$id
+                        );
+                    });
                     deletedCount++;
                 } catch (delErr) {
                     // Gracefully ignore 404 errors if document is already deleted/eventually consistent
@@ -102,6 +122,8 @@ async function uploadAllBatches() {
     console.log('🚀 Phase 2: Uploading all 1550 pre-generated batches from scratch...');
     const totalBatches = 1550;
     let totalUploaded = 0;
+    const failedDocuments = [];
+    const FAILED_UPLOADS_PATH = path.join(__dirname, '../etl/output/failed_uploads.json');
     
     for (let batchIndex = 1; batchIndex <= totalBatches; batchIndex++) {
         const batchFileName = `batch_${String(batchIndex).padStart(4, '0')}.json`;
@@ -131,22 +153,30 @@ async function uploadAllBatches() {
                 delete appwriteDoc.bundled;
                 delete appwriteDoc.group;
 
-                await databases.createDocument(
-                    APPWRITE_DATABASE_ID,
-                    APPWRITE_COLLECTION_ID,
-                    ID.unique(),
-                    appwriteDoc
-                );
+                await executeWithRetry(async () => {
+                    await databases.createDocument(
+                        APPWRITE_DATABASE_ID,
+                        APPWRITE_COLLECTION_ID,
+                        ID.unique(),
+                        appwriteDoc
+                    );
+                });
                 successCount++;
                 totalUploaded++;
                 await new Promise(resolve => setTimeout(resolve, 50));
             } catch (err) {
                 failCount++;
                 console.error(`  ⚠ Failed to upload "${doc.name}": ${err.message}`);
+                failedDocuments.push({ doc, error: err.message, batchFileName });
             }
         }
         
         console.log(`✔ Completed ${batchFileName}: ${successCount} success, ${failCount} failed. (Total uploaded: ${totalUploaded})`);
+    }
+    
+    if (failedDocuments.length > 0) {
+        fs.writeFileSync(FAILED_UPLOADS_PATH, JSON.stringify(failedDocuments, null, 2), 'utf8');
+        console.log(`\n📝 Saved ${failedDocuments.length} permanently failed documents to etl/output/failed_uploads.json for later retry.`);
     }
     
     console.log(`\n✨ Phase 2 Complete: Successfully uploaded ${totalUploaded} documents from all batches!`);
