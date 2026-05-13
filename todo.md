@@ -752,10 +752,10 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 9.3 Food Database Service (`lib/features/food/data/food_database_service.dart`)
 
-- [ ] Implement `FoodDatabaseService.searchByName()` — priority: Appwrite Indian DB (fulltext) → Open Food Facts API (if <5 results and not lowData)
-- [ ] Implement `FoodDatabaseService.searchByBarcode()` — priority: Appwrite (exact match) → Open Food Facts → return null
-- [ ] Implement `_cacheToAppwrite()` — silent best-effort cache of OFF results
-- [ ] Implement `foodDatabaseServiceProvider` (Riverpod)
+- [x] Implement `FoodDatabaseService.searchByName()` — priority: Appwrite Indian DB (fulltext) → Open Food Facts API (if <5 results and not lowData)
+- [x] Implement `FoodDatabaseService.searchByBarcode()` — priority: Appwrite (exact match) → Open Food Facts → return null
+- [x] Implement `_cacheToAppwrite()` — silent best-effort cache of OFF results
+- [x] Implement `foodDatabaseServiceProvider` (Riverpod)
 
 ### 9.4 Open Food Facts Client (`lib/features/food/data/open_food_facts_client.dart`)
 

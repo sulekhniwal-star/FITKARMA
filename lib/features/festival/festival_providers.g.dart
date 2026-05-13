@@ -33,7 +33,7 @@ final class FestivalsListProvider
   FestivalsList create() => FestivalsList();
 }
 
-String _$festivalsListHash() => r'a8d8ef7aa4f6ff3e4c5b835c502e75e1a86f22f6';
+String _$festivalsListHash() => r'aae160bbbc4db3ddd47e82a31a5832bf1b6b6d9f';
 
 abstract class _$FestivalsList extends $AsyncNotifier<List<FestivalItem>> {
   FutureOr<List<FestivalItem>> build();
