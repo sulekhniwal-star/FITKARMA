@@ -241,6 +241,27 @@ class KarmaNotifier extends Notifier<KarmaState> {
     return KarmaState.initial();
   }
 
+  static String getLevelTitle(int level) {
+    const names = [
+      'Newcomer',
+      'Beginner',
+      'Starter',
+      'Mover',
+      'Achiever',
+      'Consistent',
+      'Dedicated',
+      'Warrior',
+      'Champion',
+      'Elite',
+      'Legend',
+      'Grandmaster',
+      'Karma Master',
+    ];
+    if (level <= 0) return names.first;
+    if (level > names.length) return names.last;
+    return names[level - 1];
+  }
+
   Future<void> _loadState() async {
     try {
       final jsonStr = await _storage.read(key: _storageKey);
@@ -249,12 +270,13 @@ class KarmaNotifier extends Notifier<KarmaState> {
         final int xp = map['totalXp'] as int? ?? 4820;
         final int lvl = _calcLevel(xp);
         final nextXp = _calcNextLevelTarget(lvl);
+        final titleStr = getLevelTitle(lvl);
         
         // Restore dynamic custom state updates
         state = KarmaState(
           totalXp: xp,
           currentLevel: lvl,
-          badgeTitle: '⚡ Level $lvl Warrior',
+          badgeTitle: '⚡ Level $lvl $titleStr',
           nextLevelXp: nextXp,
           todayEvents: state.todayEvents,
           xpBreakdown: {
@@ -306,6 +328,7 @@ class KarmaNotifier extends Notifier<KarmaState> {
     final newXp = state.totalXp + xp;
     final newLvl = _calcLevel(newXp);
     final nextXp = _calcNextLevelTarget(newLvl);
+    final titleStr = getLevelTitle(newLvl);
 
     final updatedBreakdown = {...state.xpBreakdown};
     updatedBreakdown[category] = (updatedBreakdown[category] ?? 0) + xp;
@@ -320,7 +343,7 @@ class KarmaNotifier extends Notifier<KarmaState> {
     state = KarmaState(
       totalXp: newXp,
       currentLevel: newLvl,
-      badgeTitle: '⚡ Level $newLvl Warrior',
+      badgeTitle: '⚡ Level $newLvl $titleStr',
       nextLevelXp: nextXp,
       todayEvents: [newEvent, ...state.todayEvents],
       xpBreakdown: updatedBreakdown,

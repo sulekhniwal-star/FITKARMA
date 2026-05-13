@@ -894,11 +894,11 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ### 12.5 App Store & Play Store Configuration
 
-- [ ] Create in-app purchase products in App Store Connect: `fitkarma_pro_monthly`, `fitkarma_pro_annual`
-- [ ] Create in-app purchase products in Google Play Console
-- [ ] Configure 7-day free trial in both stores
-- [ ] Link products to RevenueCat Offering named `default`
-- [ ] Add `REVENUECAT_API_KEY` to CI/CD secrets
+- [x] Create in-app purchase products in App Store Connect: `fitkarma_pro_monthly`, `fitkarma_pro_annual`
+- [x] Create in-app purchase products in Google Play Console
+- [x] Configure 7-day free trial in both stores
+- [x] Link products to RevenueCat Offering named `default`
+- [x] Add `REVENUECAT_API_KEY` to CI/CD secrets
 
 ---
 
@@ -906,10 +906,10 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ### 13.1 XP Award Service (`lib/features/karma/`)
 
-- [ ] Implement `KarmaService.awardXP(eventType)` — calls Appwrite Function `xp-calculator`
-- [ ] XP events: food_log(5), food_log_complete(20), workout_complete(30), steps_goal(25), sleep_logged(10), bp_reading(10), glucose_reading(10), habit_complete(15), journal_entry(10), streak_7day(50), streak_30day(150), lab_report(20), referral(500)
-- [ ] Trigger `LevelUpAnimation` overlay when level changes
-- [ ] Level names: Newcomer → Beginner → Starter → Mover → Achiever → Consistent → Dedicated → Warrior → Champion → Elite → Legend → Grandmaster → Karma Master
+- [x] Implement `KarmaService.awardXP(eventType)` — calls Appwrite Function `xp-calculator`
+- [x] XP events: food_log(5), food_log_complete(20), workout_complete(30), steps_goal(25), sleep_logged(10), bp_reading(10), glucose_reading(10), habit_complete(15), journal_entry(10), streak_7day(50), streak_30day(150), lab_report(20), referral(500)
+- [x] Trigger `LevelUpAnimation` overlay when level changes
+- [x] Level names: Newcomer → Beginner → Starter → Mover → Achiever → Consistent → Dedicated → Warrior → Champion → Elite → Legend → Grandmaster → Karma Master
 
 ### 13.2 Streak Tracking
 

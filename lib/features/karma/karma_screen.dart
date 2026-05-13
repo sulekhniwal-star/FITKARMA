@@ -6,6 +6,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
 import '../../shared/widgets/bento_card.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'karma_providers.dart';
 
 class KarmaScreen extends ConsumerStatefulWidget {
@@ -44,8 +45,79 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
     );
   }
 
+  void _showLevelUpOverlay(int newLevel, String title) {
+    showDialog(
+      context: context,
+      builder: (context) => Center(
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 32),
+            padding: const EdgeInsets.all(28),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF2E1E50), Color(0xFFD76D77), Color(0xFFF09819)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColorsDark.accent.withValues(alpha: 0.4),
+                  blurRadius: 30,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.bolt_rounded, color: Colors.white, size: 64)
+                    .animate(onPlay: (controller) => controller.repeat(reverse: true))
+                    .scale(begin: const Offset(0.9, 0.9), end: const Offset(1.2, 1.2), duration: 600.ms),
+                const SizedBox(height: 16),
+                Text(
+                  'LEVEL UP!',
+                  style: AppTypography.displayLg(color: Colors.white).copyWith(fontSize: 32, fontWeight: FontWeight.bold),
+                ).animate().fadeIn().slideY(begin: 0.5, end: 0, duration: 400.ms),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.25), borderRadius: BorderRadius.circular(100)),
+                  child: Text(title, style: AppTypography.labelLg(color: AppColorsDark.accent).copyWith(fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Your cumulative dedication unlocks new spiritual dimensions. Keep the fire burning bright.',
+                  style: AppTypography.bodySm(color: Colors.white.withValues(alpha: 0.9)),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  ),
+                  onPressed: () => context.pop(),
+                  child: const Text('Embrace Karma Matrix', style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ],
+            ),
+          ).animate().scale(duration: 500.ms, curve: Curves.easeOutBack),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen<KarmaState>(karmaStateProvider, (prev, next) {
+      if (prev != null && next.currentLevel > prev.currentLevel) {
+        _showLevelUpOverlay(next.currentLevel, next.badgeTitle);
+      }
+    });
+
     final state = ref.watch(karmaStateProvider);
     final formattedXp = NumberFormat('#,###').format(state.totalXp);
 
