@@ -24,16 +24,21 @@ tasks.register<Delete>("clean") {
 }
 
 subprojects {
-    afterEvaluate {
-        val isAndroid = project.plugins.hasPlugin("com.android.application") || 
-                        project.plugins.hasPlugin("com.android.library")
+    val configureNamespace: Project.() -> Unit = {
+        val isAndroid = plugins.hasPlugin("com.android.application") || 
+                        plugins.hasPlugin("com.android.library")
         if (isAndroid) {
-            project.extensions.configure<com.android.build.gradle.BaseExtension> {
+            extensions.configure<com.android.build.gradle.BaseExtension> {
                 if (namespace == null) {
-                    namespace = project.group.toString().takeIf { it.isNotEmpty() } 
-                                ?: "com.example.${project.name.replace("-", ".")}"
+                    namespace = group.toString().takeIf { it.isNotEmpty() } 
+                                ?: "com.example.${name.replace("-", ".")}"
                 }
             }
         }
+    }
+    if (state.executed) {
+        configureNamespace()
+    } else {
+        afterEvaluate { configureNamespace() }
     }
 }
