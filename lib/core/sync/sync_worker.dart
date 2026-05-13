@@ -4,10 +4,12 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:drift/drift.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import '../config/device_tier.dart';
 import '../database/app_database.dart';
 import '../providers/core_providers.dart';
 import '../services/home_widget_service.dart';
+import '../security/security_service.dart';
 
 part 'sync_worker.g.dart';
 
@@ -103,10 +105,24 @@ class SyncWorker {
           (table as dynamic).createCompanion(syncStatus: const Value('synced')),
         );
       }
-    } catch (e) {
+    } catch (e, stack) {
       final int attempts = row.failedAttempts + 1;
       final String newStatus = attempts >= 3 ? 'dlq' : 'pending';
       
+      if (newStatus == 'dlq') {
+        try {
+          await Sentry.captureException(
+            e,
+            stackTrace: stack,
+            withScope: (scope) {
+              scope.setTag('sync_failure', 'enterprise_dlq');
+              scope.setExtra('table_id', tableId);
+              scope.setExtra('row_id', row.id.toString());
+            },
+          );
+        } catch (_) {}
+      }
+
       await (db.update(table)..where((t) => (t as dynamic).id.equals(row.id))).write(
         (table as dynamic).createCompanion(
           syncStatus: Value(newStatus),

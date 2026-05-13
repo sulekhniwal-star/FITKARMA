@@ -962,13 +962,13 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ## Phase 16 — Security Hardening (Enterprise)
 
-- [ ] **Certificate Pinning** — pin Appwrite endpoint TLS cert, block MITM
-- [ ] **Screen Security** — `FLAG_SECURE` on Android for Journal, BP, Glucose, Lab Reports
-- [ ] **Sensitive Screen Guard** — `SensitiveScreenGuard` widget (biometric re-auth per session)
-- [ ] **Audit Logging** — log auth events, data access, sync errors to Sentry
-- [ ] **Soft Delete** — all deletions set `isDeleted=true`, never hard delete from Drift. Appwrite sync respects this
-- [ ] **DPDP Act Compliance** — Privacy Policy accessible from Settings + Onboarding, reference data residency (India region Appwrite endpoint)
-- [ ] **Data Export / Account Deletion** — user can request full data export (JSON) and permanent account + data deletion
+- [x] **Certificate Pinning** — pin Appwrite endpoint TLS cert, block MITM
+- [x] **Screen Security** — `FLAG_SECURE` on Android for Journal, BP, Glucose, Lab Reports
+- [x] **Sensitive Screen Guard** — `SensitiveScreenGuard` widget (biometric re-auth per session)
+- [x] **Audit Logging** — log auth events, data access, sync errors to Sentry
+- [x] **Soft Delete** — all deletions set `isDeleted=true`, never hard delete from Drift. Appwrite sync respects this
+- [x] **DPDP Act Compliance** — Privacy Policy accessible from Settings + Onboarding, reference data residency (India region Appwrite endpoint)
+- [x] **Data Export / Account Deletion** — user can request full data export (JSON) and permanent account + data deletion
 
 ---
 

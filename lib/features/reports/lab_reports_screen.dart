@@ -315,160 +315,163 @@ class _LabReportsScreenState extends ConsumerState<LabReportsScreen> {
 
     final list = reportsAsync.value ?? [];
 
-    return AppScaffold.calmZone(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
-          onPressed: () => context.pop(),
+    return SensitiveScreenGuard(
+      screenName: 'Physical Lab Reports & Diagnostics',
+      child: AppScaffold.calmZone(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+            onPressed: () => context.pop(),
+          ),
+          title: Text('Clinical Lab Vault', style: AppTypography.h2(color: Colors.white)),
+          centerTitle: true,
         ),
-        title: Text('Clinical Lab Vault', style: AppTypography.h2(color: Colors.white)),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Status and Tier display header
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.shield_rounded, color: AppColorsDark.teal, size: 18),
-                      const SizedBox(width: 8),
-                      Text('Biometric Gate Enforced', style: AppTypography.labelSm(color: AppColorsDark.teal)),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: isProUser ? AppColorsDark.accent.withValues(alpha: 0.15) : AppColorsDark.surface1,
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: isProUser ? AppColorsDark.accent : AppColorsDark.surface2),
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Status and Tier display header
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.shield_rounded, color: AppColorsDark.teal, size: 18),
+                        const SizedBox(width: 8),
+                        Text('Biometric Gate Enforced', style: AppTypography.labelSm(color: AppColorsDark.teal)),
+                      ],
                     ),
-                    child: Text(
-                      isProUser ? 'Pro Account' : 'Free Tier (${list.length}/3)',
-                      style: AppTypography.labelSm(color: isProUser ? AppColorsDark.accent : AppColorsDark.textMuted).copyWith(fontSize: 11),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Top action bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColorsDark.surface1,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  side: const BorderSide(color: AppColorsDark.surface2),
-                ),
-                icon: const Icon(Icons.add_circle_outline_rounded, color: AppColorsDark.teal),
-                label: const Text('Store New Vault Document', style: TextStyle(fontWeight: FontWeight.bold)),
-                onPressed: () => _showUploadDialog(isProUser, list.length),
-              ),
-            ),
-            const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: Divider(color: AppColorsDark.divider, height: 20)),
-
-            // Reports view layout list feed
-            Expanded(
-              child: reportsAsync.when(
-                loading: () => const Center(child: CircularProgressIndicator(color: AppColorsDark.teal)),
-                error: (err, _) => Center(child: Text('Error accessing local safe storage records.', style: AppTypography.bodySm(color: AppColorsDark.rose))),
-                data: (items) {
-                  if (items.isEmpty) {
-                    return Center(
-                      child: Text(
-                        'Vault container is entirely clear.\nTap to upload PDF/Image clinical markers.',
-                        style: AppTypography.bodySm(color: AppColorsDark.textMuted),
-                        textAlign: TextAlign.center,
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: isProUser ? AppColorsDark.accent.withValues(alpha: 0.15) : AppColorsDark.surface1,
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(color: isProUser ? AppColorsDark.accent : AppColorsDark.surface2),
                       ),
-                    );
-                  }
+                      child: Text(
+                        isProUser ? 'Pro Account' : 'Free Tier (${list.length}/3)',
+                        style: AppTypography.labelSm(color: isProUser ? AppColorsDark.accent : AppColorsDark.textMuted).copyWith(fontSize: 11),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-                  return ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                    itemCount: items.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 12),
-                    itemBuilder: (context, idx) {
-                      final item = items[idx];
-                      final isGenerating = _generatingShareId == item.id;
+              // Top action bar
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColorsDark.surface1,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    side: const BorderSide(color: AppColorsDark.surface2),
+                  ),
+                  icon: const Icon(Icons.add_circle_outline_rounded, color: AppColorsDark.teal),
+                  label: const Text('Store New Vault Document', style: TextStyle(fontWeight: FontWeight.bold)),
+                  onPressed: () => _showUploadDialog(isProUser, list.length),
+                ),
+              ),
+              const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: Divider(color: AppColorsDark.divider, height: 20)),
 
-                      return GlassCard(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(item.title, style: AppTypography.labelLg(color: Colors.white).copyWith(fontWeight: FontWeight.bold)),
-                                      const SizedBox(height: 2),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                            decoration: BoxDecoration(color: AppColorsDark.surface2, borderRadius: BorderRadius.circular(4)),
-                                            child: Text(item.reportType, style: AppTypography.labelSm(color: AppColorsDark.textSecondary).copyWith(fontSize: 10)),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(_formatDateShort(item.date), style: AppTypography.monoMd(color: AppColorsDark.textMuted).copyWith(fontSize: 11)),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: isGenerating
-                                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(color: AppColorsDark.teal, strokeWidth: 2))
-                                      : const Icon(Icons.share_rounded, size: 18),
-                                  color: AppColorsDark.teal,
-                                  tooltip: 'Generate Expiring 7d Client Token',
-                                  onPressed: isGenerating ? null : () => _triggerExpiringLinkGeneration(item.id),
-                                ),
-                              ],
-                            ),
-
-                            // Subtly append extracted manual biomarkers array if specified
-                            if (item.manualValues.isNotEmpty) ...[
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                child: Divider(color: AppColorsDark.divider, height: 1),
-                              ),
-                              Wrap(
-                                spacing: 12,
-                                runSpacing: 6,
-                                children: item.manualValues.entries.map((m) {
-                                  return Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text('${m.key}: ', style: AppTypography.labelSm(color: AppColorsDark.textMuted).copyWith(fontSize: 11)),
-                                      Text('${m.value}', style: AppTypography.monoMd(color: Colors.white).copyWith(fontSize: 12, fontWeight: FontWeight.bold)),
-                                    ],
-                                  );
-                                }).toList(),
-                              ),
-                            ],
-                          ],
+              // Reports view layout list feed
+              Expanded(
+                child: reportsAsync.when(
+                  loading: () => const Center(child: CircularProgressIndicator(color: AppColorsDark.teal)),
+                  error: (err, _) => Center(child: Text('Error accessing local safe storage records.', style: AppTypography.bodySm(color: AppColorsDark.rose))),
+                  data: (items) {
+                    if (items.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Vault container is entirely clear.\nTap to upload PDF/Image clinical markers.',
+                          style: AppTypography.bodySm(color: AppColorsDark.textMuted),
+                          textAlign: TextAlign.center,
                         ),
                       );
-                    },
-                  );
-                },
+                    }
+
+                    return ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      itemCount: items.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 12),
+                      itemBuilder: (context, idx) {
+                        final item = items[idx];
+                        final isGenerating = _generatingShareId == item.id;
+
+                        return GlassCard(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(item.title, style: AppTypography.labelLg(color: Colors.white).copyWith(fontWeight: FontWeight.bold)),
+                                        const SizedBox(height: 2),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                              decoration: BoxDecoration(color: AppColorsDark.surface2, borderRadius: BorderRadius.circular(4)),
+                                              child: Text(item.reportType, style: AppTypography.labelSm(color: AppColorsDark.textSecondary).copyWith(fontSize: 10)),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(_formatDateShort(item.date), style: AppTypography.monoMd(color: AppColorsDark.textMuted).copyWith(fontSize: 11)),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: isGenerating
+                                        ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(color: AppColorsDark.teal, strokeWidth: 2))
+                                        : const Icon(Icons.share_rounded, size: 18),
+                                    color: AppColorsDark.teal,
+                                    tooltip: 'Generate Expiring 7d Client Token',
+                                    onPressed: isGenerating ? null : () => _triggerExpiringLinkGeneration(item.id),
+                                  ),
+                                ],
+                              ),
+
+                              // Subtly append extracted manual biomarkers array if specified
+                              if (item.manualValues.isNotEmpty) ...[
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: Divider(color: AppColorsDark.divider, height: 1),
+                                ),
+                                Wrap(
+                                  spacing: 12,
+                                  runSpacing: 6,
+                                  children: item.manualValues.entries.map((m) {
+                                    return Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text('${m.key}: ', style: AppTypography.labelSm(color: AppColorsDark.textMuted).copyWith(fontSize: 11)),
+                                        Text('${m.value}', style: AppTypography.monoMd(color: Colors.white).copyWith(fontSize: 12, fontWeight: FontWeight.bold)),
+                                      ],
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/router/app_router.dart';
-
 import 'core/services/notification_service.dart';
+import 'core/security/security_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +21,11 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
+
+    // Initialize TLS Certificate Pinning instantly upon startup execution
+    Future.microtask(() {
+      ref.read(securityServiceProvider).enableCertificatePinning();
+    });
 
     return MaterialApp.router(
       title: 'FitKarma',

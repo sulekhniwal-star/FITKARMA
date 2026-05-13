@@ -10,6 +10,7 @@ import '../../shared/widgets/scaffold_patterns.dart';
 import '../../shared/widgets/glowing_metric.dart';
 import '../../shared/widgets/encryption_badge.dart';
 import '../../shared/widgets/bento_card.dart';
+import '../../core/security/security_service.dart';
 import 'glucose_providers.dart';
 import 'widgets/log_glucose_sheet.dart';
 
@@ -46,285 +47,288 @@ class GlucoseScreen extends ConsumerWidget {
         ? GlucoseClassification.classify(latest.value, latest.timing)
         : GlucoseClassification.normal;
 
-    return AppScaffold.patternB(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
-          onPressed: () => context.pop(),
-        ),
-        title: Text('Blood Glucose', style: AppTypography.h2(color: Colors.white)),
-        centerTitle: true,
-      ),
-      heroGradient: const LinearGradient(
-        colors: [Color(0xFF130F25), Color(0xFF2E1E50)],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-      ),
-      hero: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(height: 12),
-          // Glowing Metric
-          GlowingMetric(
-            value: latest != null ? latest.value.toInt().toString() : '--',
-            unit: latest != null ? 'mg/dL' : null,
-            textStyle: AppTypography.metricXL().copyWith(fontSize: 64),
-            glowColor: latest != null ? classification.glowColor : AppColorsDark.accentGlow,
+    return SensitiveScreenGuard(
+      screenName: 'Blood Glucose Records',
+      child: AppScaffold.patternB(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+            onPressed: () => context.pop(),
           ),
-          const SizedBox(height: 16),
-          
-          // Context Timing Text
-          if (latest != null)
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  _getTimingIcon(latest.timing),
-                  color: AppColorsDark.textSecondary,
-                  size: 16,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  latest.timing.toUpperCase(),
-                  style: AppTypography.monoLg(color: AppColorsDark.textSecondary),
-                ),
-              ],
+          title: Text('Blood Glucose', style: AppTypography.h2(color: Colors.white)),
+          centerTitle: true,
+        ),
+        heroGradient: const LinearGradient(
+          colors: [Color(0xFF130F25), Color(0xFF2E1E50)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        hero: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 12),
+            // Glowing Metric
+            GlowingMetric(
+              value: latest != null ? latest.value.toInt().toString() : '--',
+              unit: latest != null ? 'mg/dL' : null,
+              textStyle: AppTypography.metricXL().copyWith(fontSize: 64),
+              glowColor: latest != null ? classification.glowColor : AppColorsDark.accentGlow,
             ),
-          const SizedBox(height: 16),
-
-          // Classification Chip
-          if (latest != null)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              decoration: BoxDecoration(
-                color: classification.color.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(100),
-                border: Border.all(color: classification.color.withValues(alpha: 0.3)),
-              ),
-              child: Row(
+            const SizedBox(height: 16),
+            
+            // Context Timing Text
+            if (latest != null)
+              Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: classification.color,
-                      boxShadow: [
-                        BoxShadow(
-                          color: classification.color.withValues(alpha: 0.5),
-                          blurRadius: 6,
-                        ),
-                      ],
-                    ),
+                  Icon(
+                    _getTimingIcon(latest.timing),
+                    color: AppColorsDark.textSecondary,
+                    size: 16,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6),
                   Text(
-                    classification.label,
-                    style: AppTypography.labelLg(color: classification.color).copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    latest.timing.toUpperCase(),
+                    style: AppTypography.monoLg(color: AppColorsDark.textSecondary),
                   ),
                 ],
               ),
-            )
-          else
-            Text(
-              'No recorded readings',
-              style: AppTypography.labelMd(color: AppColorsDark.textMuted),
-            ),
-        ],
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 24),
-          
-          // Log Reading Button CTA
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColorsDark.accent,
-              foregroundColor: Colors.black,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              elevation: 4,
-            ),
-            icon: const Icon(Icons.add_rounded, size: 22, color: Colors.black),
-            label: Text(
-              'Log Reading',
-              style: AppTypography.labelLg(color: Colors.black).copyWith(fontWeight: FontWeight.bold),
-            ),
-            onPressed: () => _openLogSheet(context),
-          ),
-          const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
-          // 7-Day LineChart
-          readingsAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => Center(
-              child: Text('Error loading chart', style: AppTypography.bodySm(color: AppColorsDark.rose)),
-            ),
-            data: (data) => _buildChart(data),
-          ),
-          const SizedBox(height: 28),
-
-          // Reading History List
-          Text('Reading History', style: AppTypography.h2(color: Colors.white)),
-          const SizedBox(height: 12),
-
-          readingsAsync.when(
-            loading: () => const Center(child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: CircularProgressIndicator(),
-            )),
-            error: (err, stack) => const SizedBox(),
-            data: (data) {
-              if (data.isEmpty) {
-                return GlassCard(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24.0),
-                    child: Column(
-                      children: [
-                        const Icon(Icons.water_drop_outlined, size: 48, color: AppColorsDark.surface2),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Your offline log is empty',
-                          style: AppTypography.bodyMd(color: AppColorsDark.textSecondary),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-
-              return ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                itemCount: data.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final item = data[index];
-                  final meta = metadataMap[item.id] ?? {};
-                  final itemClass = GlucoseClassification.classify(item.value, item.timing);
-                  final notes = meta['notes'];
-                  final linkedFood = meta['linkedFood'];
-
-                  return GlassCard(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline.alphabetic,
-                              children: [
-                                Text(
-                                  item.value.toInt().toString(),
-                                  style: AppTypography.metricLg(color: Colors.white).copyWith(fontSize: 28),
-                                ),
-                                const SizedBox(width: 4),
-                                Text('mg/dL', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
-                              ],
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: itemClass.color.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                itemClass.label,
-                                style: AppTypography.labelSm(color: itemClass.color).copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Icon(_getTimingIcon(item.timing), size: 14, color: AppColorsDark.accent.withValues(alpha: 0.8)),
-                            const SizedBox(width: 4),
-                            Text(
-                              item.timing.toUpperCase(),
-                              style: AppTypography.labelSm(color: AppColorsDark.textSecondary),
-                            ),
-                            const Spacer(),
-                            Text(
-                              DateFormat('MMM d, h:mm a').format(item.measuredAt),
-                              style: AppTypography.labelSm(color: AppColorsDark.textMuted),
-                            ),
-                          ],
-                        ),
-
-                        // Linked food chip
-                        if (linkedFood != null && linkedFood.isNotEmpty) ...[
-                          const SizedBox(height: 10),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: AppColorsDark.teal.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(color: AppColorsDark.teal.withValues(alpha: 0.2)),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.link_rounded, size: 12, color: AppColorsDark.teal),
-                                const SizedBox(width: 4),
-                                Flexible(
-                                  child: Text(
-                                    linkedFood,
-                                    style: AppTypography.labelSm(color: AppColorsDark.teal),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
+            // Classification Chip
+            if (latest != null)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                decoration: BoxDecoration(
+                  color: classification.color.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(color: classification.color.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: classification.color,
+                        boxShadow: [
+                          BoxShadow(
+                            color: classification.color.withValues(alpha: 0.5),
+                            blurRadius: 6,
                           ),
                         ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      classification.label,
+                      style: AppTypography.labelLg(color: classification.color).copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            else
+              Text(
+                'No recorded readings',
+                style: AppTypography.labelMd(color: AppColorsDark.textMuted),
+              ),
+          ],
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 24),
+            
+            // Log Reading Button CTA
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColorsDark.accent,
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                elevation: 4,
+              ),
+              icon: const Icon(Icons.add_rounded, size: 22, color: Colors.black),
+              label: Text(
+                'Log Reading',
+                style: AppTypography.labelLg(color: Colors.black).copyWith(fontWeight: FontWeight.bold),
+              ),
+              onPressed: () => _openLogSheet(context),
+            ),
+            const SizedBox(height: 24),
 
-                        // Notes
-                        if (notes != null && notes.isNotEmpty) ...[
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: Divider(color: AppColorsDark.divider, height: 1),
+            // 7-Day LineChart
+            readingsAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => Center(
+                child: Text('Error loading chart', style: AppTypography.bodySm(color: AppColorsDark.rose)),
+              ),
+              data: (data) => _buildChart(data),
+            ),
+            const SizedBox(height: 28),
+
+            // Reading History List
+            Text('Reading History', style: AppTypography.h2(color: Colors.white)),
+            const SizedBox(height: 12),
+
+            readingsAsync.when(
+              loading: () => const Center(child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: CircularProgressIndicator(),
+              )),
+              error: (err, stack) => const SizedBox(),
+              data: (data) {
+                if (data.isEmpty) {
+                  return GlassCard(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24.0),
+                      child: Column(
+                        children: [
+                          const Icon(Icons.water_drop_outlined, size: 48, color: AppColorsDark.surface2),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Your offline log is empty',
+                            style: AppTypography.bodyMd(color: AppColorsDark.textSecondary),
                           ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                return ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  itemCount: data.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final item = data[index];
+                    final meta = metadataMap[item.id] ?? {};
+                    final itemClass = GlucoseClassification.classify(item.value, item.timing);
+                    final notes = meta['notes'];
+                    final linkedFood = meta['linkedFood'];
+
+                    return GlassCard(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Icon(Icons.notes_rounded, size: 14, color: AppColorsDark.textMuted),
-                              const SizedBox(width: 6),
-                              Expanded(
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text(
+                                    item.value.toInt().toString(),
+                                    style: AppTypography.metricLg(color: Colors.white).copyWith(fontSize: 28),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text('mg/dL', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
+                                ],
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: itemClass.color.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                                 child: Text(
-                                  notes,
-                                  style: AppTypography.bodySm(color: AppColorsDark.textSecondary),
+                                  itemClass.label,
+                                  style: AppTypography.labelSm(color: itemClass.color).copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                        ],
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-          const SizedBox(height: 36),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Icon(_getTimingIcon(item.timing), size: 14, color: AppColorsDark.accent.withValues(alpha: 0.8)),
+                              const SizedBox(width: 4),
+                              Text(
+                                item.timing.toUpperCase(),
+                                style: AppTypography.labelSm(color: AppColorsDark.textSecondary),
+                              ),
+                              const Spacer(),
+                              Text(
+                                DateFormat('MMM d, h:mm a').format(item.measuredAt),
+                                style: AppTypography.labelSm(color: AppColorsDark.textMuted),
+                              ),
+                            ],
+                          ),
 
-          // Encryption Badge
-          const Center(child: EncryptionBadge()),
-          const SizedBox(height: 48),
-        ],
+                          // Linked food chip
+                          if (linkedFood != null && linkedFood.isNotEmpty) ...[
+                            const SizedBox(height: 10),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: AppColorsDark.teal.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(color: AppColorsDark.teal.withValues(alpha: 0.2)),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.link_rounded, size: 12, color: AppColorsDark.teal),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: Text(
+                                      linkedFood,
+                                      style: AppTypography.labelSm(color: AppColorsDark.teal),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+
+                          // Notes
+                          if (notes != null && notes.isNotEmpty) ...[
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.0),
+                              child: Divider(color: AppColorsDark.divider, height: 1),
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(Icons.notes_rounded, size: 14, color: AppColorsDark.textMuted),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    notes,
+                                    style: AppTypography.bodySm(color: AppColorsDark.textSecondary),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            const SizedBox(height: 36),
+
+            // Encryption Badge
+            const Center(child: EncryptionBadge()),
+            const SizedBox(height: 48),
+          ],
+        ),
       ),
     );
   }

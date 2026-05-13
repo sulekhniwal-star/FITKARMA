@@ -6,8 +6,10 @@ import '../../core/theme/app_typography.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/bilingual_label.dart';
+import 'package:flutter/services.dart';
 import '../onboarding/onboarding_providers.dart';
 import 'settings_providers.dart';
+import '../../core/security/security_service.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -368,6 +370,41 @@ class SettingsScreen extends ConsumerWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Simulating password revision trigger token payload...'), backgroundColor: AppColorsDark.accent),
                         );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Export Full Data Archive Button Trigger
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColorsDark.teal.withValues(alpha: 0.15),
+                        foregroundColor: AppColorsDark.teal,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        side: BorderSide(color: AppColorsDark.teal.withValues(alpha: 0.3)),
+                      ),
+                      icon: const Icon(Icons.data_saver_on_rounded, size: 18),
+                      label: const Text('Export JSON Data Archive', style: TextStyle(fontWeight: FontWeight.bold)),
+                      onPressed: () async {
+                        try {
+                          final jsonBlob = await ref.read(securityServiceProvider).exportFullUserData();
+                          await Clipboard.setData(ClipboardData(text: jsonBlob));
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Complete JSON profile archive serialized and copied to clipboard successfully.'),
+                                backgroundColor: AppColorsDark.teal,
+                                duration: Duration(seconds: 4),
+                              ),
+                            );
+                          }
+                        } catch (_) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Failed to compile clinical datastore objects.'), backgroundColor: AppColorsDark.rose),
+                            );
+                          }
+                        }
                       },
                     ),
                     const SizedBox(height: 12),
