@@ -1092,7 +1092,7 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 All items from the Master Checklist §Master Checklist:
 
-- [ ] §F1: Indian food database seeded (≥5,000 items)
+- [x] §F1: Indian food database seeded (≥5,000 items)
 - [ ] §F1: Open Food Facts integration tested with barcode scan on real device
 - [ ] §F2: AI Coach `handleAiCoach()` handler deployed inside `fitkarma-cores` function with `ANTHROPIC_API_KEY` env var set
 - [ ] §F3: iOS HealthKit entitlements configured and tested in Xcode on physical iPhone

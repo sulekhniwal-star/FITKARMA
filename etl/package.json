@@ -15,7 +15,9 @@
     "phase-i": "node scripts/audit_phase_i_coverage.js",
     "phase-k": "node scripts/verify_phase_k_normalization.js",
     "phase-l": "node ../scripts/seed_food_database.js",
-    "enrich-seed": "node scripts/enrich_master_seed.js"
+    "enrich-seed": "node scripts/enrich_master_seed.js",
+    "upload-remaining": "node ../scripts/upload_remaining_batches.js",
+    "upload-all": "node ../scripts/upload_all_batches.js"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
