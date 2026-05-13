@@ -66,5 +66,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Fitkarma requires secure access to read your daily steps, heart rate, sleep logs, blood pressure, and continuous glucose records to synthesize actionable personalized longitudinal insights.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Fitkarma saves recorded nutritional logs, continuous steps deltas, and user logged biometric values into your centralized Apple Health store to preserve system-wide sync consistency.</string>
 </dict>
 </plist>

@@ -829,21 +829,21 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 11.1 Xcode Entitlements
 
-- [ ] Add `HealthKit` capability in Xcode → Runner.entitlements
-- [ ] Add `com.apple.developer.healthkit` = true
-- [ ] Add `com.apple.developer.healthkit.background-delivery` = true
-- [ ] Add `NSHealthShareUsageDescription` to Info.plist
-- [ ] Add `NSHealthUpdateUsageDescription` to Info.plist
+- [x] Add `HealthKit` capability in Xcode → Runner.entitlements
+- [x] Add `com.apple.developer.healthkit` = true
+- [x] Add `com.apple.developer.healthkit.background-delivery` = true
+- [x] Add `NSHealthShareUsageDescription` to Info.plist
+- [x] Add `NSHealthUpdateUsageDescription` to Info.plist
 
 ### 11.2 HealthKit Provider (`lib/features/health/`)
 
-- [ ] `requestPermissions()` — STEPS, HEART_RATE, BLOOD_OXYGEN, SLEEP_SESSION, BLOOD_PRESSURE_SYSTOLIC, BLOOD_PRESSURE_DIASTOLIC, BLOOD_GLUCOSE
-- [ ] `todaySteps()` — aggregate from midnight to now
-- [ ] `heartRate()` — latest sample
-- [ ] `bloodOxygen()` — latest SpO2
-- [ ] `sleepSessions()` — last 7 days, map to SleepLog Drift objects
-- [ ] `writeSteps()` / `writeWorkout()` — write back to HealthKit
-- [ ] Background delivery — register observer queries for step count updates
+- [x] `requestPermissions()` — STEPS, HEART_RATE, BLOOD_OXYGEN, SLEEP_SESSION, BLOOD_PRESSURE_SYSTOLIC, BLOOD_PRESSURE_DIASTOLIC, BLOOD_GLUCOSE
+- [x] `todaySteps()` — aggregate from midnight to now
+- [x] `heartRate()` — latest sample
+- [x] `bloodOxygen()` — latest SpO2
+- [x] `sleepSessions()` — last 7 days, map to SleepLog Drift objects
+- [x] `writeSteps()` / `writeWorkout()` — write back to HealthKit
+- [x] Background delivery — register observer queries for step count updates
 
 ### 11.3 Android Health Connect
 
