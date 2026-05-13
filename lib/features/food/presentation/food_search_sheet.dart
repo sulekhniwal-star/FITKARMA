@@ -10,6 +10,8 @@ import '../../../core/database/app_database.dart';
 import '../../onboarding/onboarding_providers.dart';
 import '../data/food_database_service.dart';
 import '../../karma/karma_providers.dart';
+import '../../karma/karma_service.dart';
+import '../../streak/streak_providers.dart';
 
 class FoodSearchSheet extends ConsumerStatefulWidget {
   final String? initialMealType;
@@ -403,7 +405,8 @@ class _FoodSearchSheetState extends ConsumerState<FoodSearchSheet> {
           ),
         );
 
-    ref.read(karmaStateProvider.notifier).addKarmaEvent('Logged ${item['name']}', 'food', 5);
+    await ref.read(karmaServiceProvider).awardXP('food_log');
+    await ref.read(streakStateProvider.notifier).logActivity();
 
     if (mounted) {
       Navigator.pop(context);

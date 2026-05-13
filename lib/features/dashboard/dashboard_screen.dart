@@ -12,6 +12,7 @@ import '../../shared/widgets/streak_flame.dart';
 import '../../shared/widgets/insight_card.dart';
 import '../onboarding/onboarding_providers.dart';
 import '../insights/correlation_engine.dart';
+import '../streak/streak_providers.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -34,7 +35,7 @@ class DashboardScreen extends ConsumerWidget {
           const SizedBox(height: AppSpacing.lg),
 
           // Primary Bento Grid
-          _buildPrimaryBento(context),
+          _buildPrimaryBento(context, ref),
 
           const SizedBox(height: AppSpacing.lg),
 
@@ -182,7 +183,9 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPrimaryBento(BuildContext context) {
+  Widget _buildPrimaryBento(BuildContext context, WidgetRef ref) {
+    final streakState = ref.watch(streakStateProvider);
+
     return Column(
       children: [
         Row(
@@ -211,12 +214,12 @@ class DashboardScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.bentoGap),
-        const GlassCard(
+        GlassCard(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Current Streak', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-              StreakFlame(count: 12),
+              const Text('Current Streak', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+              StreakFlame(count: streakState.currentStreak),
             ],
           ),
         ),

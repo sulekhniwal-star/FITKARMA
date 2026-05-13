@@ -913,10 +913,10 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ### 13.2 Streak Tracking
 
-- [ ] Daily streak: any activity logged = streak maintained
-- [ ] 7-day streak detection → award `streak_7day` XP
-- [ ] 30-day streak detection → award `streak_30day` XP
-- [ ] `StreakFlame` widget animates on dashboard
+- [x] Daily streak: any activity logged = streak maintained
+- [x] 7-day streak detection → award `streak_7day` XP
+- [x] 30-day streak detection → award `streak_30day` XP
+- [x] `StreakFlame` widget animates on dashboard
 
 ### 13.3 Achievements
 
