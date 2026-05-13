@@ -106,8 +106,8 @@ String _$appwriteClientHash() => r'777cd590463dae4f9b03fbea9d73f1e0dfb18011';
 final appwriteDatabasesProvider = AppwriteDatabasesProvider._();
 
 final class AppwriteDatabasesProvider
-    extends $FunctionalProvider<Databases, Databases, Databases>
-    with $Provider<Databases> {
+    extends $FunctionalProvider<TablesDB, TablesDB, TablesDB>
+    with $Provider<TablesDB> {
   AppwriteDatabasesProvider._()
     : super(
         from: null,
@@ -124,24 +124,24 @@ final class AppwriteDatabasesProvider
 
   @$internal
   @override
-  $ProviderElement<Databases> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<TablesDB> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  Databases create(Ref ref) {
+  TablesDB create(Ref ref) {
     return appwriteDatabases(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Databases value) {
+  Override overrideWithValue(TablesDB value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<Databases>(value),
+      providerOverride: $SyncValueProvider<TablesDB>(value),
     );
   }
 }
 
-String _$appwriteDatabasesHash() => r'd3841ab93533f56a0b57d7631fbd444af5aa467a';
+String _$appwriteDatabasesHash() => r'0af02b6599839faaceb31a32c59153d51a012c0f';
 
 @ProviderFor(appwriteStorage)
 final appwriteStorageProvider = AppwriteStorageProvider._();

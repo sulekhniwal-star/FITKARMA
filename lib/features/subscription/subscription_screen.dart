@@ -176,12 +176,13 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                       ),
                       onPressed: () async {
                         final success = await notifier.purchase();
-                        if (success && mounted) {
+                        if (!context.mounted) return;
+                        if (success) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Welcome to FitKarma Pro! Features unlocked.'), backgroundColor: AppColorsDark.accent),
                           );
                           context.pop();
-                        } else if (mounted) {
+                        } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Simulated checkout processing successfully completed.'), backgroundColor: AppColorsDark.accent),
                           );
@@ -204,15 +205,14 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                   style: TextButton.styleFrom(foregroundColor: AppColorsDark.textMuted),
                   onPressed: () async {
                     final success = await notifier.restore();
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(success ? 'Historical acquisition restoration loop executed.' : 'No active external platform purchases available.'),
-                          backgroundColor: success ? AppColorsDark.accent : AppColorsDark.surface2,
-                        ),
-                      );
-                      if (success) context.pop();
-                    }
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(success ? 'Historical acquisition restoration loop executed.' : 'No active external platform purchases available.'),
+                        backgroundColor: success ? AppColorsDark.accent : AppColorsDark.surface2,
+                      ),
+                    );
+                    if (success) context.pop();
                   },
                   child: Text('Restore App Store / Play Store Purchases', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
                 ),

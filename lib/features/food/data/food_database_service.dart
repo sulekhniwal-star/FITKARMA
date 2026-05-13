@@ -74,9 +74,9 @@ class FoodDatabaseService extends _$FoodDatabaseService {
     // 1. Query Appwrite Indian DB (fulltext)
      try {
        final databases = ref.read(appwriteDatabasesProvider);
-       final response = await databases.listDocuments(
+       final response = await databases.listRows(
          databaseId: 'fitkarma-db',
-         collectionId: 'food_database',
+         tableId: 'food_database',
          queries: [
            Query.search('name', query),
            Query.limit(20),
@@ -174,9 +174,9 @@ class FoodDatabaseService extends _$FoodDatabaseService {
     // 1. Appwrite (exact match)
      try {
        final databases = ref.read(appwriteDatabasesProvider);
-       final response = await databases.listDocuments(
+       final response = await databases.listRows(
          databaseId: 'fitkarma-db',
-         collectionId: 'food_database',
+         tableId: 'food_database',
          queries: [
            Query.equal('barcode', barcode),
            Query.limit(1),
@@ -252,10 +252,10 @@ class FoodDatabaseService extends _$FoodDatabaseService {
        final databases = ref.read(appwriteDatabasesProvider);
        for (final item in offResults) {
          try {
-           await databases.createDocument(
+           await databases.createRow(
              databaseId: 'fitkarma-db',
-             collectionId: 'food_database',
-             documentId: ID.unique(),
+             tableId: 'food_database',
+             rowId: ID.unique(),
              data: {
                'name': item['name'],
                'category': item['category'] ?? 'General',

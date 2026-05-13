@@ -220,7 +220,7 @@ class _PermissionTile extends StatelessWidget {
           Switch.adaptive(
             value: value,
             onChanged: onChanged,
-            activeColor: AppColorsDark.primary,
+            activeThumbColor: AppColorsDark.primary,
           ),
         ],
       ),

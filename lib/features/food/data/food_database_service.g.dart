@@ -42,7 +42,7 @@ final class FoodDatabaseServiceProvider
 }
 
 String _$foodDatabaseServiceHash() =>
-    r'da898b49453d7033648d867b0e4b523d8a7bc58e';
+    r'7317ef7afd8aa9f8d59e559268ff3ac95ee1c2b7';
 
 abstract class _$FoodDatabaseService extends $Notifier<void> {
   void build();

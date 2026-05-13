@@ -115,8 +115,10 @@ class SyncWorker {
             stackTrace: stack,
             withScope: (scope) {
               scope.setTag('sync_failure', 'enterprise_dlq');
-              scope.setExtra('table_id', tableId);
-              scope.setExtra('row_id', row.id.toString());
+              scope.setContexts('record_details', {
+                'table_id': tableId,
+                'row_id': row.id.toString(),
+              });
             },
           );
         } catch (_) {}

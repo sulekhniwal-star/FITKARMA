@@ -24,7 +24,7 @@ void main() {
 
       await workerLowData.syncAll();
 
-      verifyNever(() => mockDb.select(any));
+      verifyZeroInteractions(mockDb);
     });
 
     test('SyncWorker initializes cleanly with default parameters', () {

@@ -61,7 +61,7 @@ class HealthKitService {
     try {
       final now = DateTime.now();
       final start = now.subtract(const Duration(days: 1));
-      final samples = await _health.getHealthDataFromTypes(start, now, [HealthDataType.HEART_RATE]);
+      final samples = await _health.getHealthDataFromTypes(startTime: start, endTime: now, types: [HealthDataType.HEART_RATE]);
       
       if (samples.isEmpty) return 68.0;
       samples.sort((a, b) => b.dateTo.compareTo(a.dateTo));
@@ -80,7 +80,7 @@ class HealthKitService {
     try {
       final now = DateTime.now();
       final start = now.subtract(const Duration(days: 3));
-      final samples = await _health.getHealthDataFromTypes(start, now, [HealthDataType.BLOOD_OXYGEN]);
+      final samples = await _health.getHealthDataFromTypes(startTime: start, endTime: now, types: [HealthDataType.BLOOD_OXYGEN]);
 
       if (samples.isEmpty) return 0.98;
       samples.sort((a, b) => b.dateTo.compareTo(a.dateTo));
@@ -120,7 +120,7 @@ class HealthKitService {
     try {
       final now = DateTime.now();
       final start = now.subtract(const Duration(days: 7));
-      final samples = await _health.getHealthDataFromTypes(start, now, [HealthDataType.SLEEP_SESSION]);
+      final samples = await _health.getHealthDataFromTypes(startTime: start, endTime: now, types: [HealthDataType.SLEEP_SESSION]);
 
       for (final s in samples) {
         int mappedQuality = 7;

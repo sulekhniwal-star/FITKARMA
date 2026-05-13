@@ -43,7 +43,18 @@ abstract class FoodItem with _$FoodItem {
   factory FoodItem.fromJson(Map<String, dynamic> json) => _$FoodItemFromJson(json);
 
   /// Factory constructor to map Open Food Facts product JSON correctly
-  factory FoodItem.fromOpenFoodFacts(Map<String, dynamic> p) {
+  factory FoodItem.fromOpenFoodFacts(Map<String, dynamic>? p) {
+    if (p == null) {
+      return const FoodItem(
+        id: 'Unknown Food',
+        name: 'Unknown Food',
+        category: 'General',
+        caloriesPer100g: 0.0,
+        emoji: '🍛',
+        source: 'off',
+        isBundled: false,
+      );
+    }
     final nutriments = p['nutriments'] as Map<String, dynamic>? ?? {};
     final name = p['product_name']?.toString() ?? 'Unknown Food';
     final barcode = p['code']?.toString();

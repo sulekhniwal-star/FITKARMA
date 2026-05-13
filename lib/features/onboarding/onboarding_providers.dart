@@ -1,6 +1,7 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as models;
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
@@ -90,7 +91,7 @@ class Auth extends _$Auth {
       );
     } catch (e) {
       // Log error but continue
-      print('Error syncing dosha to Appwrite: $e');
+      debugPrint('Error syncing dosha to Appwrite: $e');
     }
   }
 
@@ -119,7 +120,7 @@ class Auth extends _$Auth {
         },
       );
     } catch (e) {
-      print('Error syncing goals to Appwrite: $e');
+      debugPrint('Error syncing goals to Appwrite: $e');
     }
   }
 
@@ -148,7 +149,7 @@ class Auth extends _$Auth {
         },
       );
     } catch (e) {
-      print('Error syncing onboarding status to Appwrite: $e');
+      debugPrint('Error syncing onboarding status to Appwrite: $e');
     }
   }
 

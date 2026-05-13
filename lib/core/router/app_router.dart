@@ -11,7 +11,6 @@ import '../../features/onboarding/splash_screen.dart';
 import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/food/presentation/food_home_screen.dart';
 import '../../shared/widgets/bottom_nav_bar.dart';
-import '../../shared/widgets/scaffold_patterns.dart';
 import '../security/biometric_lock.dart';
 import '../../features/health/blood_pressure_screen.dart';
 import '../../features/health/glucose_screen.dart';
@@ -191,17 +190,4 @@ GoRouter appRouter(Ref ref) {
       GoRoute(path: '/social', builder: (context, state) => const SocialScreen()),
     ],
   );
-}
-
-class _PlaceholderScreen extends StatelessWidget {
-  final String title;
-  const _PlaceholderScreen({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return AppScaffold.patternA(
-      appBar: AppBar(title: Text(title)),
-      body: Center(child: Text('Content for $title')),
-    );
-  }
 }
