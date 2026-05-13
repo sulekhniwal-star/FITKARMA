@@ -365,10 +365,10 @@ class SleepScreen extends ConsumerWidget {
               height: 16,
               child: Row(
                 children: [
-                  _buildStageFlexSegment(deep, totalSafe, const Color(0xFF3B82F6)),
-                  _buildStageFlexSegment(rem, totalSafe, const Color(0xFF8B5CF6)),
-                  _buildStageFlexSegment(light, totalSafe, const Color(0xFF10B981)),
-                  _buildStageFlexSegment(awake, totalSafe, const Color(0xFFF59E0B)),
+                  _buildStageFlexSegment(deep, totalSafe, AppColorsDark.secondary),
+                  _buildStageFlexSegment(rem, totalSafe, AppColorsDark.purple),
+                  _buildStageFlexSegment(light, totalSafe, AppColorsDark.teal),
+                  _buildStageFlexSegment(awake, totalSafe, AppColorsDark.accent),
                 ],
               ),
             ),
@@ -379,10 +379,10 @@ class SleepScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStageLegendItem('Deep', deep, totalSafe, const Color(0xFF3B82F6)),
-              _buildStageLegendItem('REM', rem, totalSafe, const Color(0xFF8B5CF6)),
-              _buildStageLegendItem('Light', light, totalSafe, const Color(0xFF10B981)),
-              _buildStageLegendItem('Awake', awake, totalSafe, const Color(0xFFF59E0B)),
+              _buildStageLegendItem('Deep', deep, totalSafe, AppColorsDark.secondary),
+              _buildStageLegendItem('REM', rem, totalSafe, AppColorsDark.purple),
+              _buildStageLegendItem('Light', light, totalSafe, AppColorsDark.teal),
+              _buildStageLegendItem('Awake', awake, totalSafe, AppColorsDark.accent),
             ],
           ),
         ],

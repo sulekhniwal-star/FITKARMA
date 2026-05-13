@@ -7,17 +7,18 @@ import 'package:uuid/uuid.dart';
 import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
 import '../onboarding/onboarding_providers.dart';
+import '../../core/theme/app_colors.dart';
 
 part 'bp_providers.g.dart';
 
 // ─── Classification Logic ───────────────────────────────────────────────────
 
 enum BpClassification {
-  normal('Normal', Color(0xFF4ADE80), Color(0x334ADE80)),
-  elevated('Elevated', Color(0xFFFBBF24), Color(0x33FFB547)),
-  stage1('Stage 1', Color(0xFFFBBF24), Color(0x33FFB547)),
-  stage2('Stage 2', Color(0xFFF87171), Color(0x40FF6B35)),
-  crisis('Hypertensive Crisis', Color(0xFFF87171), Color(0x40FF6B35));
+  normal('Normal', AppColorsDark.success, AppColorsDark.successGlow),
+  elevated('Elevated', AppColorsDark.warning, AppColorsDark.accentGlow),
+  stage1('Stage 1', AppColorsDark.warning, AppColorsDark.accentGlow),
+  stage2('Stage 2', AppColorsDark.error, AppColorsDark.primaryGlow),
+  crisis('Hypertensive Crisis', AppColorsDark.error, AppColorsDark.primaryGlow);
 
   final String label;
   final Color color;

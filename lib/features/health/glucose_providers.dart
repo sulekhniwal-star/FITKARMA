@@ -7,16 +7,17 @@ import 'package:uuid/uuid.dart';
 import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
 import '../onboarding/onboarding_providers.dart';
+import '../../core/theme/app_colors.dart';
 
 part 'glucose_providers.g.dart';
 
 // ─── Classification Logic ───────────────────────────────────────────────────
 
 enum GlucoseClassification {
-  normal('Normal', Color(0xFF4ADE80), Color(0x334ADE80)),
-  preDiabetic('Pre-diabetic', Color(0xFFFBBF24), Color(0x33FFB547)),
-  diabetic('Diabetic', Color(0xFFF87171), Color(0x40FF6B35)),
-  hypoglycemic('Hypoglycemic', Color(0xFFC084FC), Color(0x407B6FF0));
+  normal('Normal', AppColorsDark.success, AppColorsDark.successGlow),
+  preDiabetic('Pre-diabetic', AppColorsDark.warning, AppColorsDark.accentGlow),
+  diabetic('Diabetic', AppColorsDark.error, AppColorsDark.primaryGlow),
+  hypoglycemic('Hypoglycemic', AppColorsDark.purple, AppColorsDark.secondaryGlow);
 
   final String label;
   final Color color;

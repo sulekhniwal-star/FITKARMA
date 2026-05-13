@@ -995,12 +995,12 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ### 17.3 Anti-Pattern Enforcement
 
-- [ ] Lint rule / code review check: no hardcoded hex values outside `app_colors.dart`
-- [ ] Maximum 2 visual effects per surface (blur+border OR glow+gradient — not both)
-- [ ] No glow on more than one card per screen
-- [ ] No modals where a bottom sheet suffices
-- [ ] No skeleton text — use `ShimmerLoader`
-- [ ] No bilingual labels on every element
+- [x] Lint rule / code review check: no hardcoded hex values outside `app_colors.dart`
+- [x] Maximum 2 visual effects per surface (blur+border OR glow+gradient — not both)
+- [x] No glow on more than one card per screen
+- [x] No modals where a bottom sheet suffices
+- [x] No skeleton text — use `ShimmerLoader`
+- [x] No bilingual labels on every element
 
 ---
 
