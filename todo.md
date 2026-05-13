@@ -920,9 +920,9 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ### 13.3 Achievements
 
-- [ ] Define achievement catalog (first food log, 7-day streak, 30-day streak, 10k steps, workout complete, etc.)
-- [ ] Achievement unlock check after every XP event
-- [ ] Achievement grid on Karma Hub + Profile
+- [x] Define achievement catalog (first food log, 7-day streak, 30-day streak, 10k steps, workout complete, etc.)
+- [x] Achievement unlock check after every XP event
+- [x] Achievement grid on Karma Hub + Profile
 
 ---
 
@@ -930,9 +930,9 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ### 14.1 Setup
 
-- [ ] Initialize `flutter_local_notifications` in `NotificationService.init()` (called from `main.dart`)
-- [ ] Request notification permission on onboarding
-- [ ] Set up timezone handling for local notifications
+- [x] Initialize `flutter_local_notifications` in `NotificationService.init()` (called from `main.dart`)
+- [x] Request notification permission on onboarding
+- [x] Set up timezone handling for local notifications
 
 ### 14.2 Notification Types
 

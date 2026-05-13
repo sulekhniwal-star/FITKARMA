@@ -504,73 +504,70 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
   }
 
   Widget _buildAchievementsTab(List<Achievement> achievements) {
-    return SingleChildScrollView(
-      physics: const NeverScrollableScrollPhysics(),
-      child: Column(
-        children: achievements.map((ach) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12.0),
-            child: GlassCard(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: ach.isUnlocked ? AppColorsDark.accent.withValues(alpha: 0.15) : AppColorsDark.surface2,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(ach.icon, style: const TextStyle(fontSize: 24)),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(ach.title, style: AppTypography.h3(color: ach.isUnlocked ? Colors.white : AppColorsDark.textMuted)),
-                            if (ach.isUnlocked)
-                              const Icon(Icons.star_rounded, color: AppColorsDark.accent, size: 18)
-                            else
-                              const Icon(Icons.lock_outline_rounded, color: AppColorsDark.textMuted, size: 16),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Text(ach.description, style: AppTypography.labelSm(color: AppColorsDark.textSecondary)),
-                        
-                        if (!ach.isUnlocked) ...[
-                          const SizedBox(height: 12),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Progress Tracker', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
-                              Text('${ach.currentProgress} / ${ach.maxProgress}', style: AppTypography.labelSm(color: AppColorsDark.textSecondary)),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: LinearProgressIndicator(
-                              value: ach.progressRatio,
-                              backgroundColor: AppColorsDark.surface2,
-                              valueColor: const AlwaysStoppedAnimation<Color>(AppColorsDark.purple),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
+    return GridView.builder(
+      padding: const EdgeInsets.only(top: 8),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 0.85,
       ),
+      itemCount: achievements.length,
+      itemBuilder: (context, index) {
+        final ach = achievements[index];
+        return GlassCard(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: ach.isUnlocked ? AppColorsDark.accent.withValues(alpha: 0.2) : AppColorsDark.surface2,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(ach.icon, style: const TextStyle(fontSize: 24)),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                ach.title,
+                style: AppTypography.labelSm(color: ach.isUnlocked ? Colors.white : AppColorsDark.textMuted).copyWith(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              Expanded(
+                child: Text(
+                  ach.description,
+                  style: AppTypography.labelSm(color: AppColorsDark.textMuted).copyWith(fontSize: 10),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(height: 6),
+              if (ach.isUnlocked)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(color: AppColorsDark.teal.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(4)),
+                  child: const Text('UNLOCKED', style: TextStyle(color: AppColorsDark.teal, fontSize: 8, fontWeight: FontWeight.bold)),
+                )
+              else
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: ach.progressRatio,
+                    backgroundColor: AppColorsDark.surface2,
+                    valueColor: const AlwaysStoppedAnimation<Color>(AppColorsDark.purple),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 

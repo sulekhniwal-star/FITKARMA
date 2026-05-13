@@ -54,6 +54,26 @@ class Achievement {
   });
 
   double get progressRatio => (currentProgress / maxProgress).clamp(0.0, 1.0);
+
+  Achievement copyWith({
+    String? id,
+    String? title,
+    String? description,
+    String? icon,
+    bool? isUnlocked,
+    int? currentProgress,
+    int? maxProgress,
+  }) {
+    return Achievement(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      icon: icon ?? this.icon,
+      isUnlocked: isUnlocked ?? this.isUnlocked,
+      currentProgress: currentProgress ?? this.currentProgress,
+      maxProgress: maxProgress ?? this.maxProgress,
+    );
+  }
 }
 
 class Challenge {
@@ -166,43 +186,49 @@ class KarmaState {
       },
       achievements: [
         Achievement(
-          id: 'ach_1',
-          title: 'Early Bird',
-          description: 'Log physical workouts before 7:00 AM consistently.',
-          icon: '🌅',
-          isUnlocked: true,
-        ),
-        Achievement(
-          id: 'ach_2',
-          title: 'Zen Master',
-          description: 'Achieve 7 consecutive nights of quality recovery sleep.',
-          icon: '🧘',
-          isUnlocked: true,
-        ),
-        Achievement(
-          id: 'ach_3',
-          title: 'Hydration Hero',
-          description: 'Exceed 3 liters of daily fluid intake across 10 days.',
-          icon: '💧',
-          isUnlocked: true,
-        ),
-        Achievement(
-          id: 'ach_4',
-          title: 'Century Marathon',
-          description: 'Track 100 cumulative kilometers of distance.',
-          icon: '🏃',
-          isUnlocked: false,
-          currentProgress: 82,
-          maxProgress: 100,
-        ),
-        Achievement(
-          id: 'ach_5',
-          title: 'Chef de Partie',
-          description: 'Log 30 wholesome home-cooked meals.',
+          id: 'first_food',
+          title: 'First Food Log',
+          description: 'Logged your very first healthy nutritional entry.',
           icon: '🥗',
+          isUnlocked: true,
+          currentProgress: 1,
+          maxProgress: 1,
+        ),
+        Achievement(
+          id: 'workout_1',
+          title: 'First Workout Session',
+          description: 'Completed your opening physical conditioning exercise.',
+          icon: '💪',
+          isUnlocked: true,
+          currentProgress: 1,
+          maxProgress: 1,
+        ),
+        Achievement(
+          id: 'streak_7',
+          title: '7-Day Continuous Streak',
+          description: 'Maintained uninterrupted tracking rituals for a solid week.',
+          icon: '🔥',
+          isUnlocked: true,
+          currentProgress: 7,
+          maxProgress: 7,
+        ),
+        Achievement(
+          id: 'streak_30',
+          title: '30-Day Devotion Milestone',
+          description: 'Unlocked supreme dedication over an entire active month.',
+          icon: '⚡',
           isUnlocked: false,
-          currentProgress: 18,
+          currentProgress: 12,
           maxProgress: 30,
+        ),
+        Achievement(
+          id: 'steps_10k',
+          title: '10,000 Daily Steps',
+          description: 'Crushed the golden step marker standard in a single epoch.',
+          icon: '🚶',
+          isUnlocked: false,
+          currentProgress: 7432,
+          maxProgress: 10000,
         ),
       ],
       activeChallenges: [
@@ -340,6 +366,28 @@ class KarmaNotifier extends Notifier<KarmaState> {
       return u;
     }).toList()..sort((a, b) => b.xp.compareTo(a.xp));
 
+    final updatedAchievements = state.achievements.map((ach) {
+      if (ach.isUnlocked) return ach;
+
+      bool shouldUnlock = false;
+      if (ach.id == 'first_food' && category == 'food') {
+        shouldUnlock = true;
+      } else if (ach.id == 'workout_1' && category == 'workout') {
+        shouldUnlock = true;
+      } else if (ach.id == 'steps_10k' && category == 'steps') {
+        shouldUnlock = true;
+      } else if (ach.id == 'streak_7' && title.contains('7-Day')) {
+        shouldUnlock = true;
+      } else if (ach.id == 'streak_30' && title.contains('30-Day')) {
+        shouldUnlock = true;
+      }
+
+      if (shouldUnlock) {
+        return ach.copyWith(isUnlocked: true, currentProgress: ach.maxProgress);
+      }
+      return ach;
+    }).toList();
+
     state = KarmaState(
       totalXp: newXp,
       currentLevel: newLvl,
@@ -347,7 +395,7 @@ class KarmaNotifier extends Notifier<KarmaState> {
       nextLevelXp: nextXp,
       todayEvents: [newEvent, ...state.todayEvents],
       xpBreakdown: updatedBreakdown,
-      achievements: state.achievements,
+      achievements: updatedAchievements,
       activeChallenges: state.activeChallenges,
       leaderboard: updatedLeaderboard,
     );

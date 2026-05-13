@@ -344,40 +344,73 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           const SizedBox(height: 28),
 
           // Achievements section
-          Text('Unlocked Honors', style: AppTypography.h3(color: Colors.white)),
+          Text('Honors & Milestones Grid', style: AppTypography.h3(color: Colors.white)),
           const SizedBox(height: 12),
-          GlassCard(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: karmaState.achievements.where((a) => a.isUnlocked).map((ach) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(color: AppColorsDark.surface1, borderRadius: BorderRadius.circular(10)),
-                        child: Text(ach.icon, style: const TextStyle(fontSize: 20)),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 0.85,
+            ),
+            itemCount: karmaState.achievements.length,
+            itemBuilder: (context, index) {
+              final ach = karmaState.achievements[index];
+              return GlassCard(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: ach.isUnlocked ? AppColorsDark.accent.withValues(alpha: 0.2) : AppColorsDark.surface2,
+                        shape: BoxShape.circle,
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(ach.title, style: AppTypography.labelLg(color: Colors.white)),
-                            const SizedBox(height: 2),
-                            Text(ach.description, style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
-                          ],
+                      child: Text(ach.icon, style: const TextStyle(fontSize: 24)),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      ach.title,
+                      style: AppTypography.labelSm(color: ach.isUnlocked ? Colors.white : AppColorsDark.textMuted).copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Expanded(
+                      child: Text(
+                        ach.description,
+                        style: AppTypography.labelSm(color: AppColorsDark.textMuted).copyWith(fontSize: 10),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    if (ach.isUnlocked)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(color: AppColorsDark.teal.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(4)),
+                        child: const Text('UNLOCKED', style: TextStyle(color: AppColorsDark.teal, fontSize: 8, fontWeight: FontWeight.bold)),
+                      )
+                    else
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: ach.progressRatio,
+                          backgroundColor: AppColorsDark.surface2,
+                          valueColor: const AlwaysStoppedAnimation<Color>(AppColorsDark.purple),
                         ),
                       ),
-                      const Icon(Icons.verified_rounded, color: AppColorsDark.teal, size: 18),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
+                  ],
+                ),
+              );
+            },
           ),
           const SizedBox(height: 28),
 

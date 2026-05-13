@@ -5,6 +5,7 @@ import 'package:health/health.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
+import '../../core/services/notification_service.dart';
 import 'onboarding_providers.dart';
 
 class PermissionsScreen extends ConsumerStatefulWidget {
@@ -51,6 +52,24 @@ class _PermissionsScreenState extends ConsumerState<PermissionsScreen> {
     }
   }
 
+  Future<void> _requestNotificationsAccess(bool enable) async {
+    setState(() => _notificationsEnabled = enable);
+    if (!enable) return;
+
+    final granted = await NotificationService.requestPermission();
+    if (granted && mounted) {
+      setState(() => _notificationsEnabled = true);
+    } else if (!granted && mounted) {
+      setState(() => _notificationsEnabled = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Notification permission denied. Enable in OS settings for custom reminders.'),
+          backgroundColor: AppColorsDark.surface2,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold.calmZone(
@@ -85,7 +104,7 @@ class _PermissionsScreenState extends ConsumerState<PermissionsScreen> {
               subtitle: 'Stay on track with reminders and personalized insights.',
               icon: Icons.notifications_rounded,
               value: _notificationsEnabled,
-              onChanged: (v) => setState(() => _notificationsEnabled = v),
+              onChanged: _requestNotificationsAccess,
             ),
             const SizedBox(height: 16),
             _PermissionTile(
