@@ -13,15 +13,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Appwrite CLI
-        run: npm install -g appwrite-cli
-
-      - name: Authenticate Appwrite CLI
-        run: |
-          appwrite client \
-            --endpoint ${{ secrets.APPWRITE_ENDPOINT }} \
-            --project-id ${{ secrets.APPWRITE_PROJECT_ID }} \
-            --key ${{ secrets.APPWRITE_API_KEY }}
+      - name: Setup Appwrite CLI
+        uses: appwrite/setup-for-appwrite@v2
+        with:
+          method: key
+          key: ${{ secrets.APPWRITE_API_KEY }}
+          project: ${{ secrets.APPWRITE_PROJECT_ID }}
+          endpoint: ${{ secrets.APPWRITE_ENDPOINT }}
 
       - name: Push Functions
         run: appwrite push functions --all --force --activate true

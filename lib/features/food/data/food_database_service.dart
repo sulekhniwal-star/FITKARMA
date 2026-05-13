@@ -72,16 +72,16 @@ class FoodDatabaseService extends _$FoodDatabaseService {
     final existingNames = <String>{};
 
     // 1. Query Appwrite Indian DB (fulltext)
-    try {
-      final databases = ref.read(appwriteDatabasesProvider);
-      final response = await databases.listRows(
-        databaseId: 'fitkarma-db',
-        tableId: 'food_database',
-        queries: [
-          Query.search('name', query),
-          Query.limit(20),
-        ],
-      );
+     try {
+       final databases = ref.read(appwriteDatabasesProvider);
+       final response = await databases.listDocuments(
+         databaseId: 'fitkarma-db',
+         collectionId: 'food_database',
+         queries: [
+           Query.search('name', query),
+           Query.limit(20),
+         ],
+       );
 
       for (final doc in response.rows) {
         final data = doc.data;
@@ -172,16 +172,16 @@ class FoodDatabaseService extends _$FoodDatabaseService {
     if (barcode.trim().isEmpty) return null;
 
     // 1. Appwrite (exact match)
-    try {
-      final databases = ref.read(appwriteDatabasesProvider);
-      final response = await databases.listRows(
-        databaseId: 'fitkarma-db',
-        tableId: 'food_database',
-        queries: [
-          Query.equal('barcode', barcode),
-          Query.limit(1),
-        ],
-      );
+     try {
+       final databases = ref.read(appwriteDatabasesProvider);
+       final response = await databases.listDocuments(
+         databaseId: 'fitkarma-db',
+         collectionId: 'food_database',
+         queries: [
+           Query.equal('barcode', barcode),
+           Query.limit(1),
+         ],
+       );
 
       if (response.rows.isNotEmpty) {
         final doc = response.rows.first;
@@ -246,50 +246,50 @@ class FoodDatabaseService extends _$FoodDatabaseService {
     return null;
   }
 
-  /// Silent best-effort cache of OFF results to Appwrite
-  Future<void> _cacheToAppwrite(List<Map<String, dynamic>> offResults) async {
-    try {
-      final databases = ref.read(appwriteDatabasesProvider);
-      for (final item in offResults) {
-        try {
-          await databases.createRow(
-            databaseId: 'fitkarma-db',
-            tableId: 'food_database',
-            rowId: ID.unique(),
-            data: {
-              'name': item['name'],
-              'category': item['category'] ?? 'General',
-              'caloriesPer100g': item['caloriesPer100g'],
-              'proteinPer100g': item['proteinPer100g'],
-              'carbsPer100g': item['carbsPer100g'],
-              'fatPer100g': item['fatPer100g'],
-              'fiberPer100g': item['fiberPer100g'],
-              'barcode': item['barcode'],
-              'emoji': item['emoji'] ?? '🍛',
-              'source': 'off_cached',
-            },
-          );
-        } catch (_) {
-          // If direct write fails due to client read-only permission,
-          // trigger backend execution proxy if barcode is available
-          if (item['barcode'] != null) {
-            try {
-              final functions = ref.read(appwriteFunctionsProvider);
-              await functions.createExecution(
-                functionId: 'fitkarma-cores',
-                body: jsonEncode({
-                  'action': 'search_food',
-                  'barcode': item['barcode'],
-                }),
-              );
-            } catch (_) {}
-          }
-        }
-      }
-    } catch (_) {
-      // Catch all silent failure
-    }
-  }
+   /// Silent best-effort cache of OFF results to Appwrite
+   Future<void> _cacheToAppwrite(List<Map<String, dynamic>> offResults) async {
+     try {
+       final databases = ref.read(appwriteDatabasesProvider);
+       for (final item in offResults) {
+         try {
+           await databases.createDocument(
+             databaseId: 'fitkarma-db',
+             collectionId: 'food_database',
+             documentId: ID.unique(),
+             data: {
+               'name': item['name'],
+               'category': item['category'] ?? 'General',
+               'caloriesPer100g': item['caloriesPer100g'],
+               'proteinPer100g': item['proteinPer100g'],
+               'carbsPer100g': item['carbsPer100g'],
+               'fatPer100g': item['fatPer100g'],
+               'fiberPer100g': item['fiberPer100g'],
+               'barcode': item['barcode'],
+               'emoji': item['emoji'] ?? '🍛',
+               'source': 'off_cached',
+             },
+           );
+         } catch (_) {
+           // If direct write fails due to client read-only permission,
+           // trigger backend execution proxy if barcode is available
+           if (item['barcode'] != null) {
+             try {
+               final functions = ref.read(appwriteFunctionsProvider);
+               await functions.createExecution(
+                 functionId: 'fitkarma-cores',
+                 body: jsonEncode({
+                   'action': 'search_food',
+                   'barcode': item['barcode'],
+                 }),
+               );
+             } catch (_) {}
+           }
+         }
+       }
+     } catch (_) {
+       // Catch all silent failure
+     }
+   }
 
   Future<Map<String, dynamic>?> searchRemote({String? query, String? barcode}) async {
     if (barcode != null && barcode.isNotEmpty) {
