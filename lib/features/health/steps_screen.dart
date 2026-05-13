@@ -106,12 +106,15 @@ class StepsScreen extends ConsumerWidget {
                 children: [
                   // Progress Arc CustomPainter
                   Positioned.fill(
-                    child: CustomPaint(
-                      painter: StepArcPainter(
-                        progress: progress,
-                        fillColor: AppColorsDark.primary,
-                        trackColor: AppColorsDark.surface1,
-                        strokeWidth: 20,
+                    child: Semantics(
+                      label: 'Step Goal Arc: ${(progress * 100).toInt()}% completed',
+                      child: CustomPaint(
+                        painter: StepArcPainter(
+                          progress: progress,
+                          fillColor: AppColorsDark.primary,
+                          trackColor: AppColorsDark.surface1,
+                          strokeWidth: 20,
+                        ),
                       ),
                     ),
                   ),

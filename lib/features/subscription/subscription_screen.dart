@@ -145,7 +145,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
               // Primary CTA
               subState.when(
                 loading: () => const Center(child: CircularProgressIndicator(color: AppColorsDark.accent)),
-                error: (_, __) => const SizedBox.shrink(),
+                error: (_, _) => const SizedBox.shrink(),
                 data: (isPro) {
                   if (isPro) {
                     return Container(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/app_colors.dart';
 
 class HealthGoal {
   final String id;
@@ -19,48 +20,48 @@ const List<HealthGoal> availableGoals = [
     id: 'weight_loss',
     title: 'Weight Loss',
     icon: '🔥',
-    color: Color(0xFFF87171),
+    color: AppColorsDark.error,
   ),
   HealthGoal(
     id: 'muscle_gain',
     title: 'Muscle Gain',
     icon: '💪',
-    color: Color(0xFF60A5FA),
+    color: AppColorsDark.secondary,
   ),
   HealthGoal(
     id: 'better_sleep',
     title: 'Better Sleep',
     icon: '😴',
-    color: Color(0xFFC084FC),
+    color: AppColorsDark.purple,
   ),
   HealthGoal(
     id: 'mental_clarity',
     title: 'Mental Clarity',
     icon: '🧘',
-    color: Color(0xFF2DD4BF),
+    color: AppColorsDark.teal,
   ),
   HealthGoal(
     id: 'energy_boost',
     title: 'Energy Boost',
     icon: '⚡',
-    color: Color(0xFFFBBF24),
+    color: AppColorsDark.warning,
   ),
   HealthGoal(
     id: 'flexibility',
     title: 'Flexibility',
     icon: '🤸',
-    color: Color(0xFFFB7185),
+    color: AppColorsDark.rose,
   ),
   HealthGoal(
     id: 'heart_health',
     title: 'Heart Health',
     icon: '❤️',
-    color: Color(0xFFEF4444),
+    color: AppColorsDark.primary,
   ),
   HealthGoal(
     id: 'longevity',
     title: 'Longevity',
     icon: '⏳',
-    color: Color(0xFF34D399),
+    color: AppColorsDark.success,
   ),
 ];

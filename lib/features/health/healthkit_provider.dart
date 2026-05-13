@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:health/health.dart';
 import 'package:uuid/uuid.dart';
 import '../../core/database/app_database.dart';
-import '../../core/providers/core_providers.dart';
 import '../onboarding/onboarding_providers.dart';
 
 class HealthKitService {

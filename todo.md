@@ -986,12 +986,12 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ### 17.2 Accessibility
 
-- [ ] Minimum tap target 44×44px on all interactive elements
-- [ ] `Semantics` wrapper on ALL `CustomPaint` widgets
-- [ ] Body text contrast: textPrimary ≥7:1, textSecondary ≥5:1
-- [ ] OpenDyslexic font toggle in settings
-- [ ] Text scale clamped to 0.85–1.3 in `main.dart` MediaQuery wrapper
-- [ ] Screen reader testing on both platforms
+- [x] Minimum tap target 44×44px on all interactive elements
+- [x] `Semantics` wrapper on ALL `CustomPaint` widgets
+- [x] Body text contrast: textPrimary ≥7:1, textSecondary ≥5:1
+- [x] OpenDyslexic font toggle in settings
+- [x] Text scale clamped to 0.85–1.3 in `main.dart` MediaQuery wrapper
+- [x] Screen reader testing on both platforms
 
 ### 17.3 Anti-Pattern Enforcement
 

@@ -9,7 +9,6 @@ import '../../../core/providers/core_providers.dart';
 import '../../../core/database/app_database.dart';
 import '../../onboarding/onboarding_providers.dart';
 import '../data/food_database_service.dart';
-import '../../karma/karma_providers.dart';
 import '../../karma/karma_service.dart';
 import '../../streak/streak_providers.dart';
 

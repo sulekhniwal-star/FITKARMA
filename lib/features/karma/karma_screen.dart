@@ -56,7 +56,7 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
             padding: const EdgeInsets.all(28),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFF2E1E50), Color(0xFFD76D77), Color(0xFFF09819)],
+                colors: [AppColorsDark.heroDeepEnd, AppColorsDark.rose, AppColorsDark.primary],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

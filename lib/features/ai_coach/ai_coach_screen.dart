@@ -22,7 +22,7 @@ class AiCoachScreen extends ConsumerWidget {
         backgroundColor: AppColorsDark.surface0,
         body: Center(child: CircularProgressIndicator(color: AppColorsDark.primary)),
       ),
-      error: (_, __) => const Scaffold(
+      error: (_, _) => const Scaffold(
         backgroundColor: AppColorsDark.surface0,
         body: Center(child: Text('Error loading features', style: TextStyle(color: AppColorsDark.error))),
       ),
@@ -205,7 +205,7 @@ class _AiCoachChatViewState extends ConsumerState<_AiCoachChatView> {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator(color: AppColorsDark.primary)),
-                error: (e, __) => Center(child: Text('Error: $e', style: const TextStyle(color: AppColorsDark.error))),
+                error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: AppColorsDark.error))),
               ),
             ),
 

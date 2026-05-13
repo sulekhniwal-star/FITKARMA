@@ -9,7 +9,6 @@ import '../config/device_tier.dart';
 import '../database/app_database.dart';
 import '../providers/core_providers.dart';
 import '../services/home_widget_service.dart';
-import '../security/security_service.dart';
 
 part 'sync_worker.g.dart';
 

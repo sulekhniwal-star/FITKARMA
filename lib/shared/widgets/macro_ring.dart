@@ -36,12 +36,15 @@ class MacroRing extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          CustomPaint(
-            size: Size(size, size),
-            painter: _MacroPainter(
-              proteinProgress: (protein / proteinGoal).clamp(0.0, 1.0),
-              carbsProgress: (carbs / carbsGoal).clamp(0.0, 1.0),
-              fatProgress: (fat / fatGoal).clamp(0.0, 1.0),
+          Semantics(
+            label: 'Macro Progress Ring: Protein ${protein.toInt()}g, Carbs ${carbs.toInt()}g, Fat ${fat.toInt()}g',
+            child: CustomPaint(
+              size: Size(size, size),
+              painter: _MacroPainter(
+                proteinProgress: (protein / proteinGoal).clamp(0.0, 1.0),
+                carbsProgress: (carbs / carbsGoal).clamp(0.0, 1.0),
+                fatProgress: (fat / fatGoal).clamp(0.0, 1.0),
+              ),
             ),
           ),
           Column(

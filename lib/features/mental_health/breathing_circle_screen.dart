@@ -154,8 +154,8 @@ class _BreathingCircleScreenState extends ConsumerState<BreathingCircleScreen> w
       gradient: LinearGradient(
         colors: [
           focalColor.withValues(alpha: 0.2),
-          const Color(0xFF0F2027),
-          const Color(0xFF203A43),
+          AppColorsDark.bg1,
+          AppColorsDark.surface1,
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,

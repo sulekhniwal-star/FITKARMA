@@ -87,7 +87,7 @@ class DashboardScreen extends ConsumerWidget {
               ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.1, end: 0);
             },
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (_, _) => const SizedBox.shrink(),
           ),
 
           const SizedBox(height: AppSpacing.lg),
@@ -188,7 +188,7 @@ class DashboardScreen extends ConsumerWidget {
                   children: [
                     _buildMiniMetric('$cals', 'KCAL'),
                     const SizedBox(width: 16),
-                    _buildMiniMetric('${dist.toStringAsFixed(1)}', 'KM'),
+                    _buildMiniMetric(dist.toStringAsFixed(1), 'KM'),
                   ],
                 ),
               ],
