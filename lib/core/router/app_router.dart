@@ -32,6 +32,7 @@ import '../../features/festival/festival_screen.dart';
 import '../../features/wedding/wedding_screen.dart';
 import '../../features/social/social_screen.dart';
 import '../../features/ai_coach/ai_coach_screen.dart';
+import '../../features/subscription/subscription_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -181,7 +182,7 @@ GoRouter appRouter(Ref ref) {
         ),
       ),
       GoRoute(path: '/ai-coach', builder: (context, state) => const AiCoachScreen()),
-      GoRoute(path: '/subscription', builder: (context, state) => const _PlaceholderScreen(title: 'Subscription')),
+      GoRoute(path: '/subscription', builder: (context, state) => const SubscriptionScreen()),
       GoRoute(path: '/settings', builder: (context, state) => const SettingsScreen()),
       GoRoute(path: '/water', builder: (context, state) => const WaterScreen()),
       GoRoute(path: '/medication', builder: (context, state) => const MedicationScreen()),

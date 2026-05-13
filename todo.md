@@ -870,27 +870,27 @@ Free tier includes: food logging, step tracking, BP/glucose manual logging, habi
 
 Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
-- [ ] AI Coach (LLM-powered)
-- [ ] Correlation insights (sleep→BP, hydration→performance)
-- [ ] Unlimited lab report storage (free: 3 max)
-- [ ] Wedding planner
-- [ ] Social groups + leaderboard
-- [ ] Advanced reports (PDF export)
-- [ ] All home widgets
-- [ ] Priority sync (15-min interval)
+- [x] AI Coach (LLM-powered)
+- [x] Correlation insights (sleep→BP, hydration→performance)
+- [x] Unlimited lab report storage (free: 3 max)
+- [x] Wedding planner
+- [x] Social groups + leaderboard
+- [x] Advanced reports (PDF export)
+- [x] All home widgets
+- [x] Priority sync (15-min interval)
 
 ### 12.3 `ProGate` Widget
 
-- [ ] Implement `ProGate` — wraps Pro-only widgets, shows `_UpgradePrompt` for free users
-- [ ] `_UpgradePrompt` — GlassCard with lock icon, "FitKarma Pro ₹299/month", [Upgrade] button → `/subscription`
+- [x] Implement `ProGate` — wraps Pro-only widgets, shows `_UpgradePrompt` for free users
+- [x] `_UpgradePrompt` — GlassCard with lock icon, "FitKarma Pro ₹299/month", [Upgrade] button → `/subscription`
 
 ### 12.4 Subscription Screen (`/subscription`) — Calm Zone
 
-- [ ] Hero badge: amber-to-primary gradient, "⚡ FitKarma Pro", price display
-- [ ] Pro feature checklist
-- [ ] [Start Free 7-Day Trial] primary CTA
-- [ ] [Restore purchases] TextButton
-- [ ] Annual plan highlight (30% saving)
+- [x] Hero badge: amber-to-primary gradient, "⚡ FitKarma Pro", price display
+- [x] Pro feature checklist
+- [x] [Start Free 7-Day Trial] primary CTA
+- [x] [Restore purchases] TextButton
+- [x] Annual plan highlight (30% saving)
 
 ### 12.5 App Store & Play Store Configuration
 
