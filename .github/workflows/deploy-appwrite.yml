@@ -1,0 +1,27 @@
+name: Deploy Appwrite Functions
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    name: Deploy Appwrite Functions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Appwrite CLI
+        run: curl -sL https://appwrite.io/cli/install.sh | bash
+
+      - name: Authenticate Appwrite CLI
+        run: |
+          appwrite client \
+            --endpoint ${{ secrets.APPWRITE_ENDPOINT }} \
+            --project-id ${{ secrets.APPWRITE_PROJECT_ID }} \
+            --key ${{ secrets.APPWRITE_API_KEY }}
+
+      - name: Push Functions
+        run: appwrite push functions --all --force --activate true

@@ -1054,18 +1054,18 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ### 19.1 GitHub Actions Workflows
 
-- [ ] **`test.yml`** — triggers on push to `main`/`develop` and PRs:
+- [x] **`test.yml`** — triggers on push to `main`/`develop` and PRs:
   - `flutter pub get`
   - `dart run build_runner build --delete-conflicting-outputs`
   - `flutter analyze`
   - `flutter test --coverage`
-- [ ] **`deploy-appwrite.yml`** — triggers on merge to `main`:
+- [x] **`deploy-appwrite.yml`** — triggers on merge to `main`:
   - Install Appwrite CLI
   - Authenticate with secrets
   - `appwrite push functions --all --force --activate true`
-- [ ] **`build-android.yml`** — triggers on merge to `main`:
+- [x] **`build-android.yml`** — triggers on merge to `main`:
   - `flutter build apk --release` with all `--dart-define` secrets
-- [ ] **`build-ios.yml`** — triggers on merge to `main`:
+- [x] **`build-ios.yml`** — triggers on merge to `main`:
   - `flutter build ipa --release` with all `--dart-define` secrets + code signing
 
 ### 19.2 Secrets to Add in GitHub

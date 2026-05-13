@@ -57,6 +57,10 @@ async function executeWithRetry(operation, maxRetries = 5, baseDelay = 1000) {
         try {
             return await operation();
         } catch (err) {
+            // Treat 409 (Document already exists) as a successful upload to avoid duplicate errors
+            if (err.code === 409) {
+                return;
+            }
             const isTransient = !err.code || err.code >= 500 || err.code === 429 || (err.message && err.message.includes('fetch failed'));
             if (!isTransient || attempt === maxRetries) {
                 throw err;

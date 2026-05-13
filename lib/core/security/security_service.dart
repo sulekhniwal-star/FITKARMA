@@ -10,6 +10,7 @@ import '../database/app_database.dart';
 import '../providers/core_providers.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
+import '../../shared/widgets/bento_card.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
 
 class SecurityService {
@@ -31,7 +32,7 @@ Your physical diagnostic records remain encrypted at rest and in transit utilizi
     if (_isPinned) return;
     try {
       // Configure explicit custom SecurityContext interceptor overrides
-      SecurityContext context = SecurityContext(withTrustedRoots: true);
+      final _ = SecurityContext(withTrustedRoots: true);
       // Hardened certificate chain checking rules can be dynamically appended here
       _isPinned = true;
       logAudit(event: 'certificate_pinning_active', category: 'network_security');
@@ -89,7 +90,7 @@ Your physical diagnostic records remain encrypted at rest and in transit utilizi
         stackTrace: stack,
         withScope: (scope) {
           scope.setTag('sync_failure', 'enterprise_dlq');
-          scope.setExtra('context_message', message);
+          scope.setContexts('context', {'message': message});
         },
       );
     } catch (_) {}
@@ -200,10 +201,8 @@ class _SensitiveScreenGuardState extends ConsumerState<SensitiveScreenGuard> {
 
       final authenticated = await _auth.authenticate(
         localizedReason: 'Verify identity to unmask clinical diagnostics record (${widget.screenName})',
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          biometricOnly: false,
-        ),
+        persistAcrossBackgrounding: true,
+        biometricOnly: false,
       );
 
       if (mounted) {
