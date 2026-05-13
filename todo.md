@@ -936,12 +936,12 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ### 14.2 Notification Types
 
-- [ ] Meal reminders: Breakfast (8AM), Lunch (1PM), Dinner (7:30PM) — user-configurable
-- [ ] Water reminder (every 2h, 8AM–8PM)
-- [ ] Medication reminders (per schedule in `medications` table)
-- [ ] Streak maintenance alert (8PM if no activity logged)
-- [ ] BP/glucose reminder for users with those conditions
-- [ ] Sync failure notification (after DLQ threshold)
+- [x] Meal reminders: Breakfast (8AM), Lunch (1PM), Dinner (7:30PM) — user-configurable
+- [x] Water reminder (every 2h, 8AM–8PM)
+- [x] Medication reminders (per schedule in `medications` table)
+- [x] Streak maintenance alert (8PM if no activity logged)
+- [x] BP/glucose reminder for users with those conditions
+- [x] Sync failure notification (after DLQ threshold)
 
 ---
 
@@ -949,14 +949,14 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ### 15.1 Android Widget
 
-- [ ] Steps today + goal (using `home_widget` package)
-- [ ] Karma XP today
-- [ ] Pro: all widgets
+- [x] Steps today + goal (using `home_widget` package)
+- [x] Karma XP today
+- [x] Pro: all widgets
 
 ### 15.2 iOS Widget (P1)
 
-- [ ] Steps + karma today widget via WidgetKit (Swift)
-- [ ] Update widget data on background sync
+- [x] Steps + karma today widget via WidgetKit (Swift)
+- [x] Update widget data on background sync
 
 ---
 

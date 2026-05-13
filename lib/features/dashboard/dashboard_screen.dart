@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:intl/intl.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/theme/app_spacing.dart';
@@ -13,6 +14,10 @@ import '../../shared/widgets/insight_card.dart';
 import '../onboarding/onboarding_providers.dart';
 import '../insights/correlation_engine.dart';
 import '../streak/streak_providers.dart';
+import '../karma/karma_providers.dart';
+import '../health/steps_providers.dart';
+import '../../core/providers/core_providers.dart';
+import '../../core/services/home_widget_service.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -22,6 +27,23 @@ class DashboardScreen extends ConsumerWidget {
     final user = ref.watch(authProvider).value;
     final insightsAsync = ref.watch(correlationEngineProvider);
 
+    final karmaState = ref.watch(karmaStateProvider);
+    final stepsAsync = ref.watch(stepsDataProvider);
+    final isProAsync = ref.watch(isProProvider);
+
+    final stepsVal = stepsAsync.value?.totalSteps ?? 7432;
+    final stepGoalVal = stepsAsync.value?.dailyGoal ?? 10000;
+    final isProVal = isProAsync.value ?? false;
+
+    ref.listen(karmaStateProvider, (prev, next) {
+      HomeWidgetService.updateWidgets(steps: stepsVal, stepGoal: stepGoalVal, karmaXp: next.totalXp, isPro: isProVal);
+    });
+    ref.listen(stepsDataProvider, (prev, next) {
+      final s = next.value?.totalSteps ?? 7432;
+      final g = next.value?.dailyGoal ?? 10000;
+      HomeWidgetService.updateWidgets(steps: s, stepGoal: g, karmaXp: karmaState.totalXp, isPro: isProVal);
+    });
+
     return AppScaffold.patternA(
       appBar: _buildAppBar(context, user),
       body: Column(
@@ -30,7 +52,7 @@ class DashboardScreen extends ConsumerWidget {
           const SizedBox(height: 12),
           
           // Activity Rings Hero
-          _buildActivityHero(context),
+          _buildActivityHero(context, ref),
           
           const SizedBox(height: AppSpacing.lg),
 
@@ -127,16 +149,23 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildActivityHero(BuildContext context) {
+  Widget _buildActivityHero(BuildContext context, WidgetRef ref) {
+    final stepsAsync = ref.watch(stepsDataProvider);
+    final steps = stepsAsync.value?.totalSteps ?? 7432;
+    final goal = stepsAsync.value?.dailyGoal ?? 10000;
+    final cals = stepsAsync.value?.caloriesBurned ?? 297;
+    final dist = stepsAsync.value?.distanceKm ?? 5.64;
+    final progress = (steps / goal).clamp(0.0, 1.0);
+
     return GlassCard(
       customRadius: AppRadius.xl,
       glowColor: AppColorsDark.primaryGlow,
       child: Row(
         children: [
-          const ActivityRings(
-            stepsProgress: 0.7,
-            caloriesProgress: 0.5,
-            minutesProgress: 0.8,
+          ActivityRings(
+            stepsProgress: progress,
+            caloriesProgress: (cals / 500).clamp(0.0, 1.0),
+            minutesProgress: (dist / 8.0).clamp(0.0, 1.0),
             size: 140,
           ),
           const SizedBox(width: 24),
@@ -145,7 +174,7 @@ class DashboardScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '7,432',
+                  NumberFormat.decimalPattern().format(steps),
                   style: AppTypography.metricLg(color: Colors.white),
                 ),
                 Text(
@@ -157,9 +186,9 @@ class DashboardScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    _buildMiniMetric('542', 'KCAL'),
+                    _buildMiniMetric('$cals', 'KCAL'),
                     const SizedBox(width: 16),
-                    _buildMiniMetric('32', 'MIN'),
+                    _buildMiniMetric('${dist.toStringAsFixed(1)}', 'KM'),
                   ],
                 ),
               ],
@@ -185,6 +214,11 @@ class DashboardScreen extends ConsumerWidget {
 
   Widget _buildPrimaryBento(BuildContext context, WidgetRef ref) {
     final streakState = ref.watch(streakStateProvider);
+    final karmaState = ref.watch(karmaStateProvider);
+    final isProAsync = ref.watch(isProProvider);
+    final isPro = isProAsync.value ?? false;
+
+    final diffXp = karmaState.nextLevelXp - karmaState.totalXp;
 
     return Column(
       children: [
@@ -225,9 +259,9 @@ class DashboardScreen extends ConsumerWidget {
         ),
         const SizedBox(height: AppSpacing.bentoGap),
         _BentoItem(
-          title: 'Karma XP',
-          value: '2,450',
-          subtitle: 'Level 12 • 50 XP to next level',
+          title: 'Karma XP${isPro ? " (⚡ Pro Multiplier Active)" : ""}',
+          value: NumberFormat.decimalPattern().format(karmaState.totalXp),
+          subtitle: 'Level ${karmaState.currentLevel} • ${diffXp > 0 ? diffXp : 0} XP to next rank',
           icon: Icons.auto_awesome_rounded,
           color: AppColorsDark.accent,
           fullWidth: true,
