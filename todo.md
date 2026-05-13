@@ -857,12 +857,12 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 
 ### 12.1 RevenueCat Setup
 
-- [ ] Implement `SubscriptionService.init()` — `Purchases.configure()` with `REVENUECAT_API_KEY` from `--dart-define`
-- [ ] Implement `SubscriptionService.isPro()` — check `entitlements.active['pro']`
-- [ ] Implement `SubscriptionService.purchasePro()` — fetch current offering → purchase monthly product, handle `PurchasesErrorCode.purchaseCancelledError` silently
-- [ ] Implement `SubscriptionService.restorePurchases()`
-- [ ] `isProProvider` (Riverpod `FutureProvider`)
-- [ ] `SubscriptionNotifier` (invalidates on purchase)
+- [x] Implement `SubscriptionService.init()` — `Purchases.configure()` with `REVENUECAT_API_KEY` from `--dart-define`
+- [x] Implement `SubscriptionService.isPro()` — check `entitlements.active['pro']`
+- [x] Implement `SubscriptionService.purchasePro()` — fetch current offering → purchase monthly product, handle `PurchasesErrorCode.purchaseCancelledError` silently
+- [x] Implement `SubscriptionService.restorePurchases()`
+- [x] `isProProvider` (Riverpod `FutureProvider`)
+- [x] `SubscriptionNotifier` (invalidates on purchase)
 
 ### 12.2 Free vs Pro Feature Matrix
 

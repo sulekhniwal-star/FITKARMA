@@ -2,6 +2,7 @@ import 'package:appwrite/appwrite.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/onboarding/onboarding_providers.dart';
 import '../database/app_database.dart';
+import '../../features/subscription/subscription_service.dart';
 
 part 'core_providers.g.dart';
 
@@ -58,6 +59,12 @@ Future<bool> isPro(Ref ref) async {
   final user = auth.value;
   if (user == null) return false;
 
+  // 1. Evaluate primary native store capability entitlement layer
+  final subService = ref.read(subscriptionServiceProvider);
+  final hasNativeEntitlement = await subService.isPro();
+  if (hasNativeEntitlement) return true;
+
+  // 2. Fallback checking remote user row role cache values
   final client = ref.watch(appwriteClientProvider);
   final tablesDb = TablesDB(client);
   try {
@@ -68,7 +75,6 @@ Future<bool> isPro(Ref ref) async {
     );
     return row.data['isPro'] ?? false;
   } catch (e) {
-    // If user document doesn't exist yet, they are not pro
     return false;
   }
 }
