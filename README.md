@@ -16,7 +16,7 @@ Welcome to the FitKarma documentation. This project is a from-scratch developmen
 - **State Management**: Riverpod 2.x
 - **Database**: Drift (SQLite) with AES-256 Encryption
 - **Backend**: Appwrite (CLI-first)
-- **AI**: Anthropic Claude (via server-side Functions)
+- **AI**: Groq Llama-3 (via server-side Functions)
 - **Monetisation**: RevenueCat
 
 ## 🚀 Getting Started

@@ -61,16 +61,13 @@ class HealthKitService {
     try {
       final now = DateTime.now();
       final start = now.subtract(const Duration(days: 1));
-      final samples = await _health.getHealthDataFromInterval(start, now, [HealthDataType.HEART_RATE]);
+      final samples = await _health.getHealthDataFromTypes(start, now, [HealthDataType.HEART_RATE]);
       
       if (samples.isEmpty) return 68.0;
       samples.sort((a, b) => b.dateTo.compareTo(a.dateTo));
       
       final latest = samples.first.value;
-      if (latest is NumericHealthValue) {
-        return latest.numericValue.toDouble();
-      }
-      return 68.0;
+      return (latest as NumericHealthValue).numericValue.toDouble();
     } catch (_) {
       return 68.0;
     }
@@ -83,16 +80,13 @@ class HealthKitService {
     try {
       final now = DateTime.now();
       final start = now.subtract(const Duration(days: 3));
-      final samples = await _health.getHealthDataFromInterval(start, now, [HealthDataType.BLOOD_OXYGEN]);
+      final samples = await _health.getHealthDataFromTypes(start, now, [HealthDataType.BLOOD_OXYGEN]);
 
       if (samples.isEmpty) return 0.98;
       samples.sort((a, b) => b.dateTo.compareTo(a.dateTo));
 
       final latest = samples.first.value;
-      if (latest is NumericHealthValue) {
-        return latest.numericValue.toDouble();
-      }
-      return 0.98;
+      return (latest as NumericHealthValue).numericValue.toDouble();
     } catch (_) {
       return 0.98;
     }
@@ -126,7 +120,7 @@ class HealthKitService {
     try {
       final now = DateTime.now();
       final start = now.subtract(const Duration(days: 7));
-      final samples = await _health.getHealthDataFromInterval(start, now, [HealthDataType.SLEEP_SESSION]);
+      final samples = await _health.getHealthDataFromTypes(start, now, [HealthDataType.SLEEP_SESSION]);
 
       for (final s in samples) {
         int mappedQuality = 7;
@@ -165,10 +159,10 @@ class HealthKitService {
 
     try {
       final success = await _health.writeHealthData(
-        steps.toDouble(),
-        HealthDataType.STEPS,
-        startTime,
-        endTime,
+        value: steps.toDouble(),
+        type: HealthDataType.STEPS,
+        startTime: startTime,
+        endTime: endTime,
       );
       return success;
     } catch (e) {
@@ -189,9 +183,9 @@ class HealthKitService {
 
     try {
       final success = await _health.writeWorkoutData(
-        activityType,
-        start,
-        end,
+        activityType: activityType,
+        start: start,
+        end: end,
         totalEnergyBurned: totalEnergyBurnedCalories,
         totalEnergyBurnedUnit: HealthDataUnit.KILOCALORIE,
         totalDistance: (totalDistanceKm * 1000).toInt(),

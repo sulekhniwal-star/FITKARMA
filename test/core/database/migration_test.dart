@@ -1,20 +1,16 @@
-import 'dart:async';
-import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:sqlite3/sqlite3.dart';
 
 void main() {
   group('DB Migration - v1 to v6', () {
-    late LazyDatabase db;
+    late Database db;
 
     setUp(() {
-      db = LazyDatabase(() async {
-        return NativeDatabase.memory();
-      });
+      db = sqlite3.openInMemory();
     });
 
-    tearDown(() async {
-      await db.close();
+    tearDown(() {
+      db.dispose();
     });
 
     test('migration from v1 to v6 creates all tables', () async {
@@ -53,17 +49,15 @@ void main() {
 
     group('drift_dev verification', () {
       test('verifies all migrations run without errors - table count', () async {
-        final connection = db.connection;
-
-        await connection.execute(
+        db.execute(
           'CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT, name TEXT)',
         );
 
-        await connection.execute(
+        db.execute(
           "INSERT INTO users (id, email, name) VALUES ('user1', 'test@test.com', 'Test User')",
         );
 
-        final result = await connection.query(
+        final result = db.select(
           "SELECT * FROM users WHERE id = 'user1'",
         );
 
@@ -72,21 +66,19 @@ void main() {
       });
 
       test('all expected tables are created during migration', () async {
-        final connection = db.connection;
+        db.execute('CREATE TABLE IF NOT EXISTS food_logs (id TEXT PRIMARY KEY)');
+        db.execute('CREATE TABLE IF NOT EXISTS bp_readings (id TEXT PRIMARY KEY)');
+        db.execute('CREATE TABLE IF NOT EXISTS glucose_readings (id TEXT PRIMARY KEY)');
+        db.execute('CREATE TABLE IF NOT EXISTS sleep_logs (id TEXT PRIMARY KEY)');
+        db.execute('CREATE TABLE IF NOT EXISTS workouts (id TEXT PRIMARY KEY)');
+        db.execute('CREATE TABLE IF NOT EXISTS habits (id TEXT PRIMARY KEY)');
+        db.execute('CREATE TABLE IF NOT EXISTS journal_entries (id TEXT PRIMARY KEY)');
+        db.execute('CREATE TABLE IF NOT EXISTS water_logs (id TEXT PRIMARY KEY)');
+        db.execute('CREATE TABLE IF NOT EXISTS medications (id TEXT PRIMARY KEY)');
+        db.execute('CREATE TABLE IF NOT EXISTS food_items (id TEXT PRIMARY KEY, source TEXT)');
+        db.execute('CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY)');
 
-        await connection.execute('CREATE TABLE IF NOT EXISTS food_logs (id TEXT PRIMARY KEY)');
-        await connection.execute('CREATE TABLE IF NOT EXISTS bp_readings (id TEXT PRIMARY KEY)');
-        await connection.execute('CREATE TABLE IF NOT EXISTS glucose_readings (id TEXT PRIMARY KEY)');
-        await connection.execute('CREATE TABLE IF NOT EXISTS sleep_logs (id TEXT PRIMARY KEY)');
-        await connection.execute('CREATE TABLE IF NOT EXISTS workouts (id TEXT PRIMARY KEY)');
-        await connection.execute('CREATE TABLE IF NOT EXISTS habits (id TEXT PRIMARY KEY)');
-        await connection.execute('CREATE TABLE IF NOT EXISTS journal_entries (id TEXT PRIMARY KEY)');
-        await connection.execute('CREATE TABLE IF NOT EXISTS water_logs (id TEXT PRIMARY KEY)');
-        await connection.execute('CREATE TABLE IF NOT EXISTS medications (id TEXT PRIMARY KEY)');
-        await connection.execute('CREATE TABLE IF NOT EXISTS food_items (id TEXT PRIMARY KEY, source TEXT)');
-        await connection.execute('CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY)');
-
-        final tables = await connection.query(
+        final tables = db.select(
           "SELECT name FROM sqlite_master WHERE type='table'",
         );
 

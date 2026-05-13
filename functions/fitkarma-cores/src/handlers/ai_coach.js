@@ -9,9 +9,9 @@ export async function handleAiCoach(data, context, req, res) {
     return res.json({ ok: false, error: "Missing userId or message" }, 400);
   }
 
-  const anthropicKey = process.env.ANTHROPIC_API_KEY;
-  if (!anthropicKey) {
-    return res.json({ ok: false, error: "Anthropic API key not configured" }, 500);
+  const groqKey = process.env.GROQ_API_KEY;
+  if (!groqKey) {
+    return res.json({ ok: false, error: "Groq API key not configured" }, 500);
   }
 
   try {
@@ -59,20 +59,21 @@ Follow these critical behavioral guidelines:
 
     const prompt = `User Message: ${message}\n\nUser Health Data (Last 7 Days):\n${JSON.stringify(healthContext, null, 2)}`;
 
-    const response = await axios.post('https://api.anthropic.com/v1/messages', {
-      model: 'claude-3-haiku-20240307',
+    const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+      model: 'llama3-70b-8192',
       max_tokens: 1024,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: prompt }]
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: prompt }
+      ]
     }, {
       headers: {
-        'x-api-key': anthropicKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json'
+        'Authorization': `Bearer ${groqKey}`,
+        'Content-Type': 'application/json'
       }
     });
 
-    const reply = response.data.content[0].text;
+    const reply = response.data.choices[0].message.content;
 
     return res.json({
       ok: true,
@@ -81,7 +82,7 @@ Follow these critical behavioral guidelines:
   } catch (e) {
     error(`Error in handleAiCoach: ${e.message}`);
     if (e.response) {
-      error(`Anthropic API Error: ${JSON.stringify(e.response.data)}`);
+      error(`Groq API Error: ${JSON.stringify(e.response.data)}`);
     }
     return res.json({ ok: false, error: e.message }, 500);
   }

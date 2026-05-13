@@ -74,16 +74,16 @@ class FoodDatabaseService extends _$FoodDatabaseService {
     // 1. Query Appwrite Indian DB (fulltext)
     try {
       final databases = ref.read(appwriteDatabasesProvider);
-      final response = await databases.listDocuments(
+      final response = await databases.listRows(
         databaseId: 'fitkarma-db',
-        collectionId: 'food_database',
+        tableId: 'food_database',
         queries: [
           Query.search('name', query),
           Query.limit(20),
         ],
       );
 
-      for (final doc in response.documents) {
+      for (final doc in response.rows) {
         final data = doc.data;
         final name = data['name']?.toString() ?? 'Unknown';
         final mapped = {
@@ -174,17 +174,17 @@ class FoodDatabaseService extends _$FoodDatabaseService {
     // 1. Appwrite (exact match)
     try {
       final databases = ref.read(appwriteDatabasesProvider);
-      final response = await databases.listDocuments(
+      final response = await databases.listRows(
         databaseId: 'fitkarma-db',
-        collectionId: 'food_database',
+        tableId: 'food_database',
         queries: [
           Query.equal('barcode', barcode),
           Query.limit(1),
         ],
       );
 
-      if (response.documents.isNotEmpty) {
-        final doc = response.documents.first;
+      if (response.rows.isNotEmpty) {
+        final doc = response.rows.first;
         final data = doc.data;
         final mapped = {
           'id': doc.$id,
@@ -252,10 +252,10 @@ class FoodDatabaseService extends _$FoodDatabaseService {
       final databases = ref.read(appwriteDatabasesProvider);
       for (final item in offResults) {
         try {
-          await databases.createDocument(
+          await databases.createRow(
             databaseId: 'fitkarma-db',
-            collectionId: 'food_database',
-            documentId: ID.unique(),
+            tableId: 'food_database',
+            rowId: ID.unique(),
             data: {
               'name': item['name'],
               'category': item['category'] ?? 'General',

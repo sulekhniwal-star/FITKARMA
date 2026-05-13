@@ -2777,10 +2777,10 @@ node scripts/seed_food_database.js
 // functions/ai-coach/src/main.js
 // Server-side LLM call — API key never in Flutter binary
 
-import Anthropic from "@anthropic-ai/sdk";
+import axios from "axios";
 import { Client, Databases, Query } from "node-appwrite";
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const groqKey = process.env.GROQ_API_KEY;
 
 const SYSTEM_PROMPT = `You are FitKarma's AI health coach — a warm, encouraging, and medically responsible assistant built for Indian users. 
 
@@ -2805,6 +2805,10 @@ export default async ({ req, res, log, error }) => {
   const { userId, message, conversationHistory } = JSON.parse(req.body || "{}");
   if (!userId || !message)
     return res.json({ ok: false, error: "userId and message required" }, 400);
+
+  if (!groqKey) {
+    return res.json({ ok: false, error: "Groq API key not configured" }, 500);
+  }
 
   // Fetch user's recent health data for context
   const [bpDocs, glucoseDocs, sleepDocs, foodDocs, userDoc] = await Promise.all(
@@ -2841,7 +2845,7 @@ export default async ({ req, res, log, error }) => {
     ? Math.round(
         bpDocs.documents.reduce((s, d) => s + d.systolic, 0) /
           bpDocs.documents.length,
-      )
+       )
     : null;
 
   const healthContext = `
@@ -2875,6 +2879,7 @@ RECENT HEALTH DATA (last 7 days):
 
   // Build messages with conversation history (max last 10 turns for context window)
   const messages = [
+    { role: "system", content: SYSTEM_PROMPT },
     ...(conversationHistory || []).slice(-10),
     {
       role: "user",
@@ -2883,18 +2888,20 @@ RECENT HEALTH DATA (last 7 days):
   ];
 
   try {
-    const response = await anthropic.messages.create({
-      model: "claude-opus-4-5",
+    const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+      model: "llama3-70b-8192",
       max_tokens: 512,
-      system: SYSTEM_PROMPT,
       messages,
+    }, {
+      headers: {
+        'Authorization': `Bearer ${groqKey}`,
+        'Content-Type': 'application/json'
+      }
     });
 
     return res.json({
       ok: true,
-      reply: response.content[0].text,
-      inputTokens: response.usage.input_tokens,
-      outputTokens: response.usage.output_tokens,
+      reply: response.data.choices[0].message.content,
     });
   } catch (err) {
     error(`AI coach error: ${err.message}`);
@@ -2914,7 +2921,7 @@ RECENT HEALTH DATA (last 7 days):
   "type": "module",
   "dependencies": {
     "node-appwrite": "^13.0.0",
-    "@anthropic-ai/sdk": "^0.24.0"
+    "axios": "^1.6.7"
   }
 }
 ```
@@ -3071,8 +3078,8 @@ class ChatMessage with _$ChatMessage {
 # Add to Appwrite Function environment variables:
 appwrite functions createVariable \
   --functionId "ai-coach" \
-  --key "ANTHROPIC_API_KEY" \
-  --value "sk-ant-..."
+  --key "GROQ_API_KEY" \
+  --value "gsk_..."
 ```
 
 ### Rate Limiting AI Coach Calls
@@ -3082,7 +3089,7 @@ appwrite functions createVariable \
 // Free tier: 0 AI queries/day (upsell to Pro)
 // Pro tier: 50 AI queries/day
 // The Appwrite Function checks karmaXP or subscription status from users collection
-// before making the Anthropic API call.
+// before making the Groq API call.
 ```
 
 ---
@@ -3573,7 +3580,7 @@ flutter build apk --release \
 
 _FitKarma — Complete Documentation
 _UI Design System · Technical Implementation Guide_
-_Flutter 3.x · Riverpod 2.x · Drift · Appwrite CLI · RevenueCat · Open Food Facts · Anthropic Claude_
+_Flutter 3.x · Riverpod 2.x · Drift · Appwrite CLI · RevenueCat · Open Food Facts · Groq Llama-3_
 _Offline-first · AES-256 encrypted · Privacy-centric · Built for India_
 _68 sections · 45+ screens · 28 shared components · 17 Appwrite collections · 5 server functions · Full CI/CD_
 _Critical fixes: §F1 Food Database · §F2 AI Coach · §F3 iOS HealthKit · §F4 Subscription Model_
@@ -5281,7 +5288,7 @@ class FitKarmaApp extends ConsumerWidget {
 
 - [ ] §F1: Seed Indian food database (5,000+ items)
 - [ ] §F1: Open Food Facts integration tested on barcode scan
-- [ ] §F2: AI Coach Appwrite Function deployed with Anthropic API key set
+- [ ] §F2: AI Coach Appwrite Function deployed with Groq API key set
 - [ ] §F3: iOS HealthKit entitlements configured in Xcode
 - [ ] §F4: RevenueCat configured with App Store + Play Store products
 - [ ] §F4: 7-day free trial configured for Pro tier
@@ -5309,7 +5316,7 @@ class FitKarmaApp extends ConsumerWidget {
 
 _FitKarma — Complete Documentation
 _UI Design System · Technical Implementation Guide · Enterprise Hardening · Critical Fixes_
-_Flutter 3.x · Riverpod 2.x · Drift · Appwrite CLI · RevenueCat · Open Food Facts · Anthropic Claude_
+_Flutter 3.x · Riverpod 2.x · Drift · Appwrite CLI · RevenueCat · Open Food Facts · Groq Llama-3_
 _Offline-first · AES-256 encrypted · Privacy-centric · Built for India_
 _~5,800 lines · 78 sections · 45+ screens · 28 shared components · 17 Appwrite collections_
 _1 unified server function · Full CI/CD · Complete Drift schema · Complete CLI commands_

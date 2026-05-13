@@ -35,7 +35,7 @@
 - [ ] Create Appwrite Cloud account (or self-host) — note endpoint URL
 - [ ] Create RevenueCat account — note iOS & Android API keys
 - [ ] Create Sentry account — note DSN
-- [ ] Create Anthropic account — note API key (for AI Coach function)
+- [ ] Create Groq account — note API key (for AI Coach function)
 
 ---
 
@@ -294,11 +294,11 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [x] Actions implemented and verified:
   - `award_xp`: Award XP, update karmaXP + karmaLevel.
   - `generate_share_link`: Create 7-day expiring share token.
-  - `ai_coach`: Holistic health advice via Anthropic Claude-3 Haiku.
+  - `ai_coach`: Holistic health advice via Groq Llama-3 API.
   - `search_food`: Proxy Open Food Facts + cache in food_database.
   - `get_feature_flags`: Centralized control for UI features.
 - [x] Secured function with internal `APPWRITE_API_KEY` and user-scoped execution.
-- [x] Configured environment variables (`ANTHROPIC_API_KEY`, `APP_BASE_URL`) via `.env`.
+- [x] Configured environment variables (`GROQ_API_KEY`, `APP_BASE_URL`) via `.env`.
 - [x] In Flutter, updated/implemented services to use `fitkarma-cores`:
   - `KarmaService.awardXP()` -> `action: 'award_xp'`
   - `ReportService.generateShareLink()` -> `action: 'generate_share_link'`
@@ -312,7 +312,7 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 | --------------------- | --------------------- | ---------------------------------------------- |
 | `award_xp`            | `xp-calculator`       | Award XP, update karmaXP + karmaLevel          |
 | `generate_share_link` | `report-share`        | Create 7-day expiring share token              |
-| `ai_coach`            | `ai-coach`            | Call Anthropic Claude with health context      |
+| `ai_coach`            | `ai-coach`            | Call Groq Llama-3 API with health context      |
 | `search_food`         | `food-search`         | Proxy Open Food Facts + cache in food_database |
 | `get_feature_flags`   | `feature-flags`       | Return JSON of enabled feature flags           |
 
@@ -338,7 +338,7 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
   ```
 - [x] Implement `handleAwardXp()` — XP_TABLE, LEVEL_THRESHOLDS, LEVEL_NAMES, `computeLevel()`, creates karma_events doc + updates user karmaXP & karmaLevel
 - [x] Implement `handleShareLink()` — generates 64-byte crypto random token, creates share_tokens doc, returns 7-day expiring URL
-- [x] Implement `handleAiCoach()` — fetches user health context (last 7 days BP/glucose/steps/sleep/food), calls Anthropic Claude API. API key stays server-side, never in Flutter binary
+- [x] Implement `handleAiCoach()` — fetches user health context (last 7 days BP/glucose/steps/sleep/food), calls Groq API. API key stays server-side, never in Flutter binary
 - [x] Implement `handleFoodSearch()` — proxies Open Food Facts (name search or barcode), caches result in food_database collection
 - [x] Implement `handleFeatureFlags()` — returns JSON of enabled flags (safe defaults if any error)
 - [x] Deploy:
@@ -346,7 +346,7 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
   appwrite push functions --all --force --activate true
   ```
 - [x] Set all environment variables on the single function:
-  - `ANTHROPIC_API_KEY`
+  - `GROQ_API_KEY`
   - `APP_BASE_URL`
   - (Appwrite internal vars `APPWRITE_FUNCTION_API_ENDPOINT` and `APPWRITE_FUNCTION_PROJECT_ID` are injected automatically)
 - [x] In Flutter, update all Appwrite Function calls to use `functionId: 'fitkarma-cores'` with the correct `action` in the request body:
@@ -810,7 +810,7 @@ Run all CLI commands after creating the project. Do NOT use the Appwrite console
 - [x] SYSTEM_PROMPT per §F2 — warm, empathetic, India-specific, 3–5 sentence responses, celebrate streaks, redirect off-topic
 - [x] Fetch user health context from Appwrite inside the function (last 7 days: BP, glucose, steps, sleep, food logs)
 - [x] Safety rules: BP Stage 2+ or glucose > 200 mg/dL → always recommend doctor. Never diagnose
-- [x] Anthropic API key stays server-side via `ANTHROPIC_API_KEY` env var on `fitkarma-cores` function
+- [x] Groq API key stays server-side via `GROQ_API_KEY` env var on `fitkarma-cores` function
 - [x] Flutter calls: `Functions.createExecution(functionId: 'fitkarma-cores', body: jsonEncode({action: 'ai_coach', ...}))`
 
 ### 10.3 AI Coach Screen (`/ai-coach`) — Pro only
@@ -1076,7 +1076,7 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 - [ ] `REVENUECAT_API_KEY` (iOS)
 - [ ] `REVENUECAT_API_KEY_ANDROID`
 - [ ] `SENTRY_DSN`
-- [ ] `ANTHROPIC_API_KEY` (for Appwrite Function deploy verification)
+- [ ] `GROQ_API_KEY` (for Appwrite Function deploy verification)
 - [ ] Android keystore secrets (for signed APK)
 - [ ] iOS signing secrets (App Store Connect API key)
 
@@ -1094,7 +1094,7 @@ All items from the Master Checklist §Master Checklist:
 
 - [x] §F1: Indian food database seeded (≥5,000 items)
 - [ ] §F1: Open Food Facts integration tested with barcode scan on real device
-- [ ] §F2: AI Coach `handleAiCoach()` handler deployed inside `fitkarma-cores` function with `ANTHROPIC_API_KEY` env var set
+- [ ] §F2: AI Coach `handleAiCoach()` handler deployed inside `fitkarma-cores` function with `GROQ_API_KEY` env var set
 - [ ] §F3: iOS HealthKit entitlements configured and tested in Xcode on physical iPhone
 - [ ] §F4: RevenueCat configured with App Store + Play Store products
 - [ ] §F4: 7-day free trial configured in both stores
@@ -1159,5 +1159,5 @@ All items from the Master Checklist §Master Checklist:
 
 ---
 
-_Generated from FitKarma Complete Documentation — Flutter 3.x · Riverpod 2.x · Drift · Appwrite CLI · RevenueCat · Anthropic Claude · Open Food Facts_
+_Generated from FitKarma Complete Documentation — Flutter 3.x · Riverpod 2.x · Drift · Appwrite CLI · RevenueCat · Groq Llama-3 · Open Food Facts_
 _~5,800 lines of spec → 123 files to write · 22 phases · 0 lines written so far_

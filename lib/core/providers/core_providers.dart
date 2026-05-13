@@ -30,9 +30,9 @@ Client appwriteClient(Ref ref) {
 }
 
 @riverpod
-Databases appwriteDatabases(Ref ref) {
+TablesDB appwriteDatabases(Ref ref) {
   final client = ref.watch(appwriteClientProvider);
-  return Databases(client);
+  return TablesDB(client);
 }
 
 @riverpod

@@ -230,10 +230,10 @@ class _FoodSearchSheetState extends ConsumerState<FoodSearchSheet> {
 // functions/ai-coach/src/main.js
 // Server-side LLM call — API key never in Flutter binary
 
-import Anthropic from "@anthropic-ai/sdk";
+import axios from "axios";
 import { Client, Databases, Query } from "node-appwrite";
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const groqKey = process.env.GROQ_API_KEY;
 
 const SYSTEM_PROMPT = `You are FitKarma's AI health coach — a warm, encouraging, and medically responsible assistant built for Indian users. 
 
@@ -258,6 +258,10 @@ export default async ({ req, res, log, error }) => {
   const { userId, message, conversationHistory } = JSON.parse(req.body || "{}");
   if (!userId || !message)
     return res.json({ ok: false, error: "userId and message required" }, 400);
+
+  if (!groqKey) {
+    return res.json({ ok: false, error: "Groq API key not configured" }, 500);
+  }
 
   // Fetch user's recent health data for context
   const [bpDocs, glucoseDocs, sleepDocs, foodDocs, userDoc] = await Promise.all(
@@ -294,7 +298,7 @@ export default async ({ req, res, log, error }) => {
     ? Math.round(
         bpDocs.documents.reduce((s, d) => s + d.systolic, 0) /
           bpDocs.documents.length,
-      )
+       )
     : null;
 
   const healthContext = `
@@ -328,6 +332,7 @@ RECENT HEALTH DATA (last 7 days):
 
   // Build messages with conversation history (max last 10 turns for context window)
   const messages = [
+    { role: "system", content: SYSTEM_PROMPT },
     ...(conversationHistory || []).slice(-10),
     {
       role: "user",
@@ -336,16 +341,20 @@ RECENT HEALTH DATA (last 7 days):
   ];
 
   try {
-    const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20240620",
+    const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+      model: "llama3-70b-8192",
       max_tokens: 512,
-      system: SYSTEM_PROMPT,
       messages,
+    }, {
+      headers: {
+        'Authorization': `Bearer ${groqKey}`,
+        'Content-Type': 'application/json'
+      }
     });
 
     return res.json({
       ok: true,
-      reply: response.content[0].text,
+      reply: response.data.choices[0].message.content,
     });
   } catch (err) {
     error(`AI coach error: ${err.message}`);

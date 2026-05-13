@@ -76,10 +76,10 @@ class Auth extends _$Auth {
     // Sync to Appwrite (Optional: could be handled by a sync worker)
     final databases = ref.read(appwriteDatabasesProvider);
     try {
-      await databases.updateDocument(
+      await databases.updateRow(
         databaseId: 'fitkarma-db',
-        collectionId: 'users',
-        documentId: user.$id,
+        tableId: 'users',
+        rowId: user.$id,
         data: {
           'dominantDosha': result.dominant.name,
           'vataPercentage': result.vataPercentage,
@@ -109,10 +109,10 @@ class Auth extends _$Auth {
     // Sync to Appwrite
     final databases = ref.read(appwriteDatabasesProvider);
     try {
-      await databases.updateDocument(
+      await databases.updateRow(
         databaseId: 'fitkarma-db',
-        collectionId: 'users',
-        documentId: user.$id,
+        tableId: 'users',
+        rowId: user.$id,
         data: {
           'goals': goals.join(','),
           'uxStage': 'goals_completed',
@@ -138,10 +138,10 @@ class Auth extends _$Auth {
     // Sync to Appwrite
     final databases = ref.read(appwriteDatabasesProvider);
     try {
-      await databases.updateDocument(
+      await databases.updateRow(
         databaseId: 'fitkarma-db',
-        collectionId: 'users',
-        documentId: user.$id,
+        tableId: 'users',
+        rowId: user.$id,
         data: {
           'onboardingCompleted': true,
           'uxStage': 'established',

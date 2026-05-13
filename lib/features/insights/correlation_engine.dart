@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/database/app_database.dart';
+import '../../core/providers/core_providers.dart';
 
 part 'correlation_engine.freezed.dart';
 part 'correlation_engine.g.dart';

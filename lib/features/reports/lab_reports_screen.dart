@@ -6,6 +6,7 @@ import '../../core/theme/app_typography.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../core/providers/core_providers.dart';
+import '../../core/security/security_service.dart';
 import 'lab_reports_providers.dart';
 
 class LabReportsScreen extends ConsumerStatefulWidget {

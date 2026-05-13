@@ -24,7 +24,7 @@ class NotificationService {
     );
 
     await _plugin.initialize(
-      initSettings,
+      settings: initSettings,
       onDidReceiveNotificationResponse: (details) {
         // Handle background/foreground navigation payloads if attached
       },
@@ -35,7 +35,7 @@ class NotificationService {
     bool granted = false;
     
     // Request for iOS
-    final iosImplementation = _plugin.resolvePlatformSpecificImplementation<DarwinFlutterLocalNotificationsPlugin>();
+    final iosImplementation = _plugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
     if (iosImplementation != null) {
       granted = await iosImplementation.requestPermissions(
         alert: true,
@@ -61,11 +61,11 @@ class NotificationService {
     String? payload,
   }) async {
     await _plugin.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledDate, tz.local),
-      const NotificationDetails(
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: tz.TZDateTime.from(scheduledDate, tz.local),
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'fitkarma_wellness_channel',
           'Wellness Core Reminders',
@@ -76,7 +76,6 @@ class NotificationService {
         iOS: DarwinNotificationDetails(),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       payload: payload,
     );
   }
@@ -96,11 +95,11 @@ class NotificationService {
     }
 
     await _plugin.zonedSchedule(
-      id,
-      title,
-      body,
-      scheduledDate,
-      const NotificationDetails(
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: scheduledDate,
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'fitkarma_wellness_channel',
           'Wellness Core Reminders',
@@ -111,7 +110,6 @@ class NotificationService {
         iOS: DarwinNotificationDetails(),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
       payload: payload,
     );
@@ -151,10 +149,10 @@ class NotificationService {
   // 6. Sync failure notification (after DLQ threshold)
   static Future<void> triggerSyncFailureNotification(int dlqCount) async {
     await _plugin.show(
-      999,
-      'Offline Sync Pending ⚠️',
-      '$dlqCount metric logs queued locally. Background sync will reattempt once connectivity restores.',
-      const NotificationDetails(
+      id: 999,
+      title: 'Offline Sync Pending ⚠️',
+      body: '$dlqCount metric logs queued locally. Background sync will reattempt once connectivity restores.',
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'fitkarma_sync_channel',
           'Sync Health Alerts',

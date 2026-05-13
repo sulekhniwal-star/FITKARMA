@@ -61,8 +61,8 @@ class SubscriptionService {
         return false;
       }
 
-      final customerInfo = await Purchases.purchasePackage(current.monthly!);
-      final entitlement = customerInfo.entitlements.active['pro'];
+      final purchaseResult = await Purchases.purchase(PurchaseParams.package(current.monthly!));
+      final entitlement = purchaseResult.customerInfo.entitlements.active['pro'];
       return entitlement != null && entitlement.isActive;
     } catch (e) {
       final str = e.toString();

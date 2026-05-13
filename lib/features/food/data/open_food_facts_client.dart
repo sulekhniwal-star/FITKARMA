@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'open_food_facts_client.g.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OpenFoodFactsClient {
   final Dio _dio;
@@ -55,8 +53,7 @@ class OpenFoodFactsClient {
   }
 }
 
-@riverpod
-OpenFoodFactsClient openFoodFactsClient(OpenFoodFactsClientRef ref) {
+final openFoodFactsClientProvider = Provider<OpenFoodFactsClient>((ref) {
   final dio = Dio(
     BaseOptions(
       connectTimeout: const Duration(seconds: 5),
@@ -67,4 +64,4 @@ OpenFoodFactsClient openFoodFactsClient(OpenFoodFactsClientRef ref) {
     ),
   );
   return OpenFoodFactsClient(dio);
-}
+});
