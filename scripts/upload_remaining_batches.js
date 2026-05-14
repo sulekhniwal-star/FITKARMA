@@ -40,7 +40,7 @@ try {
     }
 }
 
-const { Client, Databases, ID } = nodeAppwrite;
+const { Client, Databases, ID, Query } = nodeAppwrite;
 
 const client = new Client()
     .setEndpoint(APPWRITE_ENDPOINT)
@@ -70,6 +70,57 @@ async function executeWithRetry(operation, maxRetries = 5, baseDelay = 1000) {
             console.warn(`    ⚠ Transient error (${err.message}). Retrying attempt ${attempt}/${maxRetries} in ${Math.round(delay)}ms...`);
             await new Promise(resolve => setTimeout(resolve, delay));
         }
+    }
+}
+
+async function autoDetectLastUploadedBatch() {
+    console.log('🔍 Auto-detecting last successfully uploaded item to find resumption point...');
+    try {
+        const response = await executeWithRetry(async () => {
+            return await databases.listDocuments(
+                APPWRITE_DATABASE_ID,
+                APPWRITE_COLLECTION_ID,
+                [
+                    Query.orderDesc('$createdAt'),
+                    Query.limit(1)
+                ]
+            );
+        });
+
+        if (!response.documents || response.documents.length === 0) {
+            console.log('✔ Collection appears empty. Starting from batch_0001.json');
+            return { startBatchIndex: 1, skipCount: 0 };
+        }
+
+        const lastDoc = response.documents[0];
+        const lastDocName = lastDoc.name;
+        console.log(`📡 Last uploaded document in database: "${lastDocName}"`);
+
+        // Scan batch files to find which batch contains this item
+        for (let i = 1; i <= 1550; i++) {
+            const fileName = `batch_${String(i).padStart(4, '0')}.json`;
+            const filePath = path.join(BATCH_DIR, fileName);
+            if (fs.existsSync(filePath)) {
+                const items = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+                const indexInBatch = items.findIndex(item => item.name === lastDocName);
+                if (indexInBatch !== -1) {
+                    console.log(`🎯 Found "${lastDocName}" in ${fileName} at index ${indexInBatch} (item ${indexInBatch + 1}/${items.length}).`);
+                    if (indexInBatch === items.length - 1) {
+                        console.log(`✔ ${fileName} was completely uploaded. Auto-resuming from batch_${String(i + 1).padStart(4, '0')}.json`);
+                        return { startBatchIndex: i + 1, skipCount: 0 };
+                    } else {
+                        console.log(`⚠ ${fileName} was partially uploaded. Auto-resuming from this batch, skipping the first ${indexInBatch + 1} items.`);
+                        return { startBatchIndex: i, skipCount: indexInBatch + 1 };
+                    }
+                }
+            }
+        }
+
+        console.warn(`⚠ Could not locate "${lastDocName}" in any local batch files. Defaulting to batch 206.`);
+        return { startBatchIndex: 206, skipCount: 0 };
+    } catch (err) {
+        console.warn(`⚠ Auto-detection query failed: ${err.message}. Defaulting to batch 206.`);
+        return { startBatchIndex: 206, skipCount: 0 };
     }
 }
 
@@ -132,7 +183,7 @@ async function retryFailedUploads() {
     console.log('--------------------------------------------------------------------------------');
 }
 
-async function uploadRemainingBatches(startBatch) {
+async function uploadRemainingBatches(startBatch, initialSkipCount = 0) {
     console.log(`🚀 Phase 2: Resuming batch uploads starting from batch_${String(startBatch).padStart(4, '0')}.json...`);
     const totalBatches = 1550;
     let totalUploaded = 0;
@@ -164,6 +215,11 @@ async function uploadRemainingBatches(startBatch) {
         } catch (err) {
             console.error(`❌ Failed to parse JSON in ${batchFileName}: ${err.message}`);
             continue;
+        }
+
+        if (batchIndex === startBatch && initialSkipCount > 0) {
+            console.log(`⏭ Skipping first ${initialSkipCount} items in ${batchFileName} as they were already uploaded.`);
+            batchData = batchData.slice(initialSkipCount);
         }
 
         let successCount = 0;
@@ -207,17 +263,24 @@ async function uploadRemainingBatches(startBatch) {
 
 async function main() {
     const arg = process.argv[2];
-    // Default to 206 since the previous upload log failed at batch_0206.json
-    const startBatch = arg ? parseInt(arg, 10) : 206;
-    
-    if (isNaN(startBatch) || startBatch < 1 || startBatch > 1550) {
-        console.error('❌ Invalid starting batch number. Please provide a number between 1 and 1550.');
-        console.error('Usage: node scripts/upload_remaining_batches.js [startBatchIndex]');
-        process.exit(1);
+    let startBatch;
+    let skipCount = 0;
+
+    if (arg) {
+        startBatch = parseInt(arg, 10);
+        if (isNaN(startBatch) || startBatch < 1 || startBatch > 1550) {
+            console.error('❌ Invalid starting batch number. Please provide a number between 1 and 1550.');
+            console.error('Usage: node scripts/upload_remaining_batches.js [startBatchIndex]');
+            process.exit(1);
+        }
+    } else {
+        const detection = await autoDetectLastUploadedBatch();
+        startBatch = detection.startBatchIndex;
+        skipCount = detection.skipCount;
     }
 
     await retryFailedUploads();
-    await uploadRemainingBatches(startBatch);
+    await uploadRemainingBatches(startBatch, skipCount);
 }
 
 main().catch(err => {
