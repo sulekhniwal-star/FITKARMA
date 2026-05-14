@@ -17,6 +17,7 @@ import '../streak/streak_providers.dart';
 import '../karma/karma_providers.dart';
 import '../health/steps_providers.dart';
 import '../../core/providers/core_providers.dart';
+import '../../core/database/app_database.dart';
 import '../../core/services/home_widget_service.dart';
 
 class DashboardScreen extends ConsumerWidget {
@@ -31,7 +32,7 @@ class DashboardScreen extends ConsumerWidget {
     final stepsAsync = ref.watch(stepsDataProvider);
     final isProAsync = ref.watch(isProProvider);
 
-    final stepsVal = stepsAsync.value?.totalSteps ?? 7432;
+    final stepsVal = stepsAsync.value?.totalSteps ?? 0;
     final stepGoalVal = stepsAsync.value?.dailyGoal ?? 10000;
     final isProVal = isProAsync.value ?? false;
 
@@ -39,7 +40,7 @@ class DashboardScreen extends ConsumerWidget {
       HomeWidgetService.updateWidgets(steps: stepsVal, stepGoal: stepGoalVal, karmaXp: next.totalXp, isPro: isProVal);
     });
     ref.listen(stepsDataProvider, (prev, next) {
-      final s = next.value?.totalSteps ?? 7432;
+      final s = next.value?.totalSteps ?? 0;
       final g = next.value?.dailyGoal ?? 10000;
       HomeWidgetService.updateWidgets(steps: s, stepGoal: g, karmaXp: karmaState.totalXp, isPro: isProVal);
     });
@@ -64,7 +65,7 @@ class DashboardScreen extends ConsumerWidget {
           // Today's Meals
           _buildSectionHeader(context, 'Today\'s Meals', '/home/food'),
           const SizedBox(height: 12),
-          _buildMealsScroll(context),
+          _buildMealsScroll(context, ref),
 
           const SizedBox(height: AppSpacing.lg),
 
@@ -95,7 +96,7 @@ class DashboardScreen extends ConsumerWidget {
           // Quick Stats
           Text('Quick Stats', style: AppTypography.h1()),
           const SizedBox(height: 12),
-          _buildQuickStats(context),
+          _buildQuickStats(context, ref),
 
           const SizedBox(height: AppSpacing.lg),
 
@@ -120,7 +121,7 @@ class DashboardScreen extends ConsumerWidget {
           child: CircleAvatar(
             backgroundColor: AppColorsDark.surface2,
             child: Text(
-              user?.name.characters.first ?? 'U',
+              user?.name.isNotEmpty == true ? user!.name[0].toUpperCase() : 'U',
               style: AppTypography.h3(color: AppColorsDark.primary),
             ),
           ),
@@ -151,10 +152,10 @@ class DashboardScreen extends ConsumerWidget {
 
   Widget _buildActivityHero(BuildContext context, WidgetRef ref) {
     final stepsAsync = ref.watch(stepsDataProvider);
-    final steps = stepsAsync.value?.totalSteps ?? 7432;
+    final steps = stepsAsync.value?.totalSteps ?? 0;
     final goal = stepsAsync.value?.dailyGoal ?? 10000;
-    final cals = stepsAsync.value?.caloriesBurned ?? 297;
-    final dist = stepsAsync.value?.distanceKm ?? 5.64;
+    final cals = stepsAsync.value?.caloriesBurned ?? 0;
+    final dist = stepsAsync.value?.distanceKm ?? 0.0;
     final progress = (steps / goal).clamp(0.0, 1.0);
 
     return GlassCard(
@@ -217,6 +218,7 @@ class DashboardScreen extends ConsumerWidget {
     final karmaState = ref.watch(karmaStateProvider);
     final isProAsync = ref.watch(isProProvider);
     final isPro = isProAsync.value ?? false;
+    final db = ref.watch(appDatabaseProvider);
 
     final diffXp = karmaState.nextLevelXp - karmaState.totalXp;
 
@@ -225,24 +227,38 @@ class DashboardScreen extends ConsumerWidget {
         Row(
           children: [
             Expanded(
-              child: _BentoItem(
-                title: 'Calories',
-                value: '1,240',
-                subtitle: 'left',
-                icon: Icons.local_fire_department_rounded,
-                color: AppColorsDark.secondary,
-                onTap: () => context.push('/home/food'),
+              child: StreamBuilder<List<FoodLog>>(
+                stream: db.watchTodayFoodLogs(),
+                builder: (context, snapshot) {
+                  final logs = snapshot.data ?? [];
+                  final totalKcal = logs.fold(0.0, (sum, item) => sum + item.calories).toInt();
+                  final remaining = 2500 - totalKcal;
+                  return _BentoItem(
+                    title: 'Calories',
+                    value: NumberFormat.decimalPattern().format(remaining > 0 ? remaining : 0),
+                    subtitle: 'left',
+                    icon: Icons.local_fire_department_rounded,
+                    color: AppColorsDark.secondary,
+                    onTap: () => context.push('/home/food'),
+                  );
+                },
               ),
             ),
             const SizedBox(width: AppSpacing.bentoGap),
             Expanded(
-              child: _BentoItem(
-                title: 'Water',
-                value: '1.2',
-                subtitle: 'liters',
-                icon: Icons.water_drop_rounded,
-                color: AppColorsDark.teal,
-                onTap: () => context.push('/water'),
+              child: StreamBuilder<int>(
+                stream: db.watchTodayWaterMl(),
+                builder: (context, snapshot) {
+                  final ml = snapshot.data ?? 0;
+                  return _BentoItem(
+                    title: 'Water',
+                    value: (ml / 1000).toStringAsFixed(1),
+                    subtitle: 'liters',
+                    icon: Icons.water_drop_rounded,
+                    color: AppColorsDark.teal,
+                    onTap: () => context.push('/water'),
+                  );
+                },
               ),
             ),
           ],
@@ -284,61 +300,102 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildMealsScroll(BuildContext context) {
-    final meals = [
-      {'name': 'Oatmeal & Berries', 'kcal': '320', 'time': '8:30 AM'},
-      {'name': 'Chicken Salad', 'kcal': '450', 'time': '1:15 PM'},
-      {'name': 'Protein Shake', 'kcal': '180', 'time': '4:00 PM'},
-    ];
+  Widget _buildMealsScroll(BuildContext context, WidgetRef ref) {
+    final db = ref.watch(appDatabaseProvider);
+    final timeFormat = DateFormat('h:mm a');
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      clipBehavior: Clip.none,
-      child: Row(
-        children: meals.map((meal) => Container(
-          width: 160,
-          margin: const EdgeInsets.only(right: 12),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColorsDark.surface0,
-            borderRadius: BorderRadius.circular(20),
+    return StreamBuilder<List<FoodLog>>(
+      stream: db.watchTodayFoodLogs(),
+      builder: (context, snapshot) {
+        final meals = snapshot.data ?? [];
+        if (meals.isEmpty) {
+          return Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppColorsDark.surface0,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              'No meals logged today. Add food to track calories.',
+              style: AppTypography.labelMd(color: AppColorsDark.textMuted),
+            ),
+          );
+        }
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          clipBehavior: Clip.none,
+          child: Row(
+            children: meals.map((meal) => Container(
+              width: 160,
+              margin: const EdgeInsets.only(right: 12),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColorsDark.surface0,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(meal.name, style: AppTypography.h4(color: Colors.white), maxLines: 1, overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 4),
+                  Text('${meal.calories.toInt()} kcal', style: AppTypography.labelMd(color: AppColorsDark.primary)),
+                  const SizedBox(height: 12),
+                  Text(timeFormat.format(meal.logDate), style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
+                ],
+              ),
+            )).toList(),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(meal['name']!, style: AppTypography.h4(color: Colors.white), maxLines: 1, overflow: TextOverflow.ellipsis),
-              const SizedBox(height: 4),
-              Text('${meal['kcal']} kcal', style: AppTypography.labelMd(color: AppColorsDark.primary)),
-              const SizedBox(height: 12),
-              Text(meal['time']!, style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
-            ],
-          ),
-        )).toList(),
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildQuickStats(BuildContext context) {
+  Widget _buildQuickStats(BuildContext context, WidgetRef ref) {
+    final db = ref.watch(appDatabaseProvider);
+
     return Row(
       children: [
         Expanded(
           child: GestureDetector(
             onTap: () => context.push('/blood-pressure'),
-            child: const _StatMiniCard(label: 'BP', value: '120/80', unit: 'mmHg', color: AppColorsDark.error),
+            child: StreamBuilder<List<BpReading>>(
+              stream: db.watchRecentBpReadings(limit: 1),
+              builder: (context, snapshot) {
+                final reading = snapshot.data?.firstOrNull;
+                final val = reading != null ? '${reading.systolic}/${reading.diastolic}' : '--/--';
+                return _StatMiniCard(label: 'BP', value: val, unit: 'mmHg', color: AppColorsDark.error);
+              },
+            ),
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: GestureDetector(
             onTap: () => context.push('/glucose'),
-            child: const _StatMiniCard(label: 'GLUCOSE', value: '98', unit: 'mg/dL', color: AppColorsDark.teal),
+            child: StreamBuilder<List<GlucoseReading>>(
+              stream: db.watchRecentGlucoseReadings(limit: 1),
+              builder: (context, snapshot) {
+                final reading = snapshot.data?.firstOrNull;
+                final val = reading != null ? '${reading.value.toInt()}' : '--';
+                return _StatMiniCard(label: 'GLUCOSE', value: val, unit: 'mg/dL', color: AppColorsDark.teal);
+              },
+            ),
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: GestureDetector(
             onTap: () => context.push('/sleep'),
-            child: const _StatMiniCard(label: 'SLEEP', value: '82', unit: '/100', color: AppColorsDark.purple),
+            child: StreamBuilder<List<SleepLog>>(
+              stream: db.watchRecentSleepLogs(limit: 1),
+              builder: (context, snapshot) {
+                final reading = snapshot.data?.firstOrNull;
+                final val = reading != null ? '${reading.quality * 10}' : '--';
+                return _StatMiniCard(label: 'SLEEP', value: val, unit: '/100', color: AppColorsDark.purple);
+              },
+            ),
           ),
         ),
       ],
@@ -354,20 +411,27 @@ class DashboardScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('ACTIVE CHALLENGE', style: AppTypography.labelMd(color: AppColorsDark.primary)),
+              Text('WELLNESS CHALLENGES', style: AppTypography.labelMd(color: AppColorsDark.primary)),
               const Icon(Icons.emoji_events_rounded, color: AppColorsDark.primary, size: 20),
             ],
           ),
           const SizedBox(height: 12),
-          Text('7-Day Sugar Detox', style: AppTypography.h2(color: Colors.white)),
-          const SizedBox(height: 8),
-          const LinearProgressIndicator(
-            value: 0.6,
-            backgroundColor: AppColorsDark.surface2,
-            valueColor: AlwaysStoppedAnimation(AppColorsDark.primary),
+          Text('Ready for a new goal?', style: AppTypography.h2(color: Colors.white)),
+          const SizedBox(height: 4),
+          Text('Join seasonal community challenges to earn exclusive rank XP boosters.', style: AppTypography.labelMd(color: AppColorsDark.textSecondary)),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: () {},
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColorsDark.primary,
+                side: const BorderSide(color: AppColorsDark.primary),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: const Text('Browse Challenges'),
+            ),
           ),
-          const SizedBox(height: 8),
-          Text('Day 4 of 7', style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
         ],
       ),
     );

@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -9,6 +11,10 @@ class NotificationService {
   static Future<void> init() async {
     // Set up timezone handling for local notifications
     tz.initializeTimeZones();
+
+    if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) {
+      return;
+    }
 
     const AndroidInitializationSettings androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
     
@@ -32,6 +38,10 @@ class NotificationService {
   }
 
   static Future<bool> requestPermission() async {
+    if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) {
+      return false;
+    }
+
     bool granted = false;
     
     // Request for iOS
@@ -60,6 +70,8 @@ class NotificationService {
     required DateTime scheduledDate,
     String? payload,
   }) async {
+    if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) return;
+
     await _plugin.zonedSchedule(
       id: id,
       title: title,
@@ -88,6 +100,8 @@ class NotificationService {
     required int minute,
     String? payload,
   }) async {
+    if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) return;
+
     final now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
     if (scheduledDate.isBefore(now)) {
@@ -119,6 +133,8 @@ class NotificationService {
     bool hasBpCondition = false,
     bool hasGlucoseCondition = false,
   }) async {
+    if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) return;
+
     // 1. Meal Reminders: Breakfast (8AM), Lunch (1PM), Dinner (7:30PM)
     await _scheduleDailyRepeating(id: 101, title: 'Fuel Your Morning 🌅', body: 'Time for a nourishing breakfast to kickstart your inner agni.', hour: 8, minute: 0, payload: '/home/food');
     await _scheduleDailyRepeating(id: 102, title: 'Midday Recharge 🥗', body: 'Log your balanced lunch to sustain optimal prana & focus.', hour: 13, minute: 0, payload: '/home/food');
@@ -148,6 +164,8 @@ class NotificationService {
 
   // 6. Sync failure notification (after DLQ threshold)
   static Future<void> triggerSyncFailureNotification(int dlqCount) async {
+    if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) return;
+
     await _plugin.show(
       id: 999,
       title: 'Offline Sync Pending ⚠️',

@@ -17,7 +17,7 @@ AppDatabase appDatabase(Ref ref) {
 @riverpod
 Client appwriteClient(Ref ref) {
   const endpoint = String.fromEnvironment('APPWRITE_ENDPOINT', defaultValue: 'https://cloud.appwrite.io/v1');
-  const projectId = String.fromEnvironment('APPWRITE_PROJECT_ID');
+  const projectId = String.fromEnvironment('APPWRITE_PROJECT_ID', defaultValue: 'fitkarma');
 
   if (projectId.isEmpty) {
     throw Exception('APPWRITE_PROJECT_ID is not defined. Please run with --dart-define=APPWRITE_PROJECT_ID=your_id');

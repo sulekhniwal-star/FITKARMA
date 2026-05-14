@@ -73,6 +73,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(authProvider, (previous, next) {
+      if (next.hasError && !next.isLoading) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.error.toString().replaceAll('AppwriteException: ', '')),
+            backgroundColor: AppColorsDark.error,
+          ),
+        );
+      }
+    });
+
     final isLoading = ref.watch(authProvider).isLoading;
 
     return AppScaffold.patternA(

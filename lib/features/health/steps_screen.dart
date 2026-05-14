@@ -83,10 +83,10 @@ class StepsScreen extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.science_rounded, size: 14, color: AppColorsDark.primary),
+                  const Icon(Icons.directions_walk_rounded, size: 14, color: AppColorsDark.primary),
                   const SizedBox(width: 8),
                   Text(
-                    'Displaying demo metrics (Physical step logs idle)',
+                    'Step counter idle (Awaiting physical movement sync)',
                     style: AppTypography.labelSm(color: AppColorsDark.textSecondary),
                   ),
                 ],

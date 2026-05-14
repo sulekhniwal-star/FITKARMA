@@ -20,11 +20,11 @@ class StepsData {
 
   factory StepsData.fallback() {
     return StepsData(
-      totalSteps: 7432,
+      totalSteps: 0,
       dailyGoal: 10000,
-      distanceKm: 5.64,
-      caloriesBurned: 297,
-      hourlySteps12h: [120, 0, 450, 1100, 890, 320, 150, 600, 1400, 920, 810, 672],
+      distanceKm: 0.0,
+      caloriesBurned: 0,
+      hourlySteps12h: List.filled(12, 0),
       isUsingSimulatedData: true,
     );
   }
