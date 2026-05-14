@@ -33,7 +33,6 @@ import '../../features/wedding/wedding_screen.dart';
 import '../../features/social/social_screen.dart';
 import '../../features/ai_coach/ai_coach_screen.dart';
 import '../../features/subscription/subscription_screen.dart';
-import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
 
 part 'app_router.g.dart';
