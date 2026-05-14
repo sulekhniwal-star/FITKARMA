@@ -16,7 +16,7 @@ AppDatabase appDatabase(Ref ref) {
 /// Reads configuration from --dart-define environment variables.
 @riverpod
 Client appwriteClient(Ref ref) {
-  const endpoint = String.fromEnvironment('APPWRITE_ENDPOINT', defaultValue: 'https://cloud.appwrite.io/v1');
+  const endpoint = String.fromEnvironment('APPWRITE_ENDPOINT', defaultValue: 'https://sgp.cloud.appwrite.io/v1');
   const projectId = String.fromEnvironment('APPWRITE_PROJECT_ID', defaultValue: 'fitkarma');
 
   if (projectId.isEmpty) {
