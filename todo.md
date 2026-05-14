@@ -1070,15 +1070,15 @@ Pro tier (₹299/month or ₹2,499/year, 7-day free trial) includes:
 
 ### 19.2 Secrets to Add in GitHub
 
-- [ ] `APPWRITE_ENDPOINT`
-- [ ] `APPWRITE_PROJECT_ID`
-- [ ] `APPWRITE_API_KEY`
-- [ ] `REVENUECAT_API_KEY` (iOS)
-- [ ] `REVENUECAT_API_KEY_ANDROID`
-- [ ] `SENTRY_DSN`
-- [ ] `GROQ_API_KEY` (for Appwrite Function deploy verification)
-- [ ] Android keystore secrets (for signed APK)
-- [ ] iOS signing secrets (App Store Connect API key)
+- [x] `APPWRITE_ENDPOINT`
+- [x] `APPWRITE_PROJECT_ID`
+- [x] `APPWRITE_API_KEY`
+- [x] `REVENUECAT_API_KEY` (iOS)
+- [x] `REVENUECAT_API_KEY_ANDROID`
+- [x] `SENTRY_DSN`
+- [x] `GROQ_API_KEY` (for Appwrite Function deploy verification)
+- [x] Android keystore secrets (for signed APK)
+- [x] iOS signing secrets (App Store Connect API key)
 
 ### 19.3 Build Flavors
 

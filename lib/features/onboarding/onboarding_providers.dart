@@ -16,7 +16,24 @@ class Auth extends _$Auth {
   Future<models.User?> build() async {
     final account = ref.watch(appwriteAccountProvider);
     try {
-      return await account.get();
+      final user = await account.get();
+      // Ensure local user record exists
+      final db = ref.read(appDatabaseProvider);
+      final localUser = await (db.select(db.users)..where((t) => t.id.equals(user.$id))).getSingleOrNull();
+      if (localUser == null) {
+        await db.into(db.users).insert(
+          UsersCompanion.insert(
+            id: user.$id,
+            userId: user.$id,
+            email: user.email,
+            name: user.name,
+            uxStage: const Value('established'),
+            onboardingCompleted: const Value(true),
+          ),
+          mode: InsertMode.insertOrIgnore,
+        );
+      }
+      return user;
     } catch (_) {
       return null;
     }
@@ -27,7 +44,56 @@ class Auth extends _$Auth {
     state = await AsyncValue.guard(() async {
       final account = ref.read(appwriteAccountProvider);
       await account.createEmailPasswordSession(email: email, password: password);
-      return await account.get();
+      final user = await account.get();
+
+      // Setup local user record and attempt restore from remote
+      final db = ref.read(appDatabaseProvider);
+      final databases = ref.read(appwriteDatabasesProvider);
+      
+      String uxStage = 'established';
+      bool onboardingCompleted = true;
+      String? dominantDosha;
+      double? vataPercentage;
+      double? pittaPercentage;
+      double? kaphaPercentage;
+      String? goals;
+
+      try {
+        final row = await databases.getRow(
+          databaseId: 'fitkarma-db',
+          tableId: 'users',
+          rowId: user.$id,
+        );
+        final data = row.data;
+        uxStage = data['uxStage'] ?? 'established';
+        onboardingCompleted = data['onboardingCompleted'] ?? true;
+        dominantDosha = data['dominantDosha'];
+        vataPercentage = (data['vataPercentage'] as num?)?.toDouble();
+        pittaPercentage = (data['pittaPercentage'] as num?)?.toDouble();
+        kaphaPercentage = (data['kaphaPercentage'] as num?)?.toDouble();
+        goals = data['goals'];
+      } catch (_) {
+        // Row might not exist remotely
+      }
+
+      await db.into(db.users).insert(
+        UsersCompanion.insert(
+          id: user.$id,
+          userId: user.$id,
+          email: user.email,
+          name: user.name,
+          uxStage: Value(uxStage),
+          onboardingCompleted: Value(onboardingCompleted),
+          dominantDosha: Value(dominantDosha),
+          vataPercentage: Value(vataPercentage),
+          pittaPercentage: Value(pittaPercentage),
+          kaphaPercentage: Value(kaphaPercentage),
+          goals: Value(goals),
+        ),
+        mode: InsertMode.insertOrReplace,
+      );
+
+      return user;
     });
   }
 
@@ -43,19 +109,41 @@ class Auth extends _$Auth {
         name: name,
       );
       await account.createEmailPasswordSession(email: email, password: password);
+      final user = await account.get();
       
       // Initialize user in local DB
       final db = ref.read(appDatabaseProvider);
       await db.into(db.users).insert(
             UsersCompanion.insert(
-              id: userId,
-              userId: userId,
+              id: user.$id,
+              userId: user.$id,
               email: email,
               name: name,
+              uxStage: const Value('onboarding'),
+              onboardingCompleted: const Value(false),
             ),
+            mode: InsertMode.insertOrReplace,
           );
 
-      return await account.get();
+      // Create remote row proactively
+      try {
+        final databases = ref.read(appwriteDatabasesProvider);
+        await databases.createRow(
+          databaseId: 'fitkarma-db',
+          tableId: 'users',
+          rowId: user.$id,
+          data: {
+            'email': email,
+            'name': name,
+            'uxStage': 'onboarding',
+            'onboardingCompleted': false,
+          },
+        );
+      } catch (e) {
+        debugPrint('Error creating remote user row: $e');
+      }
+
+      return user;
     });
   }
 
@@ -74,24 +162,36 @@ class Auth extends _$Auth {
       ),
     );
 
-    // Sync to Appwrite (Optional: could be handled by a sync worker)
+    // Sync to Appwrite with fallback creation
     final databases = ref.read(appwriteDatabasesProvider);
+    final rowData = {
+      'dominantDosha': result.dominant.name,
+      'vataPercentage': result.vataPercentage,
+      'pittaPercentage': result.pittaPercentage,
+      'kaphaPercentage': result.kaphaPercentage,
+      'uxStage': 'dosha_completed',
+      'email': user.email,
+      'name': user.name,
+    };
+
     try {
       await databases.updateRow(
         databaseId: 'fitkarma-db',
         tableId: 'users',
         rowId: user.$id,
-        data: {
-          'dominantDosha': result.dominant.name,
-          'vataPercentage': result.vataPercentage,
-          'pittaPercentage': result.pittaPercentage,
-          'kaphaPercentage': result.kaphaPercentage,
-          'uxStage': 'dosha_completed',
-        },
+        data: rowData,
       );
-    } catch (e) {
-      // Log error but continue
-      debugPrint('Error syncing dosha to Appwrite: $e');
+    } catch (_) {
+      try {
+        await databases.createRow(
+          databaseId: 'fitkarma-db',
+          tableId: 'users',
+          rowId: user.$id,
+          data: rowData,
+        );
+      } catch (e) {
+        debugPrint('Error syncing dosha to Appwrite: $e');
+      }
     }
   }
 
@@ -109,18 +209,31 @@ class Auth extends _$Auth {
 
     // Sync to Appwrite
     final databases = ref.read(appwriteDatabasesProvider);
+    final rowData = {
+      'goals': goals.join(','),
+      'uxStage': 'goals_completed',
+      'email': user.email,
+      'name': user.name,
+    };
+
     try {
       await databases.updateRow(
         databaseId: 'fitkarma-db',
         tableId: 'users',
         rowId: user.$id,
-        data: {
-          'goals': goals.join(','),
-          'uxStage': 'goals_completed',
-        },
+        data: rowData,
       );
-    } catch (e) {
-      debugPrint('Error syncing goals to Appwrite: $e');
+    } catch (_) {
+      try {
+        await databases.createRow(
+          databaseId: 'fitkarma-db',
+          tableId: 'users',
+          rowId: user.$id,
+          data: rowData,
+        );
+      } catch (e) {
+        debugPrint('Error syncing goals to Appwrite: $e');
+      }
     }
   }
 
@@ -138,18 +251,31 @@ class Auth extends _$Auth {
 
     // Sync to Appwrite
     final databases = ref.read(appwriteDatabasesProvider);
+    final rowData = {
+      'onboardingCompleted': true,
+      'uxStage': 'established',
+      'email': user.email,
+      'name': user.name,
+    };
+
     try {
       await databases.updateRow(
         databaseId: 'fitkarma-db',
         tableId: 'users',
         rowId: user.$id,
-        data: {
-          'onboardingCompleted': true,
-          'uxStage': 'established',
-        },
+        data: rowData,
       );
-    } catch (e) {
-      debugPrint('Error syncing onboarding status to Appwrite: $e');
+    } catch (_) {
+      try {
+        await databases.createRow(
+          databaseId: 'fitkarma-db',
+          tableId: 'users',
+          rowId: user.$id,
+          data: rowData,
+        );
+      } catch (e) {
+        debugPrint('Error syncing onboarding status to Appwrite: $e');
+      }
     }
   }
 

@@ -22,6 +22,7 @@ import '../../features/mental_health/mental_health_screen.dart';
 import '../../features/mental_health/breathing_circle_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/workout/active_workout_screen.dart';
+import '../../features/workout/workout_screen.dart';
 import '../../features/emergency/emergency_screen.dart';
 import '../../features/settings/settings_screen.dart';
 import '../../features/reports/lab_reports_screen.dart';
@@ -32,24 +33,68 @@ import '../../features/wedding/wedding_screen.dart';
 import '../../features/social/social_screen.dart';
 import '../../features/ai_coach/ai_coach_screen.dart';
 import '../../features/subscription/subscription_screen.dart';
+import '../../core/database/app_database.dart';
+import '../../core/providers/core_providers.dart';
 
 part 'app_router.g.dart';
 
+class RouterNotifier extends ChangeNotifier {
+  final Ref _ref;
+  RouterNotifier(this._ref) {
+    _ref.listen(authProvider, (previous, next) {
+      notifyListeners();
+    });
+  }
+}
+
 @riverpod
 GoRouter appRouter(Ref ref) {
-  final authState = ref.watch(authProvider);
-  final bool isAuthenticated = authState.value != null;
+  final notifier = RouterNotifier(ref);
 
   return GoRouter(
     initialLocation: '/splash',
+    refreshListenable: notifier,
     debugLogDiagnostics: true,
-    redirect: (context, state) {
-      final isLoggingIn = state.matchedLocation.startsWith('/onboarding');
+    redirect: (context, state) async {
+      final authState = ref.read(authProvider);
+      final user = authState.value;
+      final bool isAuthenticated = user != null;
       final isSplash = state.matchedLocation == '/splash';
 
       if (isSplash) return null;
-      if (!isAuthenticated && !isLoggingIn) return '/onboarding/welcome';
-      if (isAuthenticated && isLoggingIn) return '/home/dashboard';
+
+      final isAuthScreen = state.matchedLocation == '/onboarding/welcome' ||
+                           state.matchedLocation == '/onboarding/signup' ||
+                           state.matchedLocation == '/onboarding/login';
+
+      if (!isAuthenticated) {
+        if (!isAuthScreen) return '/onboarding/welcome';
+        return null;
+      }
+
+      // If authenticated, check local DB onboarding status
+      final db = ref.read(appDatabaseProvider);
+      final localUser = await (db.select(db.users)..where((t) => t.id.equals(user.$id))).getSingleOrNull();
+
+      final bool onboardingCompleted = localUser?.onboardingCompleted ?? false;
+      final String uxStage = localUser?.uxStage ?? 'onboarding';
+
+      final isOnboardingFlowScreen = state.matchedLocation == '/onboarding/dosha' ||
+                                     state.matchedLocation == '/onboarding/goals' ||
+                                     state.matchedLocation == '/onboarding/permissions';
+
+      if (!onboardingCompleted) {
+        if (!isOnboardingFlowScreen) {
+          if (uxStage == 'dosha_completed') return '/onboarding/goals';
+          if (uxStage == 'goals_completed') return '/onboarding/permissions';
+          return '/onboarding/dosha';
+        }
+        return null;
+      }
+
+      if (isAuthScreen || isOnboardingFlowScreen) {
+        return '/home/dashboard';
+      }
 
       return null;
     },
@@ -118,7 +163,7 @@ GoRouter appRouter(Ref ref) {
         routes: [
           GoRoute(path: '/home/dashboard', builder: (context, state) => const DashboardScreen()),
           GoRoute(path: '/home/food', builder: (context, state) => const FoodHomeScreen()),
-          GoRoute(path: '/home/workout', builder: (context, state) => const ActiveWorkoutScreen(workoutId: 'wkt_tab_Hypertrophy Strength Focus')),
+          GoRoute(path: '/home/workout', builder: (context, state) => const WorkoutScreen()),
           GoRoute(path: '/home/steps', builder: (context, state) => const StepsScreen()),
           GoRoute(path: '/karma', builder: (context, state) => const KarmaScreen()),
         ],

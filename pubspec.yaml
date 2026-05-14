@@ -69,6 +69,7 @@ dependencies:
 
 # ─── Dev Dependencies ─────────────────────────────────────────────────────────
 dev_dependencies:
+  sentry_dart_plugin: ^3.3.0
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
@@ -92,7 +93,6 @@ flutter:
 
   assets:
     - assets/data/
-    - assets/fonts/
 
   fonts:
     - family: PlusJakartaSans
@@ -124,3 +124,9 @@ flutter:
           weight: 500
         - asset: assets/fonts/NotoSansDevanagari-Bold.ttf
           weight: 700
+
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  project: flutter
+  org: fitkarma
