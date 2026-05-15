@@ -55,16 +55,20 @@ class _Blob extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color,
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
-        child: Container(color: Colors.transparent),
+    return IgnorePointer(
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: RadialGradient(
+            colors: [
+              color,
+              color.withValues(alpha: 0),
+            ],
+            stops: const [0.1, 1.0],
+          ),
+        ),
       ),
     );
   }

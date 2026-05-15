@@ -129,14 +129,19 @@ class DashboardScreen extends ConsumerWidget {
       ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'Good morning,',
             style: AppTypography.labelMd(color: AppColorsDark.textSecondary),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           Text(
             user?.name.split(' ').first ?? 'Friend',
             style: AppTypography.h1(color: Colors.white),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -161,41 +166,50 @@ class DashboardScreen extends ConsumerWidget {
     return GlassCard(
       customRadius: AppRadius.xl,
       glowColor: AppColorsDark.primaryGlow,
-      child: Row(
-        children: [
-          ActivityRings(
-            stepsProgress: progress,
-            caloriesProgress: (cals / 500).clamp(0.0, 1.0),
-            minutesProgress: (dist / 8.0).clamp(0.0, 1.0),
-            size: 140,
-          ),
-          const SizedBox(width: 24),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  NumberFormat.decimalPattern().format(steps),
-                  style: AppTypography.metricLg(color: Colors.white),
-                ),
-                Text(
-                  'STEPS TODAY',
-                  style: AppTypography.labelMd(color: AppColorsDark.textSecondary).copyWith(
-                    letterSpacing: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    _buildMiniMetric('$cals', 'KCAL'),
-                    const SizedBox(width: 16),
-                    _buildMiniMetric(dist.toStringAsFixed(1), 'KM'),
-                  ],
-                ),
-              ],
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ActivityRings(
+              stepsProgress: progress,
+              caloriesProgress: (cals / 500).clamp(0.0, 1.0),
+              minutesProgress: (dist / 8.0).clamp(0.0, 1.0),
+              size: 140,
             ),
-          ),
-        ],
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      NumberFormat.decimalPattern().format(steps),
+                      style: AppTypography.metricLg(color: Colors.white),
+                    ),
+                  ),
+                  Text(
+                    'STEPS TODAY',
+                    style: AppTypography.labelMd(color: AppColorsDark.textSecondary).copyWith(
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 8,
+                    children: [
+                      _buildMiniMetric('$cals', 'KCAL'),
+                      _buildMiniMetric(dist.toStringAsFixed(1), 'KM'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -476,9 +490,9 @@ class _BentoItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTypography.labelSm(color: AppColorsDark.textSecondary)),
-                Text(value, style: AppTypography.h2(color: Colors.white)),
-                Text(subtitle, style: AppTypography.labelSm(color: AppColorsDark.textMuted)),
+                Text(title, style: AppTypography.labelSm(color: AppColorsDark.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(value, style: AppTypography.h2(color: Colors.white), maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(subtitle, style: AppTypography.labelSm(color: AppColorsDark.textMuted), maxLines: 1, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
