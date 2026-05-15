@@ -56,9 +56,9 @@ jobs:
           flutter pub get
           dart run build_runner build --delete-conflicting-outputs
 
-      - name: Build IPA release
+      - name: Build IPA debug
         run: |
-          flutter build ipa --release \
+          flutter build ipa --debug \
             --dart-define=APPWRITE_ENDPOINT=${{ secrets.APPWRITE_ENDPOINT }} \
             --dart-define=APPWRITE_PROJECT_ID=${{ secrets.APPWRITE_PROJECT_ID }} \
             --dart-define=APPWRITE_DB_ID=fitkarma-db \
@@ -68,8 +68,9 @@ jobs:
       - name: Upload iOS Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-ios
+          name: app-debug-ios
           path: |
             build/ios/ipa/
             build/ios/archive/
           if-no-files-found: warn
+          retention-days: 7
