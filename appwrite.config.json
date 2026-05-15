@@ -77,7 +77,10 @@
         {
             "$id": "users",
             "$permissions": [
-                "read(\"users\")"
+                "read(\"users\")",
+                "create(\"users\")",
+                "update(\"users\")",
+                "delete(\"users\")"
             ],
             "databaseId": "fitkarma-db",
             "name": "Users",
