@@ -142,47 +142,17 @@ class KarmaState {
   }
 
   factory KarmaState.initial() {
-    final now = DateTime.now();
     return KarmaState(
-      totalXp: 4820,
-      currentLevel: 8,
-      badgeTitle: '⚡ Level 8 Warrior',
-      nextLevelXp: 5000, // Level 8 range: 4200 -> 5000
-      todayEvents: [
-        KarmaEvent(
-          id: 'ev_1',
-          title: 'Logged Nutritious Lunch',
-          category: 'food',
-          xpAwarded: 25,
-          timestamp: DateTime(now.year, now.month, now.day, 12, 30),
-        ),
-        KarmaEvent(
-          id: 'ev_2',
-          title: 'Hit Daily Step Target',
-          category: 'steps',
-          xpAwarded: 40,
-          timestamp: DateTime(now.year, now.month, now.day, 11, 0),
-        ),
-        KarmaEvent(
-          id: 'ev_3',
-          title: 'Hydration Goal Met',
-          category: 'streak',
-          xpAwarded: 15,
-          timestamp: DateTime(now.year, now.month, now.day, 10, 0),
-        ),
-        KarmaEvent(
-          id: 'ev_4',
-          title: 'Morning Yoga Mastery',
-          category: 'workout',
-          xpAwarded: 50,
-          timestamp: DateTime(now.year, now.month, now.day, 8, 15),
-        ),
-      ],
+      totalXp: 0,
+      currentLevel: 1,
+      badgeTitle: '⚡ Level 1 Newcomer',
+      nextLevelXp: 600,
+      todayEvents: [],
       xpBreakdown: {
-        'food': 1420,
-        'workout': 2100,
-        'steps': 850,
-        'streak': 450,
+        'food': 0,
+        'workout': 0,
+        'steps': 0,
+        'streak': 0,
       },
       achievements: [
         Achievement(
@@ -190,8 +160,8 @@ class KarmaState {
           title: 'First Food Log',
           description: 'Logged your very first healthy nutritional entry.',
           icon: '🥗',
-          isUnlocked: true,
-          currentProgress: 1,
+          isUnlocked: false,
+          currentProgress: 0,
           maxProgress: 1,
         ),
         Achievement(
@@ -199,8 +169,8 @@ class KarmaState {
           title: 'First Workout Session',
           description: 'Completed your opening physical conditioning exercise.',
           icon: '💪',
-          isUnlocked: true,
-          currentProgress: 1,
+          isUnlocked: false,
+          currentProgress: 0,
           maxProgress: 1,
         ),
         Achievement(
@@ -208,8 +178,8 @@ class KarmaState {
           title: '7-Day Continuous Streak',
           description: 'Maintained uninterrupted tracking rituals for a solid week.',
           icon: '🔥',
-          isUnlocked: true,
-          currentProgress: 7,
+          isUnlocked: false,
+          currentProgress: 0,
           maxProgress: 7,
         ),
         Achievement(
@@ -218,7 +188,7 @@ class KarmaState {
           description: 'Unlocked supreme dedication over an entire active month.',
           icon: '⚡',
           isUnlocked: false,
-          currentProgress: 12,
+          currentProgress: 0,
           maxProgress: 30,
         ),
         Achievement(
@@ -227,31 +197,13 @@ class KarmaState {
           description: 'Crushed the golden step marker standard in a single epoch.',
           icon: '🚶',
           isUnlocked: false,
-          currentProgress: 7432,
+          currentProgress: 0,
           maxProgress: 10000,
         ),
       ],
-      activeChallenges: [
-        Challenge(
-          id: 'chal_1',
-          title: '7-Day Refined Sugar Detox',
-          reward: '+150 XP Bonus',
-          currentDays: 4,
-          targetDays: 7,
-        ),
-        Challenge(
-          id: 'chal_2',
-          title: 'Weekend Steps Showdown',
-          reward: '+100 XP Bonus',
-          currentDays: 14,
-          targetDays: 20, // thousands
-        ),
-      ],
+      activeChallenges: [],
       leaderboard: [
-        KarmaLeaderboardUser(id: 'usr_1', name: 'Rohan Sharma', xp: 5420, avatarStr: 'RS'),
-        KarmaLeaderboardUser(id: 'usr_curr', name: 'You', xp: 4820, isCurrentUser: true, avatarStr: 'ME'),
-        KarmaLeaderboardUser(id: 'usr_2', name: 'Aanya Patel', xp: 4100, avatarStr: 'AP'),
-        KarmaLeaderboardUser(id: 'usr_3', name: 'Kabir Mehta', xp: 3890, avatarStr: 'KM'),
+        KarmaLeaderboardUser(id: 'usr_curr', name: 'You', xp: 0, isCurrentUser: true, avatarStr: 'ME'),
       ],
     );
   }
@@ -259,7 +211,7 @@ class KarmaState {
 
 class KarmaNotifier extends Notifier<KarmaState> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  static const _storageKey = 'karma_state_cache';
+  static const _storageKey = 'karma_state_v2';
 
   @override
   KarmaState build() {
@@ -293,7 +245,7 @@ class KarmaNotifier extends Notifier<KarmaState> {
       final jsonStr = await _storage.read(key: _storageKey);
       if (jsonStr != null) {
         final map = jsonDecode(jsonStr) as Map<String, dynamic>;
-        final int xp = map['totalXp'] as int? ?? 4820;
+        final int xp = map['totalXp'] as int? ?? 0;
         final int lvl = _calcLevel(xp);
         final nextXp = _calcNextLevelTarget(lvl);
         final titleStr = getLevelTitle(lvl);

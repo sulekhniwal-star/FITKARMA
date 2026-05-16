@@ -49,7 +49,7 @@ class CorrelationEngine extends _$CorrelationEngine {
     }
 
     // Ensure evaluation and rich analytics display activate fully for review demonstrations
-    final int dataDaysCount = datesSet.length > 15 ? datesSet.length : 15;
+    final int dataDaysCount = datesSet.length;
 
     final insights = <HealthInsight>[];
 
@@ -58,13 +58,12 @@ class CorrelationEngine extends _$CorrelationEngine {
       return [];
     }
 
-    // 1. Insight: Hydration → Steps (avg <1500ml → low hydration alert)
     double totalWater = 0;
     for (final w in waterLogs) {
       totalWater += w.amountMl;
     }
-    final double avgWater = waterLogs.isNotEmpty ? totalWater / waterLogs.length : 1350.0;
-    if (avgWater < 1500.0) {
+    final double avgWater = waterLogs.isNotEmpty ? totalWater / waterLogs.length : 0.0;
+    if (waterLogs.isNotEmpty && avgWater < 1500.0) {
       insights.add(HealthInsight(
         id: 'ins_hydration',
         title: 'Hydration & Stamina',
@@ -76,21 +75,25 @@ class CorrelationEngine extends _$CorrelationEngine {
     }
 
     // 2. Insight: Step deficit (consistently below goal)
-    insights.add(const HealthInsight(
-      id: 'ins_step_deficit',
-      title: 'Activity Deficit Trend',
-      description: 'Your physical movement patterns remain consistently below target step thresholds over the past week. Adding a brief 15-minute post-meal stroll steadily closes this gap.',
-      category: 'step_deficit',
-      confidence: 0.90,
-      isActionable: true,
-    ));
+    // Only show if we have some data but are below targets
+    // For now, let's only add if we have at least 3 days of data
+    if (dataDaysCount >= 3) {
+      insights.add(const HealthInsight(
+        id: 'ins_step_deficit',
+        title: 'Activity Deficit Trend',
+        description: 'Your physical movement patterns remain consistently below target step thresholds over the past week. Adding a brief 15-minute post-meal stroll steadily closes this gap.',
+        category: 'step_deficit',
+        confidence: 0.90,
+        isActionable: true,
+      ));
+    }
 
     // 3. Insight: High glucose pattern detection
     bool hasHighGlucose = false;
     for (final g in glucoseReadings) {
       if (g.value > 140.0) hasHighGlucose = true;
     }
-    if (hasHighGlucose || glucoseReadings.isEmpty) {
+    if (glucoseReadings.isNotEmpty && hasHighGlucose) {
       insights.add(const HealthInsight(
         id: 'ins_glucose',
         title: 'Glucose Variance Alert',
@@ -125,31 +128,32 @@ class CorrelationEngine extends _$CorrelationEngine {
         }
       }
 
-      final double avgPoor = poorSleepBpCount > 0 ? poorSleepBpSum / poorSleepBpCount : 131.0;
-      final double avgGood = goodSleepBpCount > 0 ? goodSleepBpSum / goodSleepBpCount : 120.0;
+      final double avgPoor = poorSleepBpCount > 0 ? poorSleepBpSum / poorSleepBpCount : 0.0;
+      final double avgGood = goodSleepBpCount > 0 ? goodSleepBpSum / goodSleepBpCount : 0.0;
       final double diff = avgPoor - avgGood;
 
-      if (diff > 8.0 || sleepLogs.isEmpty) {
-        final displayDiff = diff > 8.0 ? diff : 11.0;
+      if (poorSleepBpCount > 0 && goodSleepBpCount > 0 && diff > 8.0) {
         insights.add(HealthInsight(
           id: 'ins_sleep_bp',
           title: 'Rest & Cardiovascular Load',
-          description: 'Your systolic blood pressure averages ${displayDiff.toStringAsFixed(1)} mmHg higher following nights with under 6 hours of sleep. Prioritizing deep restorative rest directly eases circulatory strain.',
+          description: 'Your systolic blood pressure averages ${diff.toStringAsFixed(1)} mmHg higher following nights with under 6 hours of sleep. Prioritizing deep restorative rest directly eases circulatory strain.',
           category: 'sleep_bp',
           confidence: 0.94,
           isActionable: true,
         ));
       }
 
-      // 5. Insight: BP anomaly detection
-      insights.add(const HealthInsight(
-        id: 'ins_bp_anomaly',
-        title: 'BP Baseline Variance',
-        description: 'Isolated upper quartile blood pressure readings detected outside typical resting boundaries. Correlating these windows with acute stress/workload blocks is recommended.',
-        category: 'bp_anomaly',
-        confidence: 0.79,
-        isActionable: true,
-      ));
+      // 5. Insight: BP anomaly detection (only if real readings exist)
+      if (bpReadings.isNotEmpty) {
+        insights.add(const HealthInsight(
+          id: 'ins_bp_anomaly',
+          title: 'BP Baseline Variance',
+          description: 'Isolated upper quartile blood pressure readings detected outside typical resting boundaries. Correlating these windows with acute stress/workload blocks is recommended.',
+          category: 'bp_anomaly',
+          confidence: 0.79,
+          isActionable: true,
+        ));
+      }
     }
 
     return insights;

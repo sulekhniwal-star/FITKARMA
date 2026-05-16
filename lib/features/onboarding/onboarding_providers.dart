@@ -19,19 +19,25 @@ class Auth extends _$Auth {
       final user = await account.get();
       // Ensure local user record exists
       final db = ref.read(appDatabaseProvider);
-      final localUser = await (db.select(db.users)..where((t) => t.id.equals(user.$id))).getSingleOrNull();
+      final localUser = await (db.select(
+        db.users,
+      )..where((t) => t.id.equals(user.$id))).getSingleOrNull();
       if (localUser == null) {
-        await db.into(db.users).insert(
-          UsersCompanion.insert(
-            id: user.$id,
-            userId: user.$id,
-            email: user.email,
-            name: user.name,
-            uxStage: const Value('established'),
-            onboardingCompleted: const Value(true),
-          ),
-          mode: InsertMode.insertOrIgnore,
-        );
+        await db
+            .into(db.users)
+            .insert(
+              UsersCompanion.insert(
+                id: user.$id,
+                userId: user.$id,
+                email: user.email,
+                name: user.name,
+                uxStage: const Value(
+                  'onboarding',
+                ), // Default to onboarding for new local records
+                onboardingCompleted: const Value(false),
+              ),
+              mode: InsertMode.insertOrIgnore,
+            );
       }
       return user;
     } catch (_) {
@@ -43,13 +49,16 @@ class Auth extends _$Auth {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final account = ref.read(appwriteAccountProvider);
-      await account.createEmailPasswordSession(email: email, password: password);
+      await account.createEmailPasswordSession(
+        email: email,
+        password: password,
+      );
       final user = await account.get();
 
       // Setup local user record and attempt restore from remote
       final db = ref.read(appDatabaseProvider);
       final databases = ref.read(appwriteDatabasesProvider);
-      
+
       String uxStage = 'established';
       bool onboardingCompleted = true;
       String? dominantDosha;
@@ -73,7 +82,9 @@ class Auth extends _$Auth {
         kaphaPercentage = (data['kaphaPercentage'] as num?)?.toDouble();
         goals = data['goals'];
       } catch (_) {
-        final existingLocal = await (db.select(db.users)..where((t) => t.id.equals(user.$id))).getSingleOrNull();
+        final existingLocal = await (db.select(
+          db.users,
+        )..where((t) => t.id.equals(user.$id))).getSingleOrNull();
         if (existingLocal != null) {
           uxStage = existingLocal.uxStage;
           onboardingCompleted = existingLocal.onboardingCompleted;
@@ -85,22 +96,24 @@ class Auth extends _$Auth {
         }
       }
 
-      await db.into(db.users).insert(
-        UsersCompanion.insert(
-          id: user.$id,
-          userId: user.$id,
-          email: user.email,
-          name: user.name,
-          uxStage: Value(uxStage),
-          onboardingCompleted: Value(onboardingCompleted),
-          dominantDosha: Value(dominantDosha),
-          vataPercentage: Value(vataPercentage),
-          pittaPercentage: Value(pittaPercentage),
-          kaphaPercentage: Value(kaphaPercentage),
-          goals: Value(goals),
-        ),
-        mode: InsertMode.insertOrReplace,
-      );
+      await db
+          .into(db.users)
+          .insert(
+            UsersCompanion.insert(
+              id: user.$id,
+              userId: user.$id,
+              email: user.email,
+              name: user.name,
+              uxStage: Value(uxStage),
+              onboardingCompleted: Value(onboardingCompleted),
+              dominantDosha: Value(dominantDosha),
+              vataPercentage: Value(vataPercentage),
+              pittaPercentage: Value(pittaPercentage),
+              kaphaPercentage: Value(kaphaPercentage),
+              goals: Value(goals),
+            ),
+            mode: InsertMode.insertOrReplace,
+          );
 
       return user;
     });
@@ -117,12 +130,17 @@ class Auth extends _$Auth {
         password: password,
         name: name,
       );
-      await account.createEmailPasswordSession(email: email, password: password);
+      await account.createEmailPasswordSession(
+        email: email,
+        password: password,
+      );
       final user = await account.get();
-      
+
       // Initialize user in local DB
       final db = ref.read(appDatabaseProvider);
-      await db.into(db.users).insert(
+      await db
+          .into(db.users)
+          .insert(
             UsersCompanion.insert(
               id: user.$id,
               userId: user.$id,
@@ -142,6 +160,7 @@ class Auth extends _$Auth {
           tableId: 'users',
           rowId: user.$id,
           data: {
+            'userId': user.$id,
             'email': email,
             'name': name,
             'uxStage': 'onboarding',
@@ -174,6 +193,7 @@ class Auth extends _$Auth {
     // Sync to Appwrite with fallback creation
     final databases = ref.read(appwriteDatabasesProvider);
     final rowData = {
+      'userId': user.$id,
       'dominantDosha': result.dominant.name,
       'vataPercentage': result.vataPercentage,
       'pittaPercentage': result.pittaPercentage,
@@ -219,6 +239,7 @@ class Auth extends _$Auth {
     // Sync to Appwrite
     final databases = ref.read(appwriteDatabasesProvider);
     final rowData = {
+      'userId': user.$id,
       'goals': goals.join(','),
       'uxStage': 'goals_completed',
       'email': user.email,
@@ -246,6 +267,52 @@ class Auth extends _$Auth {
     }
   }
 
+  Future<void> saveDemographics({
+    required String name,
+    required int age,
+    required double height,
+    required double weight,
+    required String gender,
+  }) async {
+    final user = state.value;
+    if (user == null) return;
+
+    final db = ref.read(appDatabaseProvider);
+    await (db.update(db.users)..where((t) => t.id.equals(user.$id))).write(
+      UsersCompanion(
+        name: Value(name),
+        age: Value(age),
+        heightCm: Value(height),
+        weightKg: Value(weight),
+        gender: Value(gender),
+        uxStage: const Value('demographics_completed'),
+      ),
+    );
+
+    // Update Appwrite
+    final databases = ref.read(appwriteDatabasesProvider);
+    final rowData = {
+      'userId': user.$id,
+      'name': name,
+      'age': age,
+      'height': height,
+      'weight': weight,
+      'gender': gender,
+      'uxStage': 'demographics_completed',
+    };
+
+    try {
+      await databases.updateRow(
+        databaseId: 'fitkarma-db',
+        tableId: 'users',
+        rowId: user.$id,
+        data: rowData,
+      );
+    } catch (e) {
+      debugPrint('Error syncing demographics to Appwrite: $e');
+    }
+  }
+
   Future<void> completeOnboarding() async {
     final user = state.value;
     if (user == null) return;
@@ -261,6 +328,7 @@ class Auth extends _$Auth {
     // Sync to Appwrite
     final databases = ref.read(appwriteDatabasesProvider);
     final rowData = {
+      'userId': user.$id,
       'onboardingCompleted': true,
       'uxStage': 'established',
       'email': user.email,
@@ -330,7 +398,7 @@ class DoshaQuiz extends _$DoshaQuiz {
     }
 
     final total = state.length.toDouble();
-    
+
     // Find dominant
     DoshaType dominant = DoshaType.vata;
     if (pitta >= vata && pitta >= kapha) dominant = DoshaType.pitta;
@@ -359,3 +427,4 @@ class Goals extends _$Goals {
     }
   }
 }
+

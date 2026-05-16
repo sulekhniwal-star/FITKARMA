@@ -6367,7 +6367,7 @@ class FoodItemsCompanion extends UpdateCompanion<FoodItem> {
   }
 }
 
-class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+class $UsersTable extends Users with TableInfo<$UsersTable, LocalUser> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -6526,6 +6526,46 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _ageMeta = const VerificationMeta('age');
+  @override
+  late final GeneratedColumn<int> age = GeneratedColumn<int>(
+    'age',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _heightCmMeta = const VerificationMeta(
+    'heightCm',
+  );
+  @override
+  late final GeneratedColumn<double> heightCm = GeneratedColumn<double>(
+    'height_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _weightKgMeta = const VerificationMeta(
+    'weightKg',
+  );
+  @override
+  late final GeneratedColumn<double> weightKg = GeneratedColumn<double>(
+    'weight_kg',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _genderMeta = const VerificationMeta('gender');
+  @override
+  late final GeneratedColumn<String> gender = GeneratedColumn<String>(
+    'gender',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _goalsMeta = const VerificationMeta('goals');
   @override
   late final GeneratedColumn<String> goals = GeneratedColumn<String>(
@@ -6577,6 +6617,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     vataPercentage,
     pittaPercentage,
     kaphaPercentage,
+    age,
+    heightCm,
+    weightKg,
+    gender,
     goals,
     onboardingCompleted,
     createdAt,
@@ -6588,7 +6632,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   static const String $name = 'users';
   @override
   VerificationContext validateIntegrity(
-    Insertable<User> instance, {
+    Insertable<LocalUser> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -6697,6 +6741,30 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         ),
       );
     }
+    if (data.containsKey('age')) {
+      context.handle(
+        _ageMeta,
+        age.isAcceptableOrUnknown(data['age']!, _ageMeta),
+      );
+    }
+    if (data.containsKey('height_cm')) {
+      context.handle(
+        _heightCmMeta,
+        heightCm.isAcceptableOrUnknown(data['height_cm']!, _heightCmMeta),
+      );
+    }
+    if (data.containsKey('weight_kg')) {
+      context.handle(
+        _weightKgMeta,
+        weightKg.isAcceptableOrUnknown(data['weight_kg']!, _weightKgMeta),
+      );
+    }
+    if (data.containsKey('gender')) {
+      context.handle(
+        _genderMeta,
+        gender.isAcceptableOrUnknown(data['gender']!, _genderMeta),
+      );
+    }
     if (data.containsKey('goals')) {
       context.handle(
         _goalsMeta,
@@ -6724,9 +6792,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+  LocalUser map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return User(
+    return LocalUser(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
@@ -6783,6 +6851,22 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         DriftSqlType.double,
         data['${effectivePrefix}kapha_percentage'],
       ),
+      age: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}age'],
+      ),
+      heightCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}height_cm'],
+      ),
+      weightKg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}weight_kg'],
+      ),
+      gender: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}gender'],
+      ),
       goals: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}goals'],
@@ -6804,7 +6888,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   }
 }
 
-class User extends DataClass implements Insertable<User> {
+class LocalUser extends DataClass implements Insertable<LocalUser> {
   final String id;
   final String userId;
   final String syncStatus;
@@ -6819,10 +6903,14 @@ class User extends DataClass implements Insertable<User> {
   final double? vataPercentage;
   final double? pittaPercentage;
   final double? kaphaPercentage;
+  final int? age;
+  final double? heightCm;
+  final double? weightKg;
+  final String? gender;
   final String? goals;
   final bool onboardingCompleted;
   final DateTime createdAt;
-  const User({
+  const LocalUser({
     required this.id,
     required this.userId,
     required this.syncStatus,
@@ -6837,6 +6925,10 @@ class User extends DataClass implements Insertable<User> {
     this.vataPercentage,
     this.pittaPercentage,
     this.kaphaPercentage,
+    this.age,
+    this.heightCm,
+    this.weightKg,
+    this.gender,
     this.goals,
     required this.onboardingCompleted,
     required this.createdAt,
@@ -6867,6 +6959,18 @@ class User extends DataClass implements Insertable<User> {
     }
     if (!nullToAbsent || kaphaPercentage != null) {
       map['kapha_percentage'] = Variable<double>(kaphaPercentage);
+    }
+    if (!nullToAbsent || age != null) {
+      map['age'] = Variable<int>(age);
+    }
+    if (!nullToAbsent || heightCm != null) {
+      map['height_cm'] = Variable<double>(heightCm);
+    }
+    if (!nullToAbsent || weightKg != null) {
+      map['weight_kg'] = Variable<double>(weightKg);
+    }
+    if (!nullToAbsent || gender != null) {
+      map['gender'] = Variable<String>(gender);
     }
     if (!nullToAbsent || goals != null) {
       map['goals'] = Variable<String>(goals);
@@ -6902,6 +7006,16 @@ class User extends DataClass implements Insertable<User> {
       kaphaPercentage: kaphaPercentage == null && nullToAbsent
           ? const Value.absent()
           : Value(kaphaPercentage),
+      age: age == null && nullToAbsent ? const Value.absent() : Value(age),
+      heightCm: heightCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(heightCm),
+      weightKg: weightKg == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weightKg),
+      gender: gender == null && nullToAbsent
+          ? const Value.absent()
+          : Value(gender),
       goals: goals == null && nullToAbsent
           ? const Value.absent()
           : Value(goals),
@@ -6910,12 +7024,12 @@ class User extends DataClass implements Insertable<User> {
     );
   }
 
-  factory User.fromJson(
+  factory LocalUser.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return User(
+    return LocalUser(
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
@@ -6930,6 +7044,10 @@ class User extends DataClass implements Insertable<User> {
       vataPercentage: serializer.fromJson<double?>(json['vataPercentage']),
       pittaPercentage: serializer.fromJson<double?>(json['pittaPercentage']),
       kaphaPercentage: serializer.fromJson<double?>(json['kaphaPercentage']),
+      age: serializer.fromJson<int?>(json['age']),
+      heightCm: serializer.fromJson<double?>(json['heightCm']),
+      weightKg: serializer.fromJson<double?>(json['weightKg']),
+      gender: serializer.fromJson<String?>(json['gender']),
       goals: serializer.fromJson<String?>(json['goals']),
       onboardingCompleted: serializer.fromJson<bool>(
         json['onboardingCompleted'],
@@ -6955,13 +7073,17 @@ class User extends DataClass implements Insertable<User> {
       'vataPercentage': serializer.toJson<double?>(vataPercentage),
       'pittaPercentage': serializer.toJson<double?>(pittaPercentage),
       'kaphaPercentage': serializer.toJson<double?>(kaphaPercentage),
+      'age': serializer.toJson<int?>(age),
+      'heightCm': serializer.toJson<double?>(heightCm),
+      'weightKg': serializer.toJson<double?>(weightKg),
+      'gender': serializer.toJson<String?>(gender),
       'goals': serializer.toJson<String?>(goals),
       'onboardingCompleted': serializer.toJson<bool>(onboardingCompleted),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
-  User copyWith({
+  LocalUser copyWith({
     String? id,
     String? userId,
     String? syncStatus,
@@ -6976,10 +7098,14 @@ class User extends DataClass implements Insertable<User> {
     Value<double?> vataPercentage = const Value.absent(),
     Value<double?> pittaPercentage = const Value.absent(),
     Value<double?> kaphaPercentage = const Value.absent(),
+    Value<int?> age = const Value.absent(),
+    Value<double?> heightCm = const Value.absent(),
+    Value<double?> weightKg = const Value.absent(),
+    Value<String?> gender = const Value.absent(),
     Value<String?> goals = const Value.absent(),
     bool? onboardingCompleted,
     DateTime? createdAt,
-  }) => User(
+  }) => LocalUser(
     id: id ?? this.id,
     userId: userId ?? this.userId,
     syncStatus: syncStatus ?? this.syncStatus,
@@ -7002,12 +7128,16 @@ class User extends DataClass implements Insertable<User> {
     kaphaPercentage: kaphaPercentage.present
         ? kaphaPercentage.value
         : this.kaphaPercentage,
+    age: age.present ? age.value : this.age,
+    heightCm: heightCm.present ? heightCm.value : this.heightCm,
+    weightKg: weightKg.present ? weightKg.value : this.weightKg,
+    gender: gender.present ? gender.value : this.gender,
     goals: goals.present ? goals.value : this.goals,
     onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
     createdAt: createdAt ?? this.createdAt,
   );
-  User copyWithCompanion(UsersCompanion data) {
-    return User(
+  LocalUser copyWithCompanion(UsersCompanion data) {
+    return LocalUser(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       syncStatus: data.syncStatus.present
@@ -7034,6 +7164,10 @@ class User extends DataClass implements Insertable<User> {
       kaphaPercentage: data.kaphaPercentage.present
           ? data.kaphaPercentage.value
           : this.kaphaPercentage,
+      age: data.age.present ? data.age.value : this.age,
+      heightCm: data.heightCm.present ? data.heightCm.value : this.heightCm,
+      weightKg: data.weightKg.present ? data.weightKg.value : this.weightKg,
+      gender: data.gender.present ? data.gender.value : this.gender,
       goals: data.goals.present ? data.goals.value : this.goals,
       onboardingCompleted: data.onboardingCompleted.present
           ? data.onboardingCompleted.value
@@ -7044,7 +7178,7 @@ class User extends DataClass implements Insertable<User> {
 
   @override
   String toString() {
-    return (StringBuffer('User(')
+    return (StringBuffer('LocalUser(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('syncStatus: $syncStatus, ')
@@ -7059,6 +7193,10 @@ class User extends DataClass implements Insertable<User> {
           ..write('vataPercentage: $vataPercentage, ')
           ..write('pittaPercentage: $pittaPercentage, ')
           ..write('kaphaPercentage: $kaphaPercentage, ')
+          ..write('age: $age, ')
+          ..write('heightCm: $heightCm, ')
+          ..write('weightKg: $weightKg, ')
+          ..write('gender: $gender, ')
           ..write('goals: $goals, ')
           ..write('onboardingCompleted: $onboardingCompleted, ')
           ..write('createdAt: $createdAt')
@@ -7067,7 +7205,7 @@ class User extends DataClass implements Insertable<User> {
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     userId,
     syncStatus,
@@ -7082,14 +7220,18 @@ class User extends DataClass implements Insertable<User> {
     vataPercentage,
     pittaPercentage,
     kaphaPercentage,
+    age,
+    heightCm,
+    weightKg,
+    gender,
     goals,
     onboardingCompleted,
     createdAt,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is User &&
+      (other is LocalUser &&
           other.id == this.id &&
           other.userId == this.userId &&
           other.syncStatus == this.syncStatus &&
@@ -7104,12 +7246,16 @@ class User extends DataClass implements Insertable<User> {
           other.vataPercentage == this.vataPercentage &&
           other.pittaPercentage == this.pittaPercentage &&
           other.kaphaPercentage == this.kaphaPercentage &&
+          other.age == this.age &&
+          other.heightCm == this.heightCm &&
+          other.weightKg == this.weightKg &&
+          other.gender == this.gender &&
           other.goals == this.goals &&
           other.onboardingCompleted == this.onboardingCompleted &&
           other.createdAt == this.createdAt);
 }
 
-class UsersCompanion extends UpdateCompanion<User> {
+class UsersCompanion extends UpdateCompanion<LocalUser> {
   final Value<String> id;
   final Value<String> userId;
   final Value<String> syncStatus;
@@ -7124,6 +7270,10 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<double?> vataPercentage;
   final Value<double?> pittaPercentage;
   final Value<double?> kaphaPercentage;
+  final Value<int?> age;
+  final Value<double?> heightCm;
+  final Value<double?> weightKg;
+  final Value<String?> gender;
   final Value<String?> goals;
   final Value<bool> onboardingCompleted;
   final Value<DateTime> createdAt;
@@ -7143,6 +7293,10 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.vataPercentage = const Value.absent(),
     this.pittaPercentage = const Value.absent(),
     this.kaphaPercentage = const Value.absent(),
+    this.age = const Value.absent(),
+    this.heightCm = const Value.absent(),
+    this.weightKg = const Value.absent(),
+    this.gender = const Value.absent(),
     this.goals = const Value.absent(),
     this.onboardingCompleted = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -7163,6 +7317,10 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.vataPercentage = const Value.absent(),
     this.pittaPercentage = const Value.absent(),
     this.kaphaPercentage = const Value.absent(),
+    this.age = const Value.absent(),
+    this.heightCm = const Value.absent(),
+    this.weightKg = const Value.absent(),
+    this.gender = const Value.absent(),
     this.goals = const Value.absent(),
     this.onboardingCompleted = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -7171,7 +7329,7 @@ class UsersCompanion extends UpdateCompanion<User> {
        userId = Value(userId),
        email = Value(email),
        name = Value(name);
-  static Insertable<User> custom({
+  static Insertable<LocalUser> custom({
     Expression<String>? id,
     Expression<String>? userId,
     Expression<String>? syncStatus,
@@ -7186,6 +7344,10 @@ class UsersCompanion extends UpdateCompanion<User> {
     Expression<double>? vataPercentage,
     Expression<double>? pittaPercentage,
     Expression<double>? kaphaPercentage,
+    Expression<int>? age,
+    Expression<double>? heightCm,
+    Expression<double>? weightKg,
+    Expression<String>? gender,
     Expression<String>? goals,
     Expression<bool>? onboardingCompleted,
     Expression<DateTime>? createdAt,
@@ -7206,6 +7368,10 @@ class UsersCompanion extends UpdateCompanion<User> {
       if (vataPercentage != null) 'vata_percentage': vataPercentage,
       if (pittaPercentage != null) 'pitta_percentage': pittaPercentage,
       if (kaphaPercentage != null) 'kapha_percentage': kaphaPercentage,
+      if (age != null) 'age': age,
+      if (heightCm != null) 'height_cm': heightCm,
+      if (weightKg != null) 'weight_kg': weightKg,
+      if (gender != null) 'gender': gender,
       if (goals != null) 'goals': goals,
       if (onboardingCompleted != null)
         'onboarding_completed': onboardingCompleted,
@@ -7229,6 +7395,10 @@ class UsersCompanion extends UpdateCompanion<User> {
     Value<double?>? vataPercentage,
     Value<double?>? pittaPercentage,
     Value<double?>? kaphaPercentage,
+    Value<int?>? age,
+    Value<double?>? heightCm,
+    Value<double?>? weightKg,
+    Value<String?>? gender,
     Value<String?>? goals,
     Value<bool>? onboardingCompleted,
     Value<DateTime>? createdAt,
@@ -7249,6 +7419,10 @@ class UsersCompanion extends UpdateCompanion<User> {
       vataPercentage: vataPercentage ?? this.vataPercentage,
       pittaPercentage: pittaPercentage ?? this.pittaPercentage,
       kaphaPercentage: kaphaPercentage ?? this.kaphaPercentage,
+      age: age ?? this.age,
+      heightCm: heightCm ?? this.heightCm,
+      weightKg: weightKg ?? this.weightKg,
+      gender: gender ?? this.gender,
       goals: goals ?? this.goals,
       onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
       createdAt: createdAt ?? this.createdAt,
@@ -7301,6 +7475,18 @@ class UsersCompanion extends UpdateCompanion<User> {
     if (kaphaPercentage.present) {
       map['kapha_percentage'] = Variable<double>(kaphaPercentage.value);
     }
+    if (age.present) {
+      map['age'] = Variable<int>(age.value);
+    }
+    if (heightCm.present) {
+      map['height_cm'] = Variable<double>(heightCm.value);
+    }
+    if (weightKg.present) {
+      map['weight_kg'] = Variable<double>(weightKg.value);
+    }
+    if (gender.present) {
+      map['gender'] = Variable<String>(gender.value);
+    }
     if (goals.present) {
       map['goals'] = Variable<String>(goals.value);
     }
@@ -7333,6 +7519,10 @@ class UsersCompanion extends UpdateCompanion<User> {
           ..write('vataPercentage: $vataPercentage, ')
           ..write('pittaPercentage: $pittaPercentage, ')
           ..write('kaphaPercentage: $kaphaPercentage, ')
+          ..write('age: $age, ')
+          ..write('heightCm: $heightCm, ')
+          ..write('weightKg: $weightKg, ')
+          ..write('gender: $gender, ')
           ..write('goals: $goals, ')
           ..write('onboardingCompleted: $onboardingCompleted, ')
           ..write('createdAt: $createdAt, ')
@@ -10472,6 +10662,10 @@ typedef $$UsersTableCreateCompanionBuilder =
       Value<double?> vataPercentage,
       Value<double?> pittaPercentage,
       Value<double?> kaphaPercentage,
+      Value<int?> age,
+      Value<double?> heightCm,
+      Value<double?> weightKg,
+      Value<String?> gender,
       Value<String?> goals,
       Value<bool> onboardingCompleted,
       Value<DateTime> createdAt,
@@ -10493,6 +10687,10 @@ typedef $$UsersTableUpdateCompanionBuilder =
       Value<double?> vataPercentage,
       Value<double?> pittaPercentage,
       Value<double?> kaphaPercentage,
+      Value<int?> age,
+      Value<double?> heightCm,
+      Value<double?> weightKg,
+      Value<String?> gender,
       Value<String?> goals,
       Value<bool> onboardingCompleted,
       Value<DateTime> createdAt,
@@ -10574,6 +10772,26 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
 
   ColumnFilters<double> get kaphaPercentage => $composableBuilder(
     column: $table.kaphaPercentage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get age => $composableBuilder(
+    column: $table.age,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get heightCm => $composableBuilder(
+    column: $table.heightCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get weightKg => $composableBuilder(
+    column: $table.weightKg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get gender => $composableBuilder(
+    column: $table.gender,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10672,6 +10890,26 @@ class $$UsersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get age => $composableBuilder(
+    column: $table.age,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get heightCm => $composableBuilder(
+    column: $table.heightCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get weightKg => $composableBuilder(
+    column: $table.weightKg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get goals => $composableBuilder(
     column: $table.goals,
     builder: (column) => ColumnOrderings(column),
@@ -10751,6 +10989,18 @@ class $$UsersTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get age =>
+      $composableBuilder(column: $table.age, builder: (column) => column);
+
+  GeneratedColumn<double> get heightCm =>
+      $composableBuilder(column: $table.heightCm, builder: (column) => column);
+
+  GeneratedColumn<double> get weightKg =>
+      $composableBuilder(column: $table.weightKg, builder: (column) => column);
+
+  GeneratedColumn<String> get gender =>
+      $composableBuilder(column: $table.gender, builder: (column) => column);
+
   GeneratedColumn<String> get goals =>
       $composableBuilder(column: $table.goals, builder: (column) => column);
 
@@ -10768,14 +11018,14 @@ class $$UsersTableTableManager
         RootTableManager<
           _$AppDatabase,
           $UsersTable,
-          User,
+          LocalUser,
           $$UsersTableFilterComposer,
           $$UsersTableOrderingComposer,
           $$UsersTableAnnotationComposer,
           $$UsersTableCreateCompanionBuilder,
           $$UsersTableUpdateCompanionBuilder,
-          (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
-          User,
+          (LocalUser, BaseReferences<_$AppDatabase, $UsersTable, LocalUser>),
+          LocalUser,
           PrefetchHooks Function()
         > {
   $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
@@ -10805,6 +11055,10 @@ class $$UsersTableTableManager
                 Value<double?> vataPercentage = const Value.absent(),
                 Value<double?> pittaPercentage = const Value.absent(),
                 Value<double?> kaphaPercentage = const Value.absent(),
+                Value<int?> age = const Value.absent(),
+                Value<double?> heightCm = const Value.absent(),
+                Value<double?> weightKg = const Value.absent(),
+                Value<String?> gender = const Value.absent(),
                 Value<String?> goals = const Value.absent(),
                 Value<bool> onboardingCompleted = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -10824,6 +11078,10 @@ class $$UsersTableTableManager
                 vataPercentage: vataPercentage,
                 pittaPercentage: pittaPercentage,
                 kaphaPercentage: kaphaPercentage,
+                age: age,
+                heightCm: heightCm,
+                weightKg: weightKg,
+                gender: gender,
                 goals: goals,
                 onboardingCompleted: onboardingCompleted,
                 createdAt: createdAt,
@@ -10845,6 +11103,10 @@ class $$UsersTableTableManager
                 Value<double?> vataPercentage = const Value.absent(),
                 Value<double?> pittaPercentage = const Value.absent(),
                 Value<double?> kaphaPercentage = const Value.absent(),
+                Value<int?> age = const Value.absent(),
+                Value<double?> heightCm = const Value.absent(),
+                Value<double?> weightKg = const Value.absent(),
+                Value<String?> gender = const Value.absent(),
                 Value<String?> goals = const Value.absent(),
                 Value<bool> onboardingCompleted = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -10864,6 +11126,10 @@ class $$UsersTableTableManager
                 vataPercentage: vataPercentage,
                 pittaPercentage: pittaPercentage,
                 kaphaPercentage: kaphaPercentage,
+                age: age,
+                heightCm: heightCm,
+                weightKg: weightKg,
+                gender: gender,
                 goals: goals,
                 onboardingCompleted: onboardingCompleted,
                 createdAt: createdAt,
@@ -10881,14 +11147,14 @@ typedef $$UsersTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $UsersTable,
-      User,
+      LocalUser,
       $$UsersTableFilterComposer,
       $$UsersTableOrderingComposer,
       $$UsersTableAnnotationComposer,
       $$UsersTableCreateCompanionBuilder,
       $$UsersTableUpdateCompanionBuilder,
-      (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
-      User,
+      (LocalUser, BaseReferences<_$AppDatabase, $UsersTable, LocalUser>),
+      LocalUser,
       PrefetchHooks Function()
     >;
 

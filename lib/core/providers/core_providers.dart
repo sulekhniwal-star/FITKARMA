@@ -78,3 +78,12 @@ Future<bool> isPro(Ref ref) async {
     return false;
   }
 }
+@riverpod
+Stream<dynamic> currentUserLocalRecord(Ref ref) {
+  final authAsync = ref.watch(authProvider);
+  final user = authAsync.value;
+  if (user == null) return Stream.value(null);
+
+  final db = ref.watch(appDatabaseProvider);
+  return (db.select(db.users)..where((t) => t.id.equals(user.$id))).watchSingleOrNull();
+}

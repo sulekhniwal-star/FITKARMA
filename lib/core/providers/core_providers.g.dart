@@ -100,7 +100,7 @@ final class AppwriteClientProvider
   }
 }
 
-String _$appwriteClientHash() => r'777cd590463dae4f9b03fbea9d73f1e0dfb18011';
+String _$appwriteClientHash() => r'8950d534579ec2c287933a465f834a712baae20d';
 
 @ProviderFor(appwriteDatabases)
 final appwriteDatabasesProvider = AppwriteDatabasesProvider._();
@@ -298,3 +298,37 @@ final class IsProProvider
 }
 
 String _$isProHash() => r'8748287bfee4b5c8bc8143f224aeceadc0886d79';
+
+@ProviderFor(currentUserLocalRecord)
+final currentUserLocalRecordProvider = CurrentUserLocalRecordProvider._();
+
+final class CurrentUserLocalRecordProvider
+    extends $FunctionalProvider<AsyncValue<dynamic>, dynamic, Stream<dynamic>>
+    with $FutureModifier<dynamic>, $StreamProvider<dynamic> {
+  CurrentUserLocalRecordProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentUserLocalRecordProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$currentUserLocalRecordHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<dynamic> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<dynamic> create(Ref ref) {
+    return currentUserLocalRecord(ref);
+  }
+}
+
+String _$currentUserLocalRecordHash() =>
+    r'b1f936e564660b193d2bf6f32964a718294d4b97';

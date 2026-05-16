@@ -99,6 +99,7 @@ class FoodItems extends Table {
   Set<Column> get primaryKey => {id, source};
 }
 
+@DataClassName('LocalUser')
 class Users extends Table with SyncableColumns {
   TextColumn get email => text()();
   TextColumn get name => text()();
@@ -109,6 +110,12 @@ class Users extends Table with SyncableColumns {
   RealColumn get vataPercentage => real().nullable()();
   RealColumn get pittaPercentage => real().nullable()();
   RealColumn get kaphaPercentage => real().nullable()();
+
+  // Demographics
+  IntColumn get age => integer().nullable()();
+  RealColumn get heightCm => real().nullable()();
+  RealColumn get weightKg => real().nullable()();
+  TextColumn get gender => text().nullable()();
 
   // Goals (Stored as comma-separated strings or JSON)
   TextColumn get goals => text().nullable()();
@@ -137,7 +144,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openDatabase());
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(

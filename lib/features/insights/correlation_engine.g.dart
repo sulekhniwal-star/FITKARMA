@@ -57,7 +57,7 @@ final class CorrelationEngineProvider
   CorrelationEngine create() => CorrelationEngine();
 }
 
-String _$correlationEngineHash() => r'ef48c53d4126a312edf8d86a68d8f753f4b401e7';
+String _$correlationEngineHash() => r'01adc0e4d6a6903cb04ab198a583cd7211b0bc58';
 
 abstract class _$CorrelationEngine extends $AsyncNotifier<List<HealthInsight>> {
   FutureOr<List<HealthInsight>> build();

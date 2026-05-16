@@ -65,7 +65,7 @@ class GoalsScreen extends ConsumerWidget {
               onPressed: () async {
                 await ref.read(authProvider.notifier).saveGoals(selectedGoals);
                 if (context.mounted) {
-                  context.go('/onboarding/permissions');
+                  context.go('/onboarding/demographics');
                 }
               },
             ),

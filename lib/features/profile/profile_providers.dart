@@ -26,27 +26,27 @@ class UserProfileMetrics {
       };
 
   factory UserProfileMetrics.fromJson(Map<String, dynamic> json) => UserProfileMetrics(
-        name: json['name'] as String? ?? 'Aanya Patel',
-        gender: json['gender'] as String? ?? 'Female',
-        age: json['age'] as int? ?? 28,
-        heightCm: (json['heightCm'] as num? ?? 165.0).toDouble(),
-        weightKg: (json['weightKg'] as num? ?? 62.0).toDouble(),
+        name: json['name'] as String? ?? '',
+        gender: json['gender'] as String? ?? '',
+        age: json['age'] as int? ?? 0,
+        heightCm: (json['heightCm'] as num? ?? 0.0).toDouble(),
+        weightKg: (json['weightKg'] as num? ?? 0.0).toDouble(),
       );
 }
 
 class ProfileNotifier extends Notifier<UserProfileMetrics> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  static const _storageKey = 'user_profile_editable_metrics';
+  static const _storageKey = 'user_profile_metrics_v2';
 
   @override
   UserProfileMetrics build() {
     Future.microtask(() => _loadState());
     return UserProfileMetrics(
-      name: 'Aanya Patel',
-      gender: 'Female',
-      age: 28,
-      heightCm: 165.0,
-      weightKg: 62.0,
+      name: '',
+      gender: '',
+      age: 0,
+      heightCm: 0.0,
+      weightKg: 0.0,
     );
   }
 

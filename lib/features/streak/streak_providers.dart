@@ -26,12 +26,12 @@ class StreakState {
         claimedMilestones: (json['claimedMilestones'] as List<dynamic>? ?? []).map((e) => e as int).toSet(),
       );
 
-  factory StreakState.initial() => StreakState(currentStreak: 12, claimedMilestones: {7});
+  factory StreakState.initial() => StreakState(currentStreak: 0, claimedMilestones: {});
 }
 
 class StreakNotifier extends Notifier<StreakState> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  static const _storageKey = 'user_streak_state_v1';
+  static const _storageKey = 'user_streak_state_v2';
 
   @override
   StreakState build() {

@@ -8,7 +8,8 @@ import '../../shared/widgets/scaffold_patterns.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../onboarding/onboarding_providers.dart';
 import '../karma/karma_providers.dart';
-import 'profile_providers.dart';
+import '../../core/providers/core_providers.dart';
+import '../../core/database/app_database.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -86,21 +87,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final authAsync = ref.watch(authProvider);
     final user = authAsync.value;
-    final emailStr = user?.email ?? 'sulekhniwal@fitkarma.in';
+    final emailStr = user?.email ?? 'user@fitkarma.in';
 
-    final metrics = ref.watch(userProfileMetricsProvider);
     final karmaState = ref.watch(karmaStateProvider);
 
-    // Derive avatar initials
-    final nameStr = metrics.name;
-    final initials = nameStr.isNotEmpty ? nameStr.split(' ').map((e) => e.isNotEmpty ? e[0] : '').take(2).join().toUpperCase() : 'ME';
-
     // Dosha percentages configuration
-    // Fetch result from quiz if available, otherwise baseline fallback
-    final doshaResult = ref.watch(doshaQuizProvider.notifier).calculateResult();
-    final double vataPct = doshaResult?.vataPercentage ?? 40.0;
-    final double pittaPct = doshaResult?.pittaPercentage ?? 35.0;
-    final double kaphaPct = doshaResult?.kaphaPercentage ?? 25.0;
+    final localUserAsync = ref.watch(currentUserLocalRecordProvider);
+    final localUser = localUserAsync.value as LocalUser?;
+    
+    // Derive avatar initials
+    final nameStr = localUser?.name ?? 'User';
+    final initials = nameStr.isNotEmpty && nameStr != 'User' ? nameStr.split(' ').map((e) => e.isNotEmpty ? e[0] : '').take(2).join().toUpperCase() : '??';
+
+    final double vataPct = localUser?.vataPercentage ?? 0.0;
+    final double pittaPct = localUser?.pittaPercentage ?? 0.0;
+    final double kaphaPct = localUser?.kaphaPercentage ?? 0.0;
+    final String dominantDosha = localUser?.dominantDosha ?? 'NONE';
 
     return AppScaffold.patternB(
       appBar: AppBar(
@@ -273,7 +275,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         children: [
                           Text('Dominant', style: AppTypography.labelSm(color: AppColorsDark.textMuted).copyWith(fontSize: 10)),
                           Text(
-                            doshaResult?.dominant.name.toUpperCase() ?? 'PITTA',
+                            dominantDosha.toUpperCase(),
                             style: AppTypography.labelLg(color: Colors.white).copyWith(fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -306,52 +308,82 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               children: [
                 _buildEditableRow(
                   label: 'Full Name',
-                  value: metrics.name,
+                  value: localUser?.name ?? 'Not Set',
                   onTap: () => _editMetricDialog(
                     title: 'Name',
-                    currentValue: metrics.name,
-                    onSave: (val) => ref.read(userProfileMetricsProvider.notifier).updateMetrics(name: val),
+                    currentValue: localUser?.name ?? '',
+                    onSave: (val) => ref.read(authProvider.notifier).saveDemographics(
+                      name: val,
+                      age: localUser?.age ?? 0,
+                      height: localUser?.heightCm ?? 0,
+                      weight: localUser?.weightKg ?? 0,
+                      gender: localUser?.gender ?? 'Other',
+                    ),
                   ),
                 ),
                 const Divider(color: AppColorsDark.divider, height: 1),
                 _buildEditableRow(
                   label: 'Biological Age',
-                  value: '${metrics.age} Years',
+                  value: '${localUser?.age ?? 0} Years',
                   onTap: () => _editMetricDialog(
                     title: 'Age',
-                    currentValue: metrics.age.toString(),
+                    currentValue: (localUser?.age ?? 0).toString(),
                     isNumber: true,
                     onSave: (val) {
                       final parsed = int.tryParse(val);
-                      if (parsed != null) ref.read(userProfileMetricsProvider.notifier).updateMetrics(age: parsed);
+                      if (parsed != null) {
+                        ref.read(authProvider.notifier).saveDemographics(
+                          name: localUser?.name ?? '',
+                          age: parsed,
+                          height: localUser?.heightCm ?? 0,
+                          weight: localUser?.weightKg ?? 0,
+                          gender: localUser?.gender ?? 'Other',
+                        );
+                      }
                     },
                   ),
                 ),
                 const Divider(color: AppColorsDark.divider, height: 1),
                 _buildEditableRow(
                   label: 'Height Metric',
-                  value: '${metrics.heightCm} cm',
+                  value: '${localUser?.heightCm ?? 0} cm',
                   onTap: () => _editMetricDialog(
                     title: 'Height (cm)',
-                    currentValue: metrics.heightCm.toString(),
+                    currentValue: (localUser?.heightCm ?? 0).toString(),
                     isNumber: true,
                     onSave: (val) {
                       final parsed = double.tryParse(val);
-                      if (parsed != null) ref.read(userProfileMetricsProvider.notifier).updateMetrics(heightCm: parsed);
+                      if (parsed != null) {
+                        ref.read(authProvider.notifier).saveDemographics(
+                          name: localUser?.name ?? '',
+                          age: localUser?.age ?? 0,
+                          height: parsed,
+                          weight: localUser?.weightKg ?? 0,
+                          gender: localUser?.gender ?? 'Other',
+                        );
+                      }
                     },
                   ),
                 ),
                 const Divider(color: AppColorsDark.divider, height: 1),
                 _buildEditableRow(
                   label: 'Body Weight',
-                  value: '${metrics.weightKg} kg',
+                  value: '${localUser?.weightKg ?? 0} kg',
                   onTap: () => _editMetricDialog(
                     title: 'Weight (kg)',
-                    currentValue: metrics.weightKg.toString(),
+                    currentValue: (localUser?.weightKg ?? 0).toString(),
                     isNumber: true,
                     onSave: (val) {
                       final parsed = double.tryParse(val);
-                      if (parsed != null) ref.read(userProfileMetricsProvider.notifier).updateMetrics(weightKg: parsed);
+                      if (parsed != null) {
+                        ref.read(authProvider.notifier).saveDemographics(
+                          name: localUser?.name ?? '',
+                          age: localUser?.age ?? 0,
+                          height: localUser?.heightCm ?? 0,
+                          weight: parsed,
+                          gender: localUser?.gender ?? 'Other',
+                        );
+                      }
                     },
                   ),
                 ),
@@ -366,11 +398,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: MediaQuery.of(context).size.width > 900 ? 4 : 2,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
-              childAspectRatio: 0.85,
+              childAspectRatio: MediaQuery.of(context).size.width > 900 ? 1.0 : 0.85,
             ),
             itemCount: karmaState.achievements.length,
             itemBuilder: (context, index) {

@@ -6,6 +6,7 @@ import '../../features/onboarding/welcome_screen.dart';
 import '../../features/onboarding/auth_screen.dart';
 import '../../features/onboarding/dosha_quiz_screen.dart';
 import '../../features/onboarding/goals_screen.dart';
+import '../../features/onboarding/demographics_screen.dart';
 import '../../features/onboarding/permissions_screen.dart';
 import '../../features/onboarding/splash_screen.dart';
 import '../../features/dashboard/dashboard_screen.dart';
@@ -80,12 +81,14 @@ GoRouter appRouter(Ref ref) {
 
       final isOnboardingFlowScreen = state.matchedLocation == '/onboarding/dosha' ||
                                      state.matchedLocation == '/onboarding/goals' ||
+                                     state.matchedLocation == '/onboarding/demographics' ||
                                      state.matchedLocation == '/onboarding/permissions';
 
       if (!onboardingCompleted) {
         if (!isOnboardingFlowScreen) {
           if (uxStage == 'dosha_completed') return '/onboarding/goals';
-          if (uxStage == 'goals_completed') return '/onboarding/permissions';
+          if (uxStage == 'goals_completed') return '/onboarding/demographics';
+          if (uxStage == 'demographics_completed') return '/onboarding/permissions';
           return '/onboarding/dosha';
         }
         return null;
@@ -123,6 +126,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/onboarding/goals',
         builder: (context, state) => const GoalsScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding/demographics',
+        builder: (context, state) => const DemographicsScreen(),
       ),
       GoRoute(
         path: '/onboarding/permissions',
