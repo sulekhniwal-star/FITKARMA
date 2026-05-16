@@ -1,3 +1,0 @@
-{"dsn":"https://751ba1a16600fe85056a402495d48049@o4510979281190912.ingest.de.sentry.io/4510979283222608"}
-{"type":"session","length":210}
-{"init":true,"sid":"3ee8ecbc-bc04-4b14-7542-a643c66cb04c","status":"crashed","errors":1,"started":"2026-05-15T07:50:33.610647Z","duration":39.341195,"attrs":{"release":"fitkarma@1.0.0+1","environment":"debug"}}
