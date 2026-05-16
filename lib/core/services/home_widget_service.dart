@@ -12,6 +12,11 @@ class HomeWidgetService {
     required int karmaXp,
     required bool isPro,
   }) async {
+    // Widgets are only supported on Android and iOS. Return early on other platforms to avoid MissingPluginException.
+    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) {
+      return;
+    }
+
     try {
       // Save data variables directly into native AppGroup / SharedPreferences surfaces
       await HomeWidget.saveWidgetData<int>('steps', steps);

@@ -145,25 +145,42 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           Text(
             nameStr,
             style: AppTypography.h1(color: Colors.white).copyWith(fontSize: 28),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4),
           Text(
             emailStr,
             style: AppTypography.labelSm(color: AppColorsDark.textSecondary),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 12),
 
           // Security tier label
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-            decoration: BoxDecoration(
-              color: AppColorsDark.surface1.withValues(alpha: 0.4),
-              borderRadius: BorderRadius.circular(100),
-              border: Border.all(color: AppColorsDark.surface2),
-            ),
-            child: Text(
-              '🔒 Isolated SQL Key Protected',
-              style: AppTypography.labelSm(color: AppColorsDark.textMuted).copyWith(fontSize: 11),
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColorsDark.surface1.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(100),
+                border: Border.all(color: AppColorsDark.surface2.withValues(alpha: 0.5)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.lock_outline_rounded, size: 12, color: AppColorsDark.textMuted),
+                  const SizedBox(width: 6),
+                  Flexible(
+                    child: Text(
+                      'Isolated SQL Key Protected',
+                      style: AppTypography.labelSm(color: AppColorsDark.textMuted).copyWith(fontSize: 10, letterSpacing: 0.5),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

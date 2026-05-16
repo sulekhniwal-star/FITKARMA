@@ -73,7 +73,7 @@ class Auth extends _$Auth {
         kaphaPercentage = (data['kaphaPercentage'] as num?)?.toDouble();
         goals = data['goals'];
       } catch (_) {
-        final existingLocal = await (db.select(db.users)..where((t) => t.id.equals(user!.$id))).getSingleOrNull();
+        final existingLocal = await (db.select(db.users)..where((t) => t.id.equals(user.$id))).getSingleOrNull();
         if (existingLocal != null) {
           uxStage = existingLocal.uxStage;
           onboardingCompleted = existingLocal.onboardingCompleted;
