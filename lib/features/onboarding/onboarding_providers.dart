@@ -60,19 +60,13 @@ class Auth extends _$Auth {
           debugPrint('AuthNotifier: Remote data found: $data');
           
           // Only overwrite if remote has data
-          uxStage = data['uxStage'] ?? uxStage;
-          onboardingCompleted = data['onboardingCompleted'] ?? onboardingCompleted;
           dominantDosha = data['dominantDosha'] ?? dominantDosha;
-          vataPercentage = (data['vataPercentage'] as num?)?.toDouble() ?? vataPercentage;
-          pittaPercentage = (data['pittaPercentage'] as num?)?.toDouble() ?? pittaPercentage;
-          kaphaPercentage = (data['kaphaPercentage'] as num?)?.toDouble() ?? kaphaPercentage;
-          goals = data['goals'] ?? goals;
           age = data['age'] as int? ?? age;
-          heightCm = (data['height'] as num?)?.toDouble() ?? heightCm;
-          weightKg = (data['weight'] as num?)?.toDouble() ?? weightKg;
+          heightCm = (data['heightCm'] as num?)?.toDouble() ?? heightCm;
+          weightKg = (data['weightKg'] as num?)?.toDouble() ?? weightKg;
           gender = data['gender'] ?? gender;
           
-          debugPrint('AuthNotifier: Restored uxStage: $uxStage, completed: $onboardingCompleted');
+          debugPrint('AuthNotifier: Restored demographics from remote');
         } catch (e) {
           debugPrint('AuthNotifier: Failed to restore remote record: $e');
         }
@@ -150,16 +144,12 @@ class Auth extends _$Auth {
           rowId: user.$id,
         );
         final data = row.data;
-        uxStage = data['uxStage'] ?? 'established';
-        onboardingCompleted = data['onboardingCompleted'] ?? true;
+        uxStage = 'established';
+        onboardingCompleted = true;
         dominantDosha = data['dominantDosha'];
-        vataPercentage = (data['vataPercentage'] as num?)?.toDouble();
-        pittaPercentage = (data['pittaPercentage'] as num?)?.toDouble();
-        kaphaPercentage = (data['kaphaPercentage'] as num?)?.toDouble();
-        goals = data['goals'];
         age = data['age'] as int?;
-        heightCm = (data['height'] as num?)?.toDouble();
-        weightKg = (data['weight'] as num?)?.toDouble();
+        heightCm = (data['heightCm'] as num?)?.toDouble();
+        weightKg = (data['weightKg'] as num?)?.toDouble();
         gender = data['gender'];
       } catch (_) {
         final existingLocal = await (db.select(
@@ -259,8 +249,6 @@ class Auth extends _$Auth {
             'userId': user.$id,
             'email': email,
             'name': name,
-            'uxStage': 'onboarding',
-            'onboardingCompleted': false,
           },
         );
       } catch (e) {
@@ -291,10 +279,6 @@ class Auth extends _$Auth {
     final rowData = {
       'userId': user.$id,
       'dominantDosha': result.dominant.name,
-      'vataPercentage': result.vataPercentage,
-      'pittaPercentage': result.pittaPercentage,
-      'kaphaPercentage': result.kaphaPercentage,
-      'uxStage': 'dosha_completed',
       'email': user.email,
       'name': user.name,
     };
@@ -336,8 +320,7 @@ class Auth extends _$Auth {
     final databases = ref.read(appwriteDatabasesProvider);
     final rowData = {
       'userId': user.$id,
-      'goals': goals.join(','),
-      'uxStage': 'goals_completed',
+      'fitnessGoal': goals.isNotEmpty ? goals.first.substring(0, goals.first.length > 30 ? 30 : goals.first.length) : null,
       'email': user.email,
       'name': user.name,
     };
@@ -402,10 +385,9 @@ class Auth extends _$Auth {
       'userId': user.$id,
       'name': name,
       'age': age,
-      'height': height,
-      'weight': weight,
+      'heightCm': height,
+      'weightKg': weight,
       'gender': gender,
-      'uxStage': 'demographics_completed',
     };
 
     try {
@@ -447,8 +429,6 @@ class Auth extends _$Auth {
     final databases = ref.read(appwriteDatabasesProvider);
     final rowData = {
       'userId': user.$id,
-      'onboardingCompleted': true,
-      'uxStage': 'established',
       'email': user.email,
       'name': user.name,
     };
@@ -516,8 +496,6 @@ class Auth extends _$Auth {
             'userId': user.$id,
             'email': 'anonymous@fitkarma.in',
             'name': 'Anonymous User',
-            'uxStage': 'onboarding',
-            'onboardingCompleted': false,
           },
         );
       } catch (e) {

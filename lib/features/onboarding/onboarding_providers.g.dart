@@ -35,7 +35,7 @@ final class AuthProvider extends $AsyncNotifierProvider<Auth, models.User?> {
   Auth create() => Auth();
 }
 
-String _$authHash() => r'f9d4f541ad5d602b08ab4def65ec5249452b0e63';
+String _$authHash() => r'6e562f7610636fe66a08b9216e09676bdc086cbf';
 
 /// AuthNotifier — Manages user authentication state via Appwrite.
 

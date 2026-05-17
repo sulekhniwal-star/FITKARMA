@@ -42,13 +42,13 @@ class GoalsScreen extends ConsumerWidget {
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
-                  childAspectRatio: 1.1,
+                  childAspectRatio: 1.5,
                 ),
                 itemCount: availableGoals.length,
                 itemBuilder: (context, index) {
                   final goal = availableGoals[index];
                   final isSelected = selectedGoals.contains(goal.id);
-
+ 
                   return _GoalCard(
                     goal: goal,
                     isSelected: isSelected,
@@ -105,19 +105,21 @@ class _GoalCard extends StatelessWidget {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     goal.icon,
-                    style: const TextStyle(fontSize: 32),
+                    style: const TextStyle(fontSize: 28),
                   ),
+                  const SizedBox(height: 10),
                   Text(
                     goal.title,
                     style: AppTypography.h3(color: Colors.white).copyWith(
                       fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
                 ],

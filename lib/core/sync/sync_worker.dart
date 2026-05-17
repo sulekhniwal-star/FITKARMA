@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:drift/drift.dart';
@@ -27,22 +28,29 @@ class SyncWorker {
 
   Future<void> syncAll() async {
     if (isLowDataMode) return; // Pause sync in Low Data Mode
-    // Priority 1: Vital Metrics & Meds
-    await _syncTable('bp_readings', db.bpReadings);
-    await _syncTable('glucose_readings', db.glucoseReadings);
-    await _syncTable('medications', db.medications);
+    
+    final jobs = [
+      () => _syncTable('bp_readings', db.bpReadings),
+      () => _syncTable('glucose_readings', db.glucoseReadings),
+      () => _syncTable('medications', db.medications),
+      () => _syncTable('workouts', db.workouts),
+      () => _syncTable('sleep_logs', db.sleepLogs),
+      () => _syncTable('food_logs', db.foodLogs),
+      () => _syncTable('habits', db.habits),
+      () => _syncTable('journal_entries', db.journalEntries),
+      () => _syncTable('water_logs', db.waterLogs),
+    ];
 
-    // Priority 2: Workouts & Sleep
-    await _syncTable('workouts', db.workouts);
-    await _syncTable('sleep_logs', db.sleepLogs);
-
-    // Priority 3: Food, Habits, Journal
-    await _syncTable('food_logs', db.foodLogs);
-    await _syncTable('habits', db.habits);
-    await _syncTable('journal_entries', db.journalEntries);
-
-    // Priority 4: Water
-    await _syncTable('water_logs', db.waterLogs);
+    for (final job in jobs) {
+      try {
+        await job();
+      } catch (e, stack) {
+        debugPrint('SyncWorker: Job failed in sync queue: $e');
+        try {
+          await Sentry.captureException(e, stackTrace: stack);
+        } catch (_) {}
+      }
+    }
 
     // Refresh host platforms desktop widgets passing active local cache targets
     try {
@@ -59,7 +67,7 @@ class SyncWorker {
     final query = db.select(table)..where((t) {
       final st = (t as dynamic).syncStatus;
       final fa = (t as dynamic).failedAttempts;
-      return st.equals('pending') & fa.isLessThan(const Constant(3));
+      return st.equals('pending') & fa.isSmallerThanValue(3);
     });
     
     final pending = await query.get();
@@ -74,35 +82,39 @@ class SyncWorker {
       final String? remoteId = row.remoteId;
       final Map<String, dynamic> data = row.toJson();
       
-      // Clean up data for Appwrite
+      // Clean up local metadata for Appwrite
       data.remove('syncStatus');
       data.remove('failedAttempts');
       data.remove('updatedAt');
       
       if (remoteId == null) {
         final doc = await tablesDb.createRow(
-          databaseId: 'main',
+          databaseId: 'fitkarma-db',
           tableId: tableId,
           rowId: row.id,
           data: data,
         );
         
         await (db.update(table)..where((t) => (t as dynamic).id.equals(row.id))).write(
-          (table as dynamic).createCompanion(
-            syncStatus: const Value('synced'),
-            remoteId: Value(doc.$id),
-          ),
+          RawValuesInsertable({
+            'sync_status': const Variable<String>('synced'),
+            'remote_id': Variable<String>(doc.$id),
+            'failed_attempts': const Variable<int>(0),
+          }),
         );
       } else {
         await tablesDb.updateRow(
-          databaseId: 'main',
+          databaseId: 'fitkarma-db',
           tableId: tableId,
           rowId: remoteId,
           data: data,
         );
         
         await (db.update(table)..where((t) => (t as dynamic).id.equals(row.id))).write(
-          (table as dynamic).createCompanion(syncStatus: const Value('synced')),
+          RawValuesInsertable({
+            'sync_status': const Variable<String>('synced'),
+            'failed_attempts': const Variable<int>(0),
+          }),
         );
       }
     } catch (e, stack) {
@@ -126,10 +138,10 @@ class SyncWorker {
       }
 
       await (db.update(table)..where((t) => (t as dynamic).id.equals(row.id))).write(
-        (table as dynamic).createCompanion(
-          syncStatus: Value(newStatus),
-          failedAttempts: Value(attempts),
-        ),
+        RawValuesInsertable({
+          'sync_status': Variable<String>(newStatus),
+          'failed_attempts': Variable<int>(attempts),
+        }),
       );
     }
   }
