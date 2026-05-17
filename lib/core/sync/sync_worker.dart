@@ -59,7 +59,7 @@ class SyncWorker {
     final query = db.select(table)..where((t) {
       final st = (t as dynamic).syncStatus;
       final fa = (t as dynamic).failedAttempts;
-      return st.equals('pending') & fa.isLessThan(3);
+      return st.equals('pending') & fa.isLessThan(const Constant(3));
     });
     
     final pending = await query.get();
