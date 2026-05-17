@@ -8,6 +8,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import '../config/device_tier.dart';
 import '../database/app_database.dart';
 import '../providers/core_providers.dart';
+import '../providers/low_data_mode_provider.dart';
 import '../services/home_widget_service.dart';
 
 part 'sync_worker.g.dart';
@@ -135,6 +136,18 @@ class SyncWorker {
 }
 
 // ─── Providers ───────────────────────────────────────────────────────────────
+
+@riverpod
+SyncWorker syncWorker(Ref ref) {
+  final tablesDb = ref.watch(appwriteDatabasesProvider);
+  final db = ref.watch(appDatabaseProvider);
+  final isLowData = ref.watch(lowDataModeProvider).value ?? false;
+  return SyncWorker(
+    tablesDb: tablesDb,
+    db: db,
+    isLowDataMode: isLowData,
+  );
+}
 
 @riverpod
 Stream<ConnectivityResult> connectivityService(Ref ref) {

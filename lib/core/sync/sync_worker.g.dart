@@ -9,6 +9,47 @@ part of 'sync_worker.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
+@ProviderFor(syncWorker)
+final syncWorkerProvider = SyncWorkerProvider._();
+
+final class SyncWorkerProvider
+    extends $FunctionalProvider<SyncWorker, SyncWorker, SyncWorker>
+    with $Provider<SyncWorker> {
+  SyncWorkerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'syncWorkerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$syncWorkerHash();
+
+  @$internal
+  @override
+  $ProviderElement<SyncWorker> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SyncWorker create(Ref ref) {
+    return syncWorker(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SyncWorker value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SyncWorker>(value),
+    );
+  }
+}
+
+String _$syncWorkerHash() => r'515690c610c51dfd355af2d984bd1ed2a610b2f4';
+
 @ProviderFor(connectivityService)
 final connectivityServiceProvider = ConnectivityServiceProvider._();
 

@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
+import '../../core/sync/sync_worker.dart';
 import '../onboarding/onboarding_providers.dart';
 import '../../core/theme/app_colors.dart';
 
@@ -138,4 +139,9 @@ Future<void> logBpReading(
       );
 
   await ref.read(bpMetadataCacheProvider.notifier).save(id, notes, arm);
+
+  // Trigger remote sync to Appwrite database
+  try {
+    ref.read(syncWorkerProvider).syncAll();
+  } catch (_) {}
 }

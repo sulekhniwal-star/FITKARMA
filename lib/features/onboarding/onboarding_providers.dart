@@ -475,7 +475,6 @@ class Auth extends _$Auth {
   }
 
   Future<void> loginAnonymous() async {
-    // ... existing loginAnonymous ...
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final account = ref.read(appwriteAccountProvider);
@@ -488,7 +487,44 @@ class Auth extends _$Auth {
       }
 
       await account.createAnonymousSession();
-      return await account.get();
+      final user = await account.get();
+
+      // Initialize user in local DB
+      final db = ref.read(appDatabaseProvider);
+      await db
+          .into(db.users)
+          .insert(
+            UsersCompanion.insert(
+              id: user.$id,
+              userId: user.$id,
+              email: 'anonymous@fitkarma.in',
+              name: 'Anonymous User',
+              uxStage: const Value('onboarding'),
+              onboardingCompleted: const Value(false),
+            ),
+            mode: InsertMode.insertOrReplace,
+          );
+
+      // Create remote row proactively
+      try {
+        final databases = ref.read(appwriteDatabasesProvider);
+        await databases.createRow(
+          databaseId: 'fitkarma-db',
+          tableId: 'users',
+          rowId: user.$id,
+          data: {
+            'userId': user.$id,
+            'email': 'anonymous@fitkarma.in',
+            'name': 'Anonymous User',
+            'uxStage': 'onboarding',
+            'onboardingCompleted': false,
+          },
+        );
+      } catch (e) {
+        debugPrint('Error creating remote anonymous user row: $e');
+      }
+
+      return user;
     });
   }
 

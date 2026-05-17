@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
 import '../../shared/widgets/bento_card.dart';
 import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
+import '../../core/sync/sync_worker.dart';
+import '../onboarding/onboarding_providers.dart';
 import 'medication_providers.dart';
 
 class MedicationScreen extends ConsumerStatefulWidget {
@@ -128,7 +131,25 @@ class _MedicationScreenState extends ConsumerState<MedicationScreen> {
                     final doseStr = _dosageController.text.trim().isEmpty ? 'As Prescribed' : _dosageController.text.trim();
 
                     final db = ref.read(appDatabaseProvider);
-                    await db.addMedicationSchedule(nameStr, doseStr, _selectedSchedule);
+                    final user = ref.read(authProvider).value;
+                    final userId = user?.$id ?? 'anonymous';
+                    final id = const Uuid().v4();
+
+                    await db.into(db.medications).insert(
+                          MedicationsCompanion.insert(
+                            id: id,
+                            userId: userId,
+                            name: nameStr,
+                            dosage: doseStr,
+                            schedule: _selectedSchedule,
+                            startDate: DateTime.now(),
+                          ),
+                        );
+
+                    // Trigger remote sync to Appwrite database
+                    try {
+                      ref.read(syncWorkerProvider).syncAll();
+                    } catch (_) {}
 
                     if (context.mounted) {
                       context.pop(); // close bottom sheet

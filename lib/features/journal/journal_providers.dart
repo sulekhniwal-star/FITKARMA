@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:uuid/uuid.dart';
 import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
+import '../../core/sync/sync_worker.dart';
 import '../onboarding/onboarding_providers.dart';
 
 class JournalMetadataService {
@@ -94,4 +95,9 @@ Future<void> saveJournalEntry(
   if (tags.isNotEmpty) {
     await ref.read(journalMetadataCacheProvider.notifier).saveTags(id, tags);
   }
+
+  // Trigger remote sync to Appwrite database
+  try {
+    ref.read(syncWorkerProvider).syncAll();
+  } catch (_) {}
 }

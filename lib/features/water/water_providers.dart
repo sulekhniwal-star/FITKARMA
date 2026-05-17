@@ -1,7 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:uuid/uuid.dart';
+import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
+import '../../core/sync/sync_worker.dart';
 import '../karma/karma_providers.dart';
+import '../onboarding/onboarding_providers.dart';
 
 class WaterTrackingState {
   final int dailyGoalMl;
@@ -39,7 +43,18 @@ class WaterNotifier extends Notifier<WaterTrackingState> {
 
   Future<void> addWater(int amountMl) async {
     final db = ref.read(appDatabaseProvider);
-    await db.logWater(amountMl);
+    final user = ref.read(authProvider).value;
+    final userId = user?.$id ?? 'anonymous';
+    final id = const Uuid().v4();
+
+    await db.into(db.waterLogs).insert(
+          WaterLogsCompanion.insert(
+            id: id,
+            userId: userId,
+            amountMl: amountMl,
+            logDate: DateTime.now(),
+          ),
+        );
 
     // Reward Karma points for consistent health upkeep
     ref.read(karmaStateProvider.notifier).addKarmaEvent(
@@ -57,6 +72,11 @@ class WaterNotifier extends Notifier<WaterTrackingState> {
         await _storage.write(key: _streakKey, value: newStreak.toString());
       } catch (_) {}
     }
+
+    // Trigger asynchronous remote sync to Appwrite database
+    try {
+      ref.read(syncWorkerProvider).syncAll();
+    } catch (_) {}
   }
 
   void updateDailyGoal(int newGoalMl) {

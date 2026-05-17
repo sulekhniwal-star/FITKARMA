@@ -5,7 +5,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:uuid/uuid.dart';
 import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
+import '../../core/sync/sync_worker.dart';
 import '../karma/karma_providers.dart';
+import '../onboarding/onboarding_providers.dart';
 
 class WorkoutSet {
   final int setNumber;
@@ -192,12 +194,15 @@ class ActiveWorkoutNotifier extends Notifier<ActiveWorkoutState> {
     final durationMins = (state.elapsedSeconds / 60.0).ceil();
     final cals = state.estimatedCaloriesBurned;
 
+    // Get current authenticated user ID dynamically
+    final user = ref.read(authProvider).value;
+    final userId = user?.$id ?? 'anonymous';
+
     // 1. Save to Drift on complete
-    // syncStatus 'pending' naturally initiates cloud synchronization pipeline loops
     await db.into(db.workouts).insert(
           WorkoutsCompanion.insert(
             id: finalId,
-            userId: 'active_session_user',
+            userId: userId,
             type: state.workoutType,
             durationMinutes: durationMins > 0 ? durationMins : 1,
             caloriesBurned: cals > 0 ? cals : 15,
@@ -215,6 +220,11 @@ class ActiveWorkoutNotifier extends Notifier<ActiveWorkoutState> {
           'workout',
           120,
         );
+
+    // Trigger remote sync to Appwrite database
+    try {
+      ref.read(syncWorkerProvider).syncAll();
+    } catch (_) {}
   }
 }
 

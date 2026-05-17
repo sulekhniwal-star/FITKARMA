@@ -11,6 +11,7 @@ import '../../onboarding/onboarding_providers.dart';
 import '../data/food_database_service.dart';
 import '../../karma/karma_service.dart';
 import '../../streak/streak_providers.dart';
+import '../../../core/sync/sync_worker.dart';
 
 class FoodSearchSheet extends ConsumerStatefulWidget {
   final String? initialMealType;
@@ -406,6 +407,11 @@ class _FoodSearchSheetState extends ConsumerState<FoodSearchSheet> {
 
     await ref.read(karmaServiceProvider).awardXP('food_log');
     await ref.read(streakStateProvider.notifier).logActivity();
+
+    // Trigger remote sync to Appwrite database
+    try {
+      ref.read(syncWorkerProvider).syncAll();
+    } catch (_) {}
 
     if (mounted) {
       Navigator.pop(context);
