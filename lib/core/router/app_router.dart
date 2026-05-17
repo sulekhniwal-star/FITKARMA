@@ -42,6 +42,11 @@ class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
   RouterNotifier(this._ref) {
     _ref.listen(authProvider, (previous, next) {
+      debugPrint('RouterNotifier: Auth changed');
+      notifyListeners();
+    });
+    _ref.listen(currentUserLocalRecordProvider, (previous, next) {
+      debugPrint('RouterNotifier: User record changed');
       notifyListeners();
     });
   }
@@ -61,14 +66,18 @@ GoRouter appRouter(Ref ref) {
       final bool isAuthenticated = user != null;
       final isSplash = state.matchedLocation == '/splash';
 
-      if (isSplash) return null;
+      debugPrint('Router: Redirect check - Location: ${state.matchedLocation}, Authenticated: $isAuthenticated');
 
       final isAuthScreen = state.matchedLocation == '/onboarding/welcome' ||
                            state.matchedLocation == '/onboarding/signup' ||
                            state.matchedLocation == '/onboarding/login';
 
       if (!isAuthenticated) {
-        if (!isAuthScreen) return '/onboarding/welcome';
+        debugPrint('Router: Not authenticated');
+        if (!isAuthScreen) {
+          debugPrint('Router: Redirecting to welcome');
+          return '/onboarding/welcome';
+        }
         return null;
       }
 
@@ -79,6 +88,8 @@ GoRouter appRouter(Ref ref) {
       final bool onboardingCompleted = localUser?.onboardingCompleted ?? false;
       final String uxStage = localUser?.uxStage ?? 'onboarding';
 
+      debugPrint('Router: OnboardingCompleted: $onboardingCompleted, uxStage: $uxStage');
+
       final isOnboardingFlowScreen = state.matchedLocation == '/onboarding/dosha' ||
                                      state.matchedLocation == '/onboarding/goals' ||
                                      state.matchedLocation == '/onboarding/demographics' ||
@@ -86,15 +97,27 @@ GoRouter appRouter(Ref ref) {
 
       if (!onboardingCompleted) {
         if (!isOnboardingFlowScreen) {
-          if (uxStage == 'dosha_completed') return '/onboarding/goals';
-          if (uxStage == 'goals_completed') return '/onboarding/demographics';
-          if (uxStage == 'demographics_completed') return '/onboarding/permissions';
+          if (uxStage == 'dosha_completed') {
+             debugPrint('Router: Redirecting to goals');
+             return '/onboarding/goals';
+          }
+          if (uxStage == 'goals_completed') {
+             debugPrint('Router: Redirecting to demographics');
+             return '/onboarding/demographics';
+          }
+          if (uxStage == 'demographics_completed') {
+             debugPrint('Router: Redirecting to permissions');
+             return '/onboarding/permissions';
+          }
+          debugPrint('Router: Redirecting to dosha');
           return '/onboarding/dosha';
         }
+        debugPrint('Router: Staying on onboarding flow screen');
         return null;
       }
 
       if (isAuthScreen || isOnboardingFlowScreen) {
+        debugPrint('Router: Onboarding done, redirecting to home');
         return '/home/dashboard';
       }
 

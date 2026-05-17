@@ -15,32 +15,96 @@ class Auth extends _$Auth {
   @override
   Future<models.User?> build() async {
     final account = ref.watch(appwriteAccountProvider);
+    debugPrint('AuthNotifier: Building auth state...');
     try {
-      final user = await account.get();
+      // Add a timeout to prevent hanging on splash screen
+      final user = await account.get().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          debugPrint('AuthNotifier: account.get() timed out');
+          throw AppwriteException('Network timeout', 0);
+        },
+      );
+      debugPrint('AuthNotifier: User found: ${user.$id}');
+      
       // Ensure local user record exists
       final db = ref.read(appDatabaseProvider);
+      debugPrint('AuthNotifier: Checking local record for ${user.$id}...');
       final localUser = await (db.select(
         db.users,
       )..where((t) => t.id.equals(user.$id))).getSingleOrNull();
-      if (localUser == null) {
-        await db
-            .into(db.users)
-            .insert(
+
+      if (localUser == null || (localUser.age == null && localUser.heightCm == null)) {
+        // Attempt to restore metrics from remote if local record is missing or incomplete
+        String uxStage = localUser?.uxStage ?? 'onboarding';
+        bool onboardingCompleted = localUser?.onboardingCompleted ?? false;
+        String? dominantDosha = localUser?.dominantDosha;
+        double? vataPercentage = localUser?.vataPercentage;
+        double? pittaPercentage = localUser?.pittaPercentage;
+        double? kaphaPercentage = localUser?.kaphaPercentage;
+        String? goals = localUser?.goals;
+        String? gender = localUser?.gender;
+        int? age = localUser?.age;
+        double? heightCm = localUser?.heightCm;
+        double? weightKg = localUser?.weightKg;
+
+        try {
+          final databases = ref.read(appwriteDatabasesProvider);
+          debugPrint('AuthNotifier: Fetching remote record for ${user.$id}...');
+          final row = await databases.getRow(
+            databaseId: 'fitkarma-db',
+            tableId: 'users',
+            rowId: user.$id,
+          );
+          final data = row.data;
+          debugPrint('AuthNotifier: Remote data found: $data');
+          
+          // Only overwrite if remote has data
+          uxStage = data['uxStage'] ?? uxStage;
+          onboardingCompleted = data['onboardingCompleted'] ?? onboardingCompleted;
+          dominantDosha = data['dominantDosha'] ?? dominantDosha;
+          vataPercentage = (data['vataPercentage'] as num?)?.toDouble() ?? vataPercentage;
+          pittaPercentage = (data['pittaPercentage'] as num?)?.toDouble() ?? pittaPercentage;
+          kaphaPercentage = (data['kaphaPercentage'] as num?)?.toDouble() ?? kaphaPercentage;
+          goals = data['goals'] ?? goals;
+          age = data['age'] as int? ?? age;
+          heightCm = (data['height'] as num?)?.toDouble() ?? heightCm;
+          weightKg = (data['weight'] as num?)?.toDouble() ?? weightKg;
+          gender = data['gender'] ?? gender;
+          
+          debugPrint('AuthNotifier: Restored uxStage: $uxStage, completed: $onboardingCompleted');
+        } catch (e) {
+          debugPrint('AuthNotifier: Failed to restore remote record: $e');
+        }
+
+        await db.into(db.users).insert(
               UsersCompanion.insert(
                 id: user.$id,
                 userId: user.$id,
                 email: user.email,
                 name: user.name,
-                uxStage: const Value(
-                  'onboarding',
-                ), // Default to onboarding for new local records
-                onboardingCompleted: const Value(false),
+                uxStage: Value(uxStage),
+                onboardingCompleted: Value(onboardingCompleted),
+                dominantDosha: Value(dominantDosha),
+                vataPercentage: Value(vataPercentage),
+                pittaPercentage: Value(pittaPercentage),
+                kaphaPercentage: Value(kaphaPercentage),
+                goals: Value(goals),
+                age: Value(age),
+                heightCm: Value(heightCm),
+                weightKg: Value(weightKg),
+                gender: Value(gender),
               ),
-              mode: InsertMode.insertOrIgnore,
+              mode: InsertMode.insertOrReplace,
             );
       }
       return user;
-    } catch (_) {
+    } catch (e) {
+      if (e is AppwriteException && e.code == 401) {
+        debugPrint('AuthNotifier: No active session (401)');
+      } else {
+        debugPrint('AuthNotifier: Error during build (falling back to null): $e');
+      }
       return null;
     }
   }
@@ -49,6 +113,14 @@ class Auth extends _$Auth {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final account = ref.read(appwriteAccountProvider);
+      
+      // Clear any existing session to avoid 401 "session already exists"
+      try {
+        await account.deleteSession(sessionId: 'current');
+      } catch (_) {
+        // Ignore if no session exists
+      }
+
       await account.createEmailPasswordSession(
         email: email,
         password: password,
@@ -66,6 +138,10 @@ class Auth extends _$Auth {
       double? pittaPercentage;
       double? kaphaPercentage;
       String? goals;
+      int? age;
+      double? heightCm;
+      double? weightKg;
+      String? gender;
 
       try {
         final row = await databases.getRow(
@@ -81,6 +157,10 @@ class Auth extends _$Auth {
         pittaPercentage = (data['pittaPercentage'] as num?)?.toDouble();
         kaphaPercentage = (data['kaphaPercentage'] as num?)?.toDouble();
         goals = data['goals'];
+        age = data['age'] as int?;
+        heightCm = (data['height'] as num?)?.toDouble();
+        weightKg = (data['weight'] as num?)?.toDouble();
+        gender = data['gender'];
       } catch (_) {
         final existingLocal = await (db.select(
           db.users,
@@ -93,6 +173,10 @@ class Auth extends _$Auth {
           pittaPercentage = existingLocal.pittaPercentage;
           kaphaPercentage = existingLocal.kaphaPercentage;
           goals = existingLocal.goals;
+          age = existingLocal.age;
+          heightCm = existingLocal.heightCm;
+          weightKg = existingLocal.weightKg;
+          gender = existingLocal.gender;
         }
       }
 
@@ -111,6 +195,10 @@ class Auth extends _$Auth {
               pittaPercentage: Value(pittaPercentage),
               kaphaPercentage: Value(kaphaPercentage),
               goals: Value(goals),
+              age: Value(age),
+              heightCm: Value(heightCm),
+              weightKg: Value(weightKg),
+              gender: Value(gender),
             ),
             mode: InsertMode.insertOrReplace,
           );
@@ -123,6 +211,14 @@ class Auth extends _$Auth {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final account = ref.read(appwriteAccountProvider);
+      
+      // Clear any existing session to avoid 401 "session already exists"
+      try {
+        await account.deleteSession(sessionId: 'current');
+      } catch (_) {
+        // Ignore if no session exists
+      }
+
       final userId = ID.unique();
       await account.create(
         userId: userId,
@@ -275,21 +371,32 @@ class Auth extends _$Auth {
     required String gender,
   }) async {
     final user = state.value;
-    if (user == null) return;
+    if (user == null) {
+      debugPrint('AuthNotifier: Cannot save demographics, user is null');
+      return;
+    }
 
+    debugPrint('AuthNotifier: Saving demographics locally for ${user.$id}...');
     final db = ref.read(appDatabaseProvider);
-    await (db.update(db.users)..where((t) => t.id.equals(user.$id))).write(
-      UsersCompanion(
-        name: Value(name),
-        age: Value(age),
-        heightCm: Value(height),
-        weightKg: Value(weight),
-        gender: Value(gender),
-        uxStage: const Value('demographics_completed'),
-      ),
-    );
+    try {
+      await (db.update(db.users)..where((t) => t.id.equals(user.$id))).write(
+        UsersCompanion(
+          name: Value(name),
+          age: Value(age),
+          heightCm: Value(height),
+          weightKg: Value(weight),
+          gender: Value(gender),
+          uxStage: const Value('demographics_completed'),
+        ),
+      );
+      debugPrint('AuthNotifier: Local save successful');
+    } catch (e) {
+      debugPrint('AuthNotifier: Local save failed: $e');
+      rethrow;
+    }
 
     // Update Appwrite
+    debugPrint('AuthNotifier: Syncing demographics to Appwrite...');
     final databases = ref.read(appwriteDatabasesProvider);
     final rowData = {
       'userId': user.$id,
@@ -308,8 +415,19 @@ class Auth extends _$Auth {
         rowId: user.$id,
         data: rowData,
       );
-    } catch (e) {
-      debugPrint('Error syncing demographics to Appwrite: $e');
+      debugPrint('AuthNotifier: Appwrite sync successful (updated)');
+    } catch (_) {
+      try {
+        await databases.createRow(
+          databaseId: 'fitkarma-db',
+          tableId: 'users',
+          rowId: user.$id,
+          data: rowData,
+        );
+        debugPrint('AuthNotifier: Appwrite sync successful (created)');
+      } catch (e) {
+        debugPrint('AuthNotifier: Appwrite sync failed (non-fatal): $e');
+      }
     }
   }
 
@@ -361,6 +479,14 @@ class Auth extends _$Auth {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final account = ref.read(appwriteAccountProvider);
+      
+      // Clear any existing session to avoid 401 "session already exists"
+      try {
+        await account.deleteSession(sessionId: 'current');
+      } catch (_) {
+        // Ignore
+      }
+
       await account.createAnonymousSession();
       return await account.get();
     });

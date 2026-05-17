@@ -28,9 +28,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     // 2. Concurrently ensure auth state is resolved
     // We use ref.read(authProvider.future) to wait if it's still loading
     try {
-      await ref.read(authProvider.future);
+      // Wait for auth state with a hard timeout of 5 seconds
+      await ref.read(authProvider.future).timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          debugPrint('SplashScreen: Auth check timed out');
+          return null;
+        },
+      );
     } catch (e) {
-      // Ignore errors here, we'll check the value below
+      debugPrint('SplashScreen: Auth check error: $e');
     }
 
     // 3. Ensure at least 1.5s has passed for the animation
@@ -43,12 +50,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     // 4. Final check of auth state
     final user = ref.read(authProvider).value;
+    debugPrint('SplashScreen: Navigation check - User: ${user?.$id}');
     
     if (user != null) {
-      // User is logged in → go to dashboard
+      debugPrint('SplashScreen: Navigating to dashboard');
       context.go('/home/dashboard');
     } else {
-      // Not logged in → go to welcome
+      debugPrint('SplashScreen: Navigating to welcome');
       context.go('/onboarding/welcome');
     }
   }

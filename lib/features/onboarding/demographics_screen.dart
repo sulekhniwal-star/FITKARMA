@@ -29,6 +29,8 @@ class _DemographicsScreenState extends ConsumerState<DemographicsScreen> {
     super.dispose();
   }
 
+  bool _isLoading = false;
+
   void _submit() async {
     if (_nameController.text.isEmpty ||
         _ageController.text.isEmpty ||
@@ -40,23 +42,40 @@ class _DemographicsScreenState extends ConsumerState<DemographicsScreen> {
       return;
     }
 
-    final name = _nameController.text.trim();
-    final age = int.tryParse(_ageController.text) ?? 25;
-    final height = double.tryParse(_heightController.text) ?? 165.0;
-    final weight = double.tryParse(_weightController.text) ?? 60.0;
+    setState(() => _isLoading = true);
+    debugPrint('DemographicsScreen: Submitting...');
 
+    try {
+      final name = _nameController.text.trim();
+      final age = int.tryParse(_ageController.text) ?? 25;
+      final height = double.tryParse(_heightController.text) ?? 165.0;
+      final weight = double.tryParse(_weightController.text) ?? 60.0;
 
-    // Mark stage as completed in auth provider
-    await ref.read(authProvider.notifier).saveDemographics(
-          name: name,
-          age: age,
-          height: height,
-          weight: weight,
-          gender: _selectedGender,
+      debugPrint('DemographicsScreen: Saving to provider...');
+      // Mark stage as completed in auth provider
+      await ref.read(authProvider.notifier).saveDemographics(
+            name: name,
+            age: age,
+            height: height,
+            weight: weight,
+            gender: _selectedGender,
+          );
+
+      debugPrint('DemographicsScreen: Save complete. Navigating...');
+      if (mounted) {
+        context.go('/onboarding/permissions');
+      }
+    } catch (e) {
+      debugPrint('DemographicsScreen: Error during submit: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
         );
-
-    if (mounted) {
-      context.go('/onboarding/permissions');
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -137,13 +156,19 @@ class _DemographicsScreenState extends ConsumerState<DemographicsScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _submit,
+              onPressed: _isLoading ? null : _submit,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColorsDark.primary,
                 padding: const EdgeInsets.symmetric(vertical: 18),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: const Text('Continue', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                    )
+                  : const Text('Continue', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 20),
           ],

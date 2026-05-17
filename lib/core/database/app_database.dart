@@ -144,7 +144,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openDatabase());
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -152,14 +152,10 @@ class AppDatabase extends _$AppDatabase {
           await m.createAll();
         },
         onUpgrade: (m, from, to) async {
-          if (from < 2) {
-            // v1 -> v2 migration logic
-          }
-          if (from < 3) {
-            // v2 -> v3 migration logic
-          }
-          if (from < 4) {
-            // v3 -> v4 migration logic
+          if (from < 8) {
+            // Re-create users table to ensure all columns exist for demographics
+            await m.drop(users);
+            await m.create(users);
           }
         },
       );
