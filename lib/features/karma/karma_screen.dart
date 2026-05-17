@@ -32,11 +32,27 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
   }
 
   void _triggerInstantXpReward(BuildContext context, WidgetRef ref) {
-    ref.read(karmaStateProvider.notifier).addKarmaEvent(
-          'Daily Wellness Affirmation',
-          'streak',
-          35,
-        );
+    final state = ref.read(karmaStateProvider);
+    final now = DateTime.now();
+    final claimed = state.lastDailyBonusClaimedAt;
+    final alreadyClaimedToday = claimed != null &&
+        claimed.year == now.year &&
+        claimed.month == now.month &&
+        claimed.day == now.day;
+
+    if (alreadyClaimedToday) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Daily bonus already claimed today. Come back tomorrow!'),
+          backgroundColor: AppColorsDark.surface2,
+        ),
+      );
+      return;
+    }
+
+    final awarded = ref.read(karmaStateProvider.notifier).claimDailyBonus();
+    if (!awarded) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('⚡ +35 Karma XP Earned! Level progression increased.'),
@@ -504,68 +520,90 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
   }
 
   Widget _buildAchievementsTab(List<Achievement> achievements) {
-    return GridView.builder(
-      padding: const EdgeInsets.only(top: 8),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.85,
-      ),
-      itemCount: achievements.length,
-      itemBuilder: (context, index) {
-        final ach = achievements[index];
-        return GlassCard(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: ach.isUnlocked ? AppColorsDark.accent.withValues(alpha: 0.2) : AppColorsDark.surface2,
-                  shape: BoxShape.circle,
-                ),
-                child: Text(ach.icon, style: const TextStyle(fontSize: 24)),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                ach.title,
-                style: AppTypography.labelSm(color: ach.isUnlocked ? Colors.white : AppColorsDark.textMuted).copyWith(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              Expanded(
-                child: Text(
-                  ach.description,
-                  style: AppTypography.labelSm(color: AppColorsDark.textMuted).copyWith(fontSize: 10),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(height: 6),
-              if (ach.isUnlocked)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(color: AppColorsDark.teal.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(4)),
-                  child: const Text('UNLOCKED', style: TextStyle(color: AppColorsDark.teal, fontSize: 8, fontWeight: FontWeight.bold)),
-                )
-              else
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: ach.progressRatio,
-                    backgroundColor: AppColorsDark.surface2,
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColorsDark.purple),
-                  ),
-                ),
-            ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double width = constraints.maxWidth;
+        
+        // Dynamically calculate column count and aspect ratio based on available width
+        int crossAxisCount = 2;
+        double childAspectRatio = 0.85;
+
+        if (width > 750) {
+          crossAxisCount = 4;
+          childAspectRatio = 1.0;
+        } else if (width > 480) {
+          crossAxisCount = 3;
+          childAspectRatio = 0.95;
+        } else {
+          // On small mobile screens, keep 2 columns but make them slightly shorter/wider
+          crossAxisCount = 2;
+          childAspectRatio = 0.95;
+        }
+
+        return GridView.builder(
+          padding: const EdgeInsets.only(top: 8),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: childAspectRatio,
           ),
+          itemCount: achievements.length,
+          itemBuilder: (context, index) {
+            final ach = achievements[index];
+            return GlassCard(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: ach.isUnlocked ? AppColorsDark.accent.withValues(alpha: 0.2) : AppColorsDark.surface2,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(ach.icon, style: const TextStyle(fontSize: 24)),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    ach.title,
+                    style: AppTypography.labelSm(color: ach.isUnlocked ? Colors.white : AppColorsDark.textMuted).copyWith(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Expanded(
+                    child: Text(
+                      ach.description,
+                      style: AppTypography.labelSm(color: AppColorsDark.textMuted).copyWith(fontSize: 10),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  if (ach.isUnlocked)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(color: AppColorsDark.teal.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(4)),
+                      child: const Text('UNLOCKED', style: TextStyle(color: AppColorsDark.teal, fontSize: 8, fontWeight: FontWeight.bold)),
+                    )
+                  else
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: ach.progressRatio,
+                        backgroundColor: AppColorsDark.surface2,
+                        valueColor: const AlwaysStoppedAnimation<Color>(AppColorsDark.purple),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
         );
       },
     );

@@ -119,6 +119,7 @@ class KarmaState {
   final Map<String, int> xpBreakdown; // category -> XP
   final List<Achievement> achievements;
   final List<Challenge> activeChallenges;
+  final DateTime? lastDailyBonusClaimedAt;
   final List<KarmaLeaderboardUser> leaderboard;
 
   KarmaState({
@@ -131,6 +132,7 @@ class KarmaState {
     required this.achievements,
     required this.activeChallenges,
     required this.leaderboard,
+    this.lastDailyBonusClaimedAt,
   });
 
   double get levelProgressRatio {
@@ -249,6 +251,9 @@ class KarmaNotifier extends Notifier<KarmaState> {
         final int lvl = _calcLevel(xp);
         final nextXp = _calcNextLevelTarget(lvl);
         final titleStr = getLevelTitle(lvl);
+        final lastClaimedStr = map['lastDailyBonusClaimedAt'] as String?;
+        final DateTime? lastClaimed =
+            lastClaimedStr != null ? DateTime.parse(lastClaimedStr) : null;
         
         // Restore dynamic custom state updates
         state = KarmaState(
@@ -271,6 +276,7 @@ class KarmaNotifier extends Notifier<KarmaState> {
             }
             return u;
           }).toList()..sort((a, b) => b.xp.compareTo(a.xp)),
+          lastDailyBonusClaimedAt: lastClaimed,
         );
       }
     } catch (_) {
@@ -278,9 +284,15 @@ class KarmaNotifier extends Notifier<KarmaState> {
     }
   }
 
-  Future<void> _saveState(int newXp) async {
+  Future<void> _saveState(int newXp, {DateTime? lastClaimed}) async {
     try {
-      await _storage.write(key: _storageKey, value: jsonEncode({'totalXp': newXp}));
+      await _storage.write(
+        key: _storageKey,
+        value: jsonEncode({
+          'totalXp': newXp,
+          'lastDailyBonusClaimedAt': lastClaimed?.toIso8601String(),
+        }),
+      );
     } catch (_) {}
   }
 
@@ -350,9 +362,68 @@ class KarmaNotifier extends Notifier<KarmaState> {
       achievements: updatedAchievements,
       activeChallenges: state.activeChallenges,
       leaderboard: updatedLeaderboard,
+      lastDailyBonusClaimedAt: state.lastDailyBonusClaimedAt,
     );
 
-    _saveState(newXp);
+    // Re-read so we have the just-updated flag value for persistence
+    _saveState(newXp, lastClaimed: state.lastDailyBonusClaimedAt);
+  }
+
+  /// Claims the daily karma bonus. Only awards XP once per day.
+  /// Returns true if XP was awarded, or false if already claimed today.
+  bool claimDailyBonus() {
+    final now = DateTime.now();
+    final lastClaimed = state.lastDailyBonusClaimedAt;
+    final alreadyClaimedToday = lastClaimed != null &&
+        lastClaimed.year == now.year &&
+        lastClaimed.month == now.month &&
+        lastClaimed.day == now.day;
+
+    if (alreadyClaimedToday) return false;
+
+    final expireMs = now.millisecondsSinceEpoch.toString();
+    final xp = 35;
+    final newXp = state.totalXp + xp;
+    final newLvl = _calcLevel(newXp);
+    final nextXp = _calcNextLevelTarget(newLvl);
+    final titleStr = getLevelTitle(newLvl);
+
+    final updatedBreakdown = {...state.xpBreakdown};
+    updatedBreakdown['streak'] = (updatedBreakdown['streak'] ?? 0) + xp;
+
+    final updatedLeaderboard = state.leaderboard.map((u) {
+      if (u.isCurrentUser) {
+        return KarmaLeaderboardUser(
+          id: u.id, name: u.name, xp: newXp,
+          isCurrentUser: true, avatarStr: u.avatarStr,
+        );
+      }
+      return u;
+    }).toList()..sort((a, b) => b.xp.compareTo(a.xp));
+
+    final dailyEvent = KarmaEvent(
+      id: expireMs,
+      title: 'Daily Karma Bonus',
+      category: 'streak',
+      xpAwarded: xp,
+      timestamp: now,
+    );
+
+    state = KarmaState(
+      totalXp: newXp,
+      currentLevel: newLvl,
+      badgeTitle: '⚡ Level $newLvl $titleStr',
+      nextLevelXp: nextXp,
+      todayEvents: [dailyEvent, ...state.todayEvents],
+      xpBreakdown: updatedBreakdown,
+      achievements: state.achievements,
+      activeChallenges: state.activeChallenges,
+      leaderboard: updatedLeaderboard,
+      lastDailyBonusClaimedAt: now,
+    );
+
+    _saveState(newXp, lastClaimed: now);
+    return true;
   }
 }
 
