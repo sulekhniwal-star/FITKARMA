@@ -2,13 +2,26 @@ import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as models;
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
 import '../settings/settings_providers.dart';
 import 'models/dosha_quiz.dart';
-
 part 'onboarding_providers.g.dart';
+
+/// GoalsState — State container for the health goals selection screen.
+/// Builds all goals from the constants in [health_goal.dart].
+@freezed
+class GoalsState with _$GoalsState {
+  const factory GoalsState({
+    @Default({}) Set<String> selectedGoals,
+    @Default(1800) int dailyCalorieTarget,
+    @Default(120)  int dailyProteinG,
+    @Default(8000) int dailyStepsGoal,
+    @Default(8.0)  double sleepTargetHours,
+  }) = _GoalsState;
+}
 
 /// AuthNotifier — Manages user authentication state via Appwrite.
 @Riverpod(keepAlive: true)
@@ -316,6 +329,7 @@ class Auth extends _$Auth {
     if (user == null) return;
 
     final db = ref.read(appDatabaseProvider);
+    // Persist all goals + all metrics to local Drift DB
     await (db.update(db.users)..where((t) => t.id.equals(user.$id))).write(
       UsersCompanion(
         goals: Value(goals.join(',')),
@@ -332,11 +346,15 @@ class Auth extends _$Auth {
       }
     }
 
-    // Sync to Appwrite
+    // Sync ALL goals + ALL metrics to Appwrite
     final databases = ref.read(appwriteDatabasesProvider);
     final rowData = {
       'userId': user.$id,
-      'fitnessGoal': goals.isNotEmpty ? goals.first.substring(0, goals.first.length > 30 ? 30 : goals.first.length) : null,
+      'fitnessGoals': goals.join(','),
+      'dailyCalorieTarget': dailyCalorieTarget,
+      'dailyProteinG': dailyProteinG,
+      'dailyStepsGoal': dailyStepsGoal,
+      'sleepTargetHours': sleepTargetHours,
       'email': user.email,
       'name': user.name,
     };
@@ -569,76 +587,27 @@ class DoshaQuiz extends _$DoshaQuiz {
   }
 }
 
-class GoalsState {
-  final Set<String> selectedGoals;
-  final int dailyCalorieTarget;
-  final int dailyProteinG;
-  final int dailyStepsGoal;
-  final double sleepTargetHours;
-
-  const GoalsState({
-    this.selectedGoals = const {},
-    this.dailyCalorieTarget = 1800,
-    this.dailyProteinG = 120,
-    this.dailyStepsGoal = 8000,
-    this.sleepTargetHours = 8.0,
-  });
-
-  GoalsState copyWith({
-    Set<String>? selectedGoals,
-    int? dailyCalorieTarget,
-    int? dailyProteinG,
-    int? dailyStepsGoal,
-    double? sleepTargetHours,
-  }) {
-    return GoalsState(
-      selectedGoals: selectedGoals ?? this.selectedGoals,
-      dailyCalorieTarget: dailyCalorieTarget ?? this.dailyCalorieTarget,
-      dailyProteinG: dailyProteinG ?? this.dailyProteinG,
-      dailyStepsGoal: dailyStepsGoal ?? this.dailyStepsGoal,
-      sleepTargetHours: sleepTargetHours ?? this.sleepTargetHours,
-    );
-  }
-}
-
-/// GoalsNotifier — Manages the multi-selection of health goals and target metrics.
+/// Goals — Multi-selection provider for health goals and target metrics.
+/// Generates a `goalsProvider` that reads/writes `GoalsState`.
 @riverpod
 class Goals extends _$Goals {
   @override
-  GoalsState build() => const GoalsState();
+  GoalsState build() => const _$GoalsState();
 
   bool toggleGoal(String goalId) {
     final current = state.selectedGoals;
     if (current.contains(goalId)) {
-      state = state.copyWith(
-        selectedGoals: current.where((id) => id != goalId).toSet(),
-      );
-      return true;
-    } else {
-      if (current.length >= 3) {
-        return false; // Limit reached
-      }
-      state = state.copyWith(
-        selectedGoals: {...current, goalId},
-      );
+      state = state.copyWith(selectedGoals: current.where((id) => id != goalId).toSet());
       return true;
     }
+    if (current.length >= 3) return false;
+    state = state.copyWith(selectedGoals: {...current, goalId});
+    return true;
   }
 
-  void updateCalorieTarget(int kcal) {
-    state = state.copyWith(dailyCalorieTarget: kcal);
-  }
-
-  void updateProteinTarget(int g) {
-    state = state.copyWith(dailyProteinG: g);
-  }
-
-  void updateStepsGoal(int steps) {
-    state = state.copyWith(dailyStepsGoal: steps);
-  }
-
-  void updateSleepTarget(double hours) {
-    state = state.copyWith(sleepTargetHours: hours);
-  }
+  void updateCalorieTarget(int kcal) => state = state.copyWith(dailyCalorieTarget: kcal);
+  void updateProteinTarget(int g)     => state = state.copyWith(dailyProteinG: g);
+  void updateStepsGoal(int steps)     => state = state.copyWith(dailyStepsGoal: steps);
+  void updateSleepTarget(double h)    => state = state.copyWith(sleepTargetHours: h);
 }
 
