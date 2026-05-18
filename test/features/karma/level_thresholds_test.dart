@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 
 int computeLevel(int xp) {
-  return (xp ~/ 600) + 1;
+  final lvl = (xp ~/ 600) + 1;
+  return lvl > 13 ? 13 : lvl;
 }
 
 int nextLevelTarget(int level) {

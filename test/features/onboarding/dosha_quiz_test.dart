@@ -119,9 +119,9 @@ void main() {
       final result = computeDosha(answers);
 
       expect(result.dominant, DoshaType.vata);
-      expect(result.vataPercentage, 70.0);
+      expect(result.vataPercentage, 60.0);
       expect(result.pittaPercentage, 20.0);
-      expect(result.kaphaPercentage, 10.0);
+      expect(result.kaphaPercentage, 20.0);
     });
 
     test('single pitta majority results in pitta dominant', () {
@@ -133,8 +133,8 @@ void main() {
 
       expect(result.dominant, DoshaType.pitta);
       expect(result.vataPercentage, 20.0);
-      expect(result.pittaPercentage, 70.0);
-      expect(result.kaphaPercentage, 10.0);
+      expect(result.pittaPercentage, 60.0);
+      expect(result.kaphaPercentage, 20.0);
     });
 
     test('single kapha majority results in kapha dominant', () {

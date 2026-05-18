@@ -1,6 +1,6 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as models;
-import 'package:drift/drift.dart';
+import 'package:drift/drift.dart' hide JsonKey;
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,12 +8,13 @@ import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
 import '../settings/settings_providers.dart';
 import 'models/dosha_quiz.dart';
+part 'onboarding_providers.freezed.dart';
 part 'onboarding_providers.g.dart';
 
 /// GoalsState — State container for the health goals selection screen.
 /// Builds all goals from the constants in [health_goal.dart].
 @freezed
-class GoalsState with _$GoalsState {
+abstract class GoalsState with _$GoalsState {
   const factory GoalsState({
     @Default({}) Set<String> selectedGoals,
     @Default(1800) int dailyCalorieTarget,
@@ -592,7 +593,7 @@ class DoshaQuiz extends _$DoshaQuiz {
 @riverpod
 class Goals extends _$Goals {
   @override
-  GoalsState build() => const _$GoalsState();
+  GoalsState build() => const GoalsState();
 
   bool toggleGoal(String goalId) {
     final current = state.selectedGoals;

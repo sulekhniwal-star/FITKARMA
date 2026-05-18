@@ -5,9 +5,9 @@ void main() {
   group('CorrelationEngine', () {
     group('sleep to BP insight generation', () {
       test('generates insight when poor sleep correlates with higher BP', () {
-        final poorSleepBpSum = 150.0;
+        final poorSleepBpSum = 750.0; // 150.0 * 5
         final poorSleepBpCount = 5;
-        final goodSleepBpSum = 130.0;
+        final goodSleepBpSum = 650.0; // 130.0 * 5
         final goodSleepBpCount = 5;
 
         final avgPoor = poorSleepBpSum / poorSleepBpCount;
@@ -18,9 +18,9 @@ void main() {
       });
 
       test('no insight when sleep and BP difference is small', () {
-        final poorSleepBpSum = 135.0;
+        final poorSleepBpSum = 675.0; // 135.0 * 5
         final poorSleepBpCount = 5;
-        final goodSleepBpSum = 130.0;
+        final goodSleepBpSum = 650.0; // 130.0 * 5
         final goodSleepBpCount = 5;
 
         final avgPoor = poorSleepBpSum / poorSleepBpCount;

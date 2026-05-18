@@ -35,7 +35,7 @@ final class AuthProvider extends $AsyncNotifierProvider<Auth, models.User?> {
   Auth create() => Auth();
 }
 
-String _$authHash() => r'dd8ee0b7d375dd1e18ecd78d3fb1e0469efdbfa0';
+String _$authHash() => r'fd76af12a2943890e3e5e3e37aec1d3c22c34158';
 
 /// AuthNotifier — Manages user authentication state via Appwrite.
 
@@ -115,14 +115,17 @@ abstract class _$DoshaQuiz extends $Notifier<Map<int, DoshaType>> {
   }
 }
 
-/// GoalsNotifier — Manages the multi-selection of health goals and target metrics.
+/// Goals — Multi-selection provider for health goals and target metrics.
+/// Generates a `goalsProvider` that reads/writes `GoalsState`.
 
 @ProviderFor(Goals)
 final goalsProvider = GoalsProvider._();
 
-/// GoalsNotifier — Manages the multi-selection of health goals and target metrics.
+/// Goals — Multi-selection provider for health goals and target metrics.
+/// Generates a `goalsProvider` that reads/writes `GoalsState`.
 final class GoalsProvider extends $NotifierProvider<Goals, GoalsState> {
-  /// GoalsNotifier — Manages the multi-selection of health goals and target metrics.
+  /// Goals — Multi-selection provider for health goals and target metrics.
+  /// Generates a `goalsProvider` that reads/writes `GoalsState`.
   GoalsProvider._()
     : super(
         from: null,
@@ -150,9 +153,10 @@ final class GoalsProvider extends $NotifierProvider<Goals, GoalsState> {
   }
 }
 
-String _$goalsHash() => r'b19e12e04839b801b20050e3734553e0a63b1379';
+String _$goalsHash() => r'ad34080dd010fb112b3da68a0c4691a4c867239d';
 
-/// GoalsNotifier — Manages the multi-selection of health goals and target metrics.
+/// Goals — Multi-selection provider for health goals and target metrics.
+/// Generates a `goalsProvider` that reads/writes `GoalsState`.
 
 abstract class _$Goals extends $Notifier<GoalsState> {
   GoalsState build();

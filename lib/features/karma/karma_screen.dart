@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_gradients.dart';
 import '../../core/theme/app_typography.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
 import '../../shared/widgets/bento_card.dart';
@@ -148,11 +149,7 @@ class _KarmaScreenState extends ConsumerState<KarmaScreen> with SingleTickerProv
         title: Text('Karma XP Hub', style: AppTypography.h2(color: Colors.white)),
         centerTitle: true,
       ),
-      heroGradient: const LinearGradient(
-        colors: [Color(0xFF2E1E50), Color(0xFFD76D77), Color(0xFFF09819)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
+      heroGradient: AppGradients.heroKarma,
       hero: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

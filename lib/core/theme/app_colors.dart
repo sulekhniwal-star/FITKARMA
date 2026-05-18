@@ -60,6 +60,11 @@ class AppColorsDark {
   static const heroWeddingEnd = Color(0xFF3D0015);
   static const heroWorkoutStart = Color(0xFFF09819);
   static const heroWorkoutEnd = Color(0xFFEDDE5D);
+  static const glucoseHeroStart = Color(0xFF130F25);
+  static const glucoseHeroEnd = Color(0xFF2E1E50);
+  static const karmaHeroStart = Color(0xFF2E1E50);
+  static const karmaHeroMid = Color(0xFFD76D77);
+  static const karmaHeroEnd = Color(0xFFF09819);
 }
 
 /// AppColorsLight — Warm inversion of the dark theme.

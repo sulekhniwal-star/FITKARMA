@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_gradients.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/database/app_database.dart';
 import '../../shared/widgets/scaffold_patterns.dart';
@@ -60,11 +61,7 @@ class GlucoseScreen extends ConsumerWidget {
           title: Text('Blood Glucose', style: AppTypography.h2(color: Colors.white)),
           centerTitle: true,
         ),
-        heroGradient: const LinearGradient(
-          colors: [Color(0xFF130F25), Color(0xFF2E1E50)],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
+        heroGradient: AppGradients.heroGlucose,
         hero: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

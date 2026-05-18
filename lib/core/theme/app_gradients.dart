@@ -70,4 +70,23 @@ class AppGradients {
       AppColorsDark.bg0, // Using bg0 for deep overlay
     ],
   );
+
+  static const heroGlucose = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      AppColorsDark.glucoseHeroStart,
+      AppColorsDark.glucoseHeroEnd,
+    ],
+  );
+
+  static const heroKarma = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      AppColorsDark.karmaHeroStart,
+      AppColorsDark.karmaHeroMid,
+      AppColorsDark.karmaHeroEnd,
+    ],
+  );
 }
