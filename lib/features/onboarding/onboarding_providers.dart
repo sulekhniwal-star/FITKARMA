@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
+import '../settings/settings_providers.dart';
 import 'models/dosha_quiz.dart';
 
 part 'onboarding_providers.g.dart';
@@ -304,7 +305,13 @@ class Auth extends _$Auth {
     }
   }
 
-  Future<void> saveGoals(List<String> goals) async {
+  Future<void> saveGoals({
+    required Set<String> goals,
+    required int dailyCalorieTarget,
+    required int dailyProteinG,
+    required int dailyStepsGoal,
+    required double sleepTargetHours,
+  }) async {
     final user = state.value;
     if (user == null) return;
 
@@ -315,6 +322,15 @@ class Auth extends _$Auth {
         uxStage: const Value('goals_completed'),
       ),
     );
+
+    // If step-based goal selected, update step goal in SystemSettings
+    if (goals.contains('heart_health') || goals.contains('manage_bp_glucose')) {
+      try {
+        ref.read(systemSettingsProvider.notifier).updateStepGoal(dailyStepsGoal);
+      } catch (e) {
+        debugPrint('Error updating system settings step goal: $e');
+      }
+    }
 
     // Sync to Appwrite
     final databases = ref.read(appwriteDatabasesProvider);
@@ -553,18 +569,76 @@ class DoshaQuiz extends _$DoshaQuiz {
   }
 }
 
-/// GoalsNotifier — Manages the multi-selection of health goals.
+class GoalsState {
+  final Set<String> selectedGoals;
+  final int dailyCalorieTarget;
+  final int dailyProteinG;
+  final int dailyStepsGoal;
+  final double sleepTargetHours;
+
+  const GoalsState({
+    this.selectedGoals = const {},
+    this.dailyCalorieTarget = 1800,
+    this.dailyProteinG = 120,
+    this.dailyStepsGoal = 8000,
+    this.sleepTargetHours = 8.0,
+  });
+
+  GoalsState copyWith({
+    Set<String>? selectedGoals,
+    int? dailyCalorieTarget,
+    int? dailyProteinG,
+    int? dailyStepsGoal,
+    double? sleepTargetHours,
+  }) {
+    return GoalsState(
+      selectedGoals: selectedGoals ?? this.selectedGoals,
+      dailyCalorieTarget: dailyCalorieTarget ?? this.dailyCalorieTarget,
+      dailyProteinG: dailyProteinG ?? this.dailyProteinG,
+      dailyStepsGoal: dailyStepsGoal ?? this.dailyStepsGoal,
+      sleepTargetHours: sleepTargetHours ?? this.sleepTargetHours,
+    );
+  }
+}
+
+/// GoalsNotifier — Manages the multi-selection of health goals and target metrics.
 @riverpod
 class Goals extends _$Goals {
   @override
-  List<String> build() => [];
+  GoalsState build() => const GoalsState();
 
-  void toggleGoal(String goalId) {
-    if (state.contains(goalId)) {
-      state = state.where((id) => id != goalId).toList();
+  bool toggleGoal(String goalId) {
+    final current = state.selectedGoals;
+    if (current.contains(goalId)) {
+      state = state.copyWith(
+        selectedGoals: current.where((id) => id != goalId).toSet(),
+      );
+      return true;
     } else {
-      state = [...state, goalId];
+      if (current.length >= 3) {
+        return false; // Limit reached
+      }
+      state = state.copyWith(
+        selectedGoals: {...current, goalId},
+      );
+      return true;
     }
+  }
+
+  void updateCalorieTarget(int kcal) {
+    state = state.copyWith(dailyCalorieTarget: kcal);
+  }
+
+  void updateProteinTarget(int g) {
+    state = state.copyWith(dailyProteinG: g);
+  }
+
+  void updateStepsGoal(int steps) {
+    state = state.copyWith(dailyStepsGoal: steps);
+  }
+
+  void updateSleepTarget(double hours) {
+    state = state.copyWith(sleepTargetHours: hours);
   }
 }
 

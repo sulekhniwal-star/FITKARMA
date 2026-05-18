@@ -35,7 +35,7 @@ final class AuthProvider extends $AsyncNotifierProvider<Auth, models.User?> {
   Auth create() => Auth();
 }
 
-String _$authHash() => r'6e562f7610636fe66a08b9216e09676bdc086cbf';
+String _$authHash() => r'dd8ee0b7d375dd1e18ecd78d3fb1e0469efdbfa0';
 
 /// AuthNotifier — Manages user authentication state via Appwrite.
 
@@ -115,14 +115,14 @@ abstract class _$DoshaQuiz extends $Notifier<Map<int, DoshaType>> {
   }
 }
 
-/// GoalsNotifier — Manages the multi-selection of health goals.
+/// GoalsNotifier — Manages the multi-selection of health goals and target metrics.
 
 @ProviderFor(Goals)
 final goalsProvider = GoalsProvider._();
 
-/// GoalsNotifier — Manages the multi-selection of health goals.
-final class GoalsProvider extends $NotifierProvider<Goals, List<String>> {
-  /// GoalsNotifier — Manages the multi-selection of health goals.
+/// GoalsNotifier — Manages the multi-selection of health goals and target metrics.
+final class GoalsProvider extends $NotifierProvider<Goals, GoalsState> {
+  /// GoalsNotifier — Manages the multi-selection of health goals and target metrics.
   GoalsProvider._()
     : super(
         from: null,
@@ -142,29 +142,29 @@ final class GoalsProvider extends $NotifierProvider<Goals, List<String>> {
   Goals create() => Goals();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<String> value) {
+  Override overrideWithValue(GoalsState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<List<String>>(value),
+      providerOverride: $SyncValueProvider<GoalsState>(value),
     );
   }
 }
 
-String _$goalsHash() => r'031c72d33f28f4d85a7a82c55838c58e5a69481a';
+String _$goalsHash() => r'b19e12e04839b801b20050e3734553e0a63b1379';
 
-/// GoalsNotifier — Manages the multi-selection of health goals.
+/// GoalsNotifier — Manages the multi-selection of health goals and target metrics.
 
-abstract class _$Goals extends $Notifier<List<String>> {
-  List<String> build();
+abstract class _$Goals extends $Notifier<GoalsState> {
+  GoalsState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<List<String>, List<String>>;
+    final ref = this.ref as $Ref<GoalsState, GoalsState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<List<String>, List<String>>,
-              List<String>,
+              AnyNotifier<GoalsState, GoalsState>,
+              GoalsState,
               Object?,
               Object?
             >;

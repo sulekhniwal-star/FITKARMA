@@ -4,7 +4,7 @@ import '../../../core/theme/app_colors.dart';
 class HealthGoal {
   final String id;
   final String title;
-  final String icon; // Icon name or character
+  final String icon; // Emoji character
   final Color color;
 
   const HealthGoal({
@@ -18,39 +18,15 @@ class HealthGoal {
 const List<HealthGoal> availableGoals = [
   HealthGoal(
     id: 'weight_loss',
-    title: 'Weight Loss',
-    icon: '🔥',
+    title: 'Lose Weight',
+    icon: '🏃',
     color: AppColorsDark.error,
   ),
   HealthGoal(
     id: 'muscle_gain',
-    title: 'Muscle Gain',
+    title: 'Build Muscle',
     icon: '💪',
     color: AppColorsDark.secondary,
-  ),
-  HealthGoal(
-    id: 'better_sleep',
-    title: 'Better Sleep',
-    icon: '😴',
-    color: AppColorsDark.purple,
-  ),
-  HealthGoal(
-    id: 'mental_clarity',
-    title: 'Mental Clarity',
-    icon: '🧘',
-    color: AppColorsDark.teal,
-  ),
-  HealthGoal(
-    id: 'energy_boost',
-    title: 'Energy Boost',
-    icon: '⚡',
-    color: AppColorsDark.warning,
-  ),
-  HealthGoal(
-    id: 'flexibility',
-    title: 'Flexibility',
-    icon: '🤸',
-    color: AppColorsDark.rose,
   ),
   HealthGoal(
     id: 'heart_health',
@@ -59,9 +35,21 @@ const List<HealthGoal> availableGoals = [
     color: AppColorsDark.primary,
   ),
   HealthGoal(
-    id: 'longevity',
-    title: 'Longevity',
-    icon: '⏳',
-    color: AppColorsDark.success,
+    id: 'manage_bp_glucose',
+    title: 'Manage BP / Glucose',
+    icon: '🩸',
+    color: AppColorsDark.rose,
+  ),
+  HealthGoal(
+    id: 'reduce_stress',
+    title: 'Reduce Stress',
+    icon: '🧘',
+    color: AppColorsDark.teal,
+  ),
+  HealthGoal(
+    id: 'energy_boost',
+    title: 'More Energy',
+    icon: '⚡',
+    color: AppColorsDark.warning,
   ),
 ];
