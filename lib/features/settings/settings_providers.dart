@@ -12,6 +12,7 @@ class SystemSettingsState {
   final bool biometricLock;
   final int waterDailyGoalMl;
   final int stepDailyGoal;
+  final int workoutDailyGoalMinutes;
 
   SystemSettingsState({
     this.isDarkMode = true,
@@ -23,6 +24,7 @@ class SystemSettingsState {
     this.biometricLock = true,
     this.waterDailyGoalMl = 3000,
     this.stepDailyGoal = 10000,
+    this.workoutDailyGoalMinutes = 30,
   });
 
   SystemSettingsState copyWith({
@@ -35,6 +37,7 @@ class SystemSettingsState {
     bool? biometricLock,
     int? waterDailyGoalMl,
     int? stepDailyGoal,
+    int? workoutDailyGoalMinutes,
   }) {
     return SystemSettingsState(
       isDarkMode: isDarkMode ?? this.isDarkMode,
@@ -46,6 +49,7 @@ class SystemSettingsState {
       biometricLock: biometricLock ?? this.biometricLock,
       waterDailyGoalMl: waterDailyGoalMl ?? this.waterDailyGoalMl,
       stepDailyGoal: stepDailyGoal ?? this.stepDailyGoal,
+      workoutDailyGoalMinutes: workoutDailyGoalMinutes ?? this.workoutDailyGoalMinutes,
     );
   }
 
@@ -59,6 +63,7 @@ class SystemSettingsState {
         'biometricLock': biometricLock,
         'waterDailyGoalMl': waterDailyGoalMl,
         'stepDailyGoal': stepDailyGoal,
+        'workoutDailyGoalMinutes': workoutDailyGoalMinutes,
       };
 
   factory SystemSettingsState.fromJson(Map<String, dynamic> json) => SystemSettingsState(
@@ -71,6 +76,7 @@ class SystemSettingsState {
         biometricLock: json['biometricLock'] as bool? ?? true,
         waterDailyGoalMl: json['waterDailyGoalMl'] as int? ?? 3000,
         stepDailyGoal: json['stepDailyGoal'] as int? ?? 10000,
+        workoutDailyGoalMinutes: json['workoutDailyGoalMinutes'] as int? ?? 30,
       );
 }
 
@@ -109,6 +115,7 @@ class SystemSettingsNotifier extends Notifier<SystemSettingsState> {
   void toggleBiometricLock() => _savePrefs(state.copyWith(biometricLock: !state.biometricLock));
   void updateWaterGoal(int ml) => _savePrefs(state.copyWith(waterDailyGoalMl: ml));
   void updateStepGoal(int steps) => _savePrefs(state.copyWith(stepDailyGoal: steps));
+  void updateWorkoutGoal(int minutes) => _savePrefs(state.copyWith(workoutDailyGoalMinutes: minutes));
 }
 
 final systemSettingsProvider = NotifierProvider<SystemSettingsNotifier, SystemSettingsState>(SystemSettingsNotifier.new);

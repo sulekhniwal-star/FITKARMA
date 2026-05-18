@@ -49,22 +49,23 @@
 16. Low Data Mode
 17. Dosha Quiz Implementation
 18. Onboarding: Health Goals Setup
-19. Onboarding: Permissions & Privacy
-20. Complete pubspec.yaml
-21. Code Generation Commands
-22. Design System Quick Reference
+19. Onboarding: Demographics Screen
+20. Onboarding: Permissions & Privacy
+21. Complete pubspec.yaml
+22. Code Generation Commands
+23. Design System Quick Reference
 
 ### Part II — Technical Implementation
-23–47. (Architecture, Appwrite, Drift, Riverpod, Sync, Auth, CI/CD, etc.)
+24–48. (Architecture, Appwrite, Drift, Riverpod, Sync, Auth, CI/CD, etc.)
 
 ### Part III — Enterprise Hardening
-48–64. (Clean Architecture, Security, Testing, Observability, etc.)
+49–65. (Clean Architecture, Security, Testing, Observability, etc.)
 
 ### Part IV — Critical Fixes
-65. §F1 Indian Food Database Integration
-66. §F2 AI Insight Engine & LLM Coach
-67. §F3 iOS HealthKit — Full Implementation
-68. §F4 Subscription Model & Monetisation
+66. §F1 Indian Food Database Integration
+67. §F2 AI Insight Engine & LLM Coach
+68. §F3 iOS HealthKit — Full Implementation
+69. §F4 Subscription Model & Monetisation
 
 ---
 
@@ -153,7 +154,7 @@ lib/
 │       ├── shimmer_loader.dart         # First-load skeleton shimmer
 │       ├── trend_chip.dart             # ↑ ↓ → color-coded delta chip
 │       ├── pulse_ring.dart             # Animated glow ring (CustomPainter)
-│       ├── streak_flame.dart           # Lottie/custom animated flame, amber
+│       ├── streak_flame.dart           # Custom animated flame (Dart Canvas/CustomPainter), amber
 │       ├── bottom_nav_bar.dart         # 5-tab glass nav bar
 │       ├── empty_state.dart            # Animated icon + message + CTA
 │       ├── animation_widgets.dart      # ErrorRetryWidget, etc.
@@ -675,7 +676,7 @@ DeviceTier detectTier(int ramMb) {
 | Backdrop blur | ❌ solid `surface1` | ✅ `blur(12)` | ✅ `blur(16)` |
 | Ambient glow | ❌ | ✅ Reduced (opacity 0.15) | ✅ Full (opacity 0.25) |
 | Spring physics | ❌ `easeOutCubic` | ✅ Standard spring | ✅ Dramatic spring |
-| Lottie animations | ❌ Static icon | ✅ | ✅ |
+| Complex Dart animations | ❌ Static icon | ✅ | ✅ |
 | Ambient blobs | ❌ | ✅ | ✅ |
 | Sync interval | Every 6h | Every 30min | Every 15min |
 | Image quality | Low (75%) | Medium (85%) | Full (100%) |
@@ -1110,11 +1111,67 @@ Sticky bottom:
 
 ---
 
-### 11.5 Onboarding — Permissions & Privacy
+### 11.5 Onboarding — Demographics Screen
+
+**Route:** `/onboarding/demographics`
+**Scaffold:** Pattern C (full-bleed `heroDeep` gradient)
+**Step:** 3 of 4
+
+#### Layout
+```
+Top-right: [Skip] text button (textSecondary) - hidden/removed to enforce demographics collection
+
+Header (top center, 36px from top of safe area):
+  "👤" (48px)
+  24px gap
+  "Tell us about yourself"
+  AppTypography.displayLg, white
+  12px gap
+  "Help us customize your dietary calorie limits, ideal protein targets, and Ayurvedic recommendations."
+  AppTypography.bodyMd, textSecondary
+  Center-aligned, max 3 lines
+
+32px gap
+
+Interactive Demographics Form (SingleChildScrollView with bouncing physics):
+  Wrap sections in cohesive, tier-aware GlassCards.
+
+  Card 1: Name Details
+    - Title: "Full Name"
+    - TextField: premium styling with surface0 bg, 16px border radius, prefixIcon `Icons.person_outline_rounded`, primary focused border glow.
+
+  Card 2: Physical Metrics
+    - Title: "Physical Metrics" (AppTypography.h3, white, 16sp)
+    - 20px gap
+    - Age Input:
+      - TextField with `Icons.calendar_today_rounded` prefixIcon, numeric keyboard, "years" suffix text.
+    - 20px gap
+    - Gender Input:
+      - Styled row of segmented pills ("Male", "Female", "Other") instead of generic dropdown.
+      - Unselected: surface0 bg, glassBorder.
+      - Selected: primary (15% opacity) bg, primary border (1.5px), white text, bold.
+      - Fluid touch: setState highlights selected gender pill instantly.
+    - 20px gap
+    - Height & Weight Inputs (Row of 2 columns, 16px gap):
+      - Height: prefixIcon `Icons.height_rounded`, numeric keyboard, "cm" suffix text.
+      - Weight: prefixIcon `Icons.monitor_weight_outlined`, numeric keyboard, "kg" suffix text.
+
+Sticky bottom:
+  [Continue] ElevatedButton (full width, 56px height, radius 20)
+    - Sleek container shadow: primary color with 30% opacity, 20px blur, offset (0, 8)
+    - Loading state: CircularProgressIndicator (white, strokeWidth 2.5) displayed when submitting demographics.
+    - Validation: If any fields are empty, shows floating warning SnackBar:
+      "Please fill all fields first"
+    - On Tap: save demographics metrics (name, age, height, weight, gender) to Local Drift DB and Remote Appwrite user record, dynamically provision tailored daily physical targets (steps, hydration, and workout minutes) based on calculated BMI, transition stage, and navigate to permissions screen.
+```
+
+---
+
+### 11.6 Onboarding — Permissions & Privacy
 
 **Route:** `/onboarding/permissions`
 **Scaffold:** Calm Zone (bg2 solid, ZERO decorations — no blobs, no blur, no glow)
-**Step:** 5 of 5 (final)
+**Step:** 4 of 4 (final)
 
 #### Layout
 ```
@@ -2074,6 +2131,40 @@ Personal info section (surface0 card, list tiles):
   Age | Height | Weight | Activity level | Goal
   Each: 48px row, bodyMd (label, left), monoSm (value, right)
   Chevron icon → edit sheet for each
+
+16px gap
+
+BMI & Adaptive Targets Bento Card:
+  GlassCard container featuring dynamic metrics based on height and weight.
+  
+  Body Mass Index (BMI) Header:
+    - Title: "Your Calculated BMI" (AppTypography.labelSm, textSecondary)
+    - Value: calculated dynamically `weight / (height / 100)^2` (AppTypography.h1, white, 32sp)
+    - Pill Status Badge (right-aligned): Dynamic HSL border/fill indicating category:
+      - BMI < 18.5: "Underweight ⚠️" (AppColorsDark.accent / warm yellow glow)
+      - 18.5 <= BMI < 25.0: "Normal Weight ✨" (AppColorsDark.teal / neon teal glow)
+      - 25.0 <= BMI < 30.0: "Overweight ⚠️" (AppColorsDark.primary / vibrant orange glow)
+      - BMI >= 30.0: "Obese 🚨" (AppColorsDark.purple / cyber purple glow)
+
+  Adaptive Physical Targets Panel (3-column grid):
+    Automatically provisions the user's daily goals based on their BMI category:
+    1. Steps Target (neon teal icon):
+       - Underweight: 6,000 steps
+       - Normal: 10,000 steps
+       - Overweight: 12,000 steps
+       - Obese: 8,000 steps
+    2. Workout Duration Target (warm yellow icon):
+       - Underweight: 20 minutes
+       - Normal: 30 minutes
+       - Overweight: 45 minutes
+       - Obese: 40 minutes
+    3. Hydration Target (cyber purple icon):
+       - Underweight: 2.5L (2,500 mL)
+       - Normal: 3.0L (3,000 mL)
+       - Overweight: 3.5L (3,500 mL)
+       - Obese: 4.0L (4,000 mL)
+
+  When metrics are updated via the edit dialogs, targets instantly recalculate and persist dynamically to localized secure preferences and Appwrite sync.
 
 16px gap
 

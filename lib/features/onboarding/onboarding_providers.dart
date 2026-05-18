@@ -394,6 +394,44 @@ class Auth extends _$Auth {
       return;
     }
 
+    // Calculate BMI and update physical targets dynamically
+    if (height > 0 && weight > 0) {
+      final double bmi = weight / ((height / 100.0) * (height / 100.0));
+      debugPrint('AuthNotifier: Calculated BMI: ${bmi.toStringAsFixed(1)}');
+      
+      int stepsGoal = 10000;
+      int waterGoal = 3000;
+      int workoutGoal = 30;
+
+      if (bmi < 18.5) {
+        stepsGoal = 6000;     // Moderate active to conserve energy
+        waterGoal = 2500;     // Adequate hydration
+        workoutGoal = 20;     // Focus on light conditioning
+      } else if (bmi < 25.0) {
+        stepsGoal = 10000;    // Standard optimal active baseline
+        waterGoal = 3000;     // Standard hydration
+        workoutGoal = 30;     // Well-balanced standard workout
+      } else if (bmi < 30.0) {
+        stepsGoal = 12000;    // High activity to boost calorie burn
+        waterGoal = 3500;     // Increased hydration
+        workoutGoal = 45;     // Extra metabolic burn duration
+      } else {
+        stepsGoal = 8000;     // Safe progressive active goal to protect joints
+        waterGoal = 4000;     // High hydration to flush metabolic byproduct
+        workoutGoal = 40;     // Progressive conditioning cardio/strength
+      }
+
+      try {
+        final settingsNotifier = ref.read(systemSettingsProvider.notifier);
+        settingsNotifier.updateStepGoal(stepsGoal);
+        settingsNotifier.updateWaterGoal(waterGoal);
+        settingsNotifier.updateWorkoutGoal(workoutGoal);
+        debugPrint('AuthNotifier: Targets updated - Steps: $stepsGoal, Water: ${waterGoal}mL, Workout: ${workoutGoal}m');
+      } catch (e) {
+        debugPrint('AuthNotifier: Error updating system targets: $e');
+      }
+    }
+
     debugPrint('AuthNotifier: Saving demographics locally for ${user.$id}...');
     final db = ref.read(appDatabaseProvider);
     try {

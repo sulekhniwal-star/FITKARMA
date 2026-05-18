@@ -10,6 +10,7 @@ import '../onboarding/onboarding_providers.dart';
 import '../karma/karma_providers.dart';
 import '../../core/providers/core_providers.dart';
 import '../../core/database/app_database.dart';
+import '../settings/settings_providers.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -90,10 +91,35 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final emailStr = user?.email ?? 'user@fitkarma.in';
 
     final karmaState = ref.watch(karmaStateProvider);
+    final settings = ref.watch(systemSettingsProvider);
 
     // Dosha percentages configuration
     final localUserAsync = ref.watch(currentUserLocalRecordProvider);
     final localUser = localUserAsync.value as LocalUser?;
+    
+    // Calculate BMI and categories
+    final double? height = localUser?.heightCm;
+    final double? weight = localUser?.weightKg;
+    double? bmi;
+    String bmiCategory = 'Not Calculated';
+    Color bmiColor = AppColorsDark.textMuted;
+    
+    if (height != null && height > 0 && weight != null && weight > 0) {
+      bmi = weight / ((height / 100.0) * (height / 100.0));
+      if (bmi < 18.5) {
+        bmiCategory = 'Underweight ⚠️';
+        bmiColor = AppColorsDark.accent; // saffron yellow
+      } else if (bmi < 25.0) {
+        bmiCategory = 'Normal Weight ✨';
+        bmiColor = AppColorsDark.teal; // neon teal
+      } else if (bmi < 30.0) {
+        bmiCategory = 'Overweight ⚠️';
+        bmiColor = AppColorsDark.primary; // vibrant orange
+      } else {
+        bmiCategory = 'Obese 🚨';
+        bmiColor = AppColorsDark.purple; // cyber purple
+      }
+    }
     
     // Derive avatar initials
     final nameStr = localUser?.name ?? 'User';
@@ -387,6 +413,142 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     },
                   ),
                 ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 28),
+
+          // BMI & Tailored Targets Section
+          Text('Body Mass Index (BMI) & Targets', style: AppTypography.h3(color: Colors.white)),
+          const SizedBox(height: 12),
+          GlassCard(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Your Calculated BMI', style: AppTypography.labelSm(color: AppColorsDark.textSecondary)),
+                        const SizedBox(height: 4),
+                        Text(
+                          bmi != null ? bmi.toStringAsFixed(1) : '——',
+                          style: AppTypography.h1(color: Colors.white).copyWith(fontSize: 32, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: bmiColor.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(color: bmiColor.withValues(alpha: 0.5), width: 1.5),
+                      ),
+                      child: Text(
+                        bmiCategory,
+                        style: AppTypography.labelSm(color: bmiColor).copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                if (bmi != null) ...[
+                  const SizedBox(height: 20),
+                  const Divider(color: AppColorsDark.divider, height: 1),
+                  const SizedBox(height: 20),
+                  Text(
+                    '🎯 Adaptive Daily Targets (Based on physical profile)',
+                    style: AppTypography.labelLg(color: Colors.white).copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // Row of 3 targeted goals (Steps, Water, Workout)
+                  Row(
+                    children: [
+                      // Steps Target
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                          decoration: BoxDecoration(
+                            color: AppColorsDark.surface0.withValues(alpha: 0.5),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: AppColorsDark.divider.withValues(alpha: 0.5)),
+                          ),
+                          child: Column(
+                            children: [
+                              const Icon(Icons.directions_walk_rounded, color: AppColorsDark.teal, size: 22),
+                              const SizedBox(height: 6),
+                              Text('Daily Steps', style: AppTypography.labelSm(color: AppColorsDark.textMuted).copyWith(fontSize: 10)),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${settings.stepDailyGoal}',
+                                style: AppTypography.labelLg(color: Colors.white).copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      
+                      // Workout Target
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                          decoration: BoxDecoration(
+                            color: AppColorsDark.surface0.withValues(alpha: 0.5),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: AppColorsDark.divider.withValues(alpha: 0.5)),
+                          ),
+                          child: Column(
+                            children: [
+                              const Icon(Icons.fitness_center_rounded, color: AppColorsDark.accent, size: 22),
+                              const SizedBox(height: 6),
+                              Text('Workout Target', style: AppTypography.labelSm(color: AppColorsDark.textMuted).copyWith(fontSize: 10)),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${settings.workoutDailyGoalMinutes} mins',
+                                style: AppTypography.labelLg(color: Colors.white).copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+
+                      // Hydration Target
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                          decoration: BoxDecoration(
+                            color: AppColorsDark.surface0.withValues(alpha: 0.5),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: AppColorsDark.divider.withValues(alpha: 0.5)),
+                          ),
+                          child: Column(
+                            children: [
+                              const Icon(Icons.local_drink_rounded, color: AppColorsDark.purple, size: 22),
+                              const SizedBox(height: 6),
+                              Text('Hydration Target', style: AppTypography.labelSm(color: AppColorsDark.textMuted).copyWith(fontSize: 10)),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${(settings.waterDailyGoalMl / 1000.0).toStringAsFixed(1)}L',
+                                style: AppTypography.labelLg(color: Colors.white).copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ] else ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    'Please complete your demographics details to view your calculated BMI and unlock tailored workout, steps, and water targets.',
+                    style: AppTypography.labelSm(color: AppColorsDark.textMuted),
+                  ),
+                ],
               ],
             ),
           ),
