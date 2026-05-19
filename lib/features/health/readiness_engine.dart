@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_colors.dart';
 
 enum ReadinessZone {
   optimal,   // 85-100 (Green)
@@ -28,15 +29,15 @@ class ReadinessResult {
   Color get color {
     switch (zone) {
       case ReadinessZone.optimal:
-        return const Color(0xFF4CAF50); // Green
+        return AppColorsDark.success;
       case ReadinessZone.good:
-        return const Color(0xFF00BFA5); // Teal
+        return AppColorsDark.teal;
       case ReadinessZone.moderate:
-        return const Color(0xFFFFB300); // Amber
+        return AppColorsDark.accent;
       case ReadinessZone.low:
-        return const Color(0xFFFF9100); // Orange
+        return AppColorsDark.primary;
       case ReadinessZone.rest:
-        return const Color(0xFFFF5252); // Red
+        return AppColorsDark.error;
     }
   }
 

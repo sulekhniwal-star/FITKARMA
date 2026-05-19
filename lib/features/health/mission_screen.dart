@@ -187,7 +187,7 @@ class MissionScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Your target metrics have been updated dynamically to accommodate your current recovery score. Staying within these guardrails will yield $+50$ Karma XP.',
+                        'Your target metrics have been updated dynamically to accommodate your current recovery score. Staying within these guardrails will yield +50 Karma XP.',
                         style: AppTypography.bodyMd(color: AppColorsDark.textSecondary),
                       ),
                     ],

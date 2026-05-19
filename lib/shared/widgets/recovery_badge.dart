@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
-import '../health/readiness_engine.dart';
+import '../../features/health/readiness_engine.dart';
 
 class RecoveryBadge extends StatelessWidget {
   final int score;
@@ -33,19 +33,19 @@ class RecoveryBadge extends StatelessWidget {
     String label;
     switch (zoneEnum) {
       case ReadinessZone.optimal:
-        zoneColor = const Color(0xFF4CAF50);
+        zoneColor = AppColorsDark.success;
         label = 'Optimal';
       case ReadinessZone.good:
-        zoneColor = const Color(0xFF00BFA5);
+        zoneColor = AppColorsDark.teal;
         label = 'Good';
       case ReadinessZone.moderate:
-        zoneColor = const Color(0xFFFFB300);
+        zoneColor = AppColorsDark.accent;
         label = 'Moderate';
       case ReadinessZone.low:
-        zoneColor = const Color(0xFFFF9100);
+        zoneColor = AppColorsDark.primary;
         label = 'Low';
       case ReadinessZone.rest:
-        zoneColor = const Color(0xFFFF5252);
+        zoneColor = AppColorsDark.error;
         label = 'Rest';
     }
 

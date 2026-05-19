@@ -4,7 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/database/app_database.dart';
-import '../health/readiness_engine.dart';
+import '../../features/health/readiness_engine.dart';
 
 class DailyBriefingCard extends StatelessWidget {
   final ReadinessLog? log;
@@ -29,7 +29,7 @@ class DailyBriefingCard extends StatelessWidget {
           ),
           border: Border.all(color: AppColorsDark.glassBorder),
         ),
-        padding: const EdgeInsets.all(AppSpacing.cardInner),
+        padding: const EdgeInsets.all(AppSpacing.cardH),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -102,7 +102,7 @@ class DailyBriefingCard extends StatelessWidget {
         color: AppColorsDark.surface1,
         border: Border.all(color: AppColorsDark.glassBorder),
       ),
-      padding: const EdgeInsets.all(AppSpacing.cardInner),
+      padding: const EdgeInsets.all(AppSpacing.cardH),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

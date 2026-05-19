@@ -32,7 +32,7 @@ final class UxStageProvider extends $AsyncNotifierProvider<UxStage, UXStage> {
   UxStage create() => UxStage();
 }
 
-String _$uxStageHash() => r'7783713a5e75adc1557a3ac9e8ddf6f6bcf1a79c';
+String _$uxStageHash() => r'7bb651d402f7dcc81110484a86ad883fecd5b57b';
 
 abstract class _$UxStage extends $AsyncNotifier<UXStage> {
   FutureOr<UXStage> build();

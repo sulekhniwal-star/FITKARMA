@@ -23,5 +23,8 @@ class AppDatabaseAtV9 extends GeneratedDatabase {
   AppDatabaseAtV9(QueryExecutor db) : super(db);
 
   @override
+  int get schemaVersion => 9;
+
+  @override
   Iterable<TableInfo> get allTables => const [];
 }

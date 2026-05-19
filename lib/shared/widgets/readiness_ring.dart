@@ -2,7 +2,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
-import '../models/placeholder.dart'; // fallback if any imports are needed, none needed.
 
 class ReadinessRing extends StatefulWidget {
   final int score;

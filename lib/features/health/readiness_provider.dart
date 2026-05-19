@@ -1,23 +1,21 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart';
 import '../../core/providers/core_providers.dart';
 import '../../core/database/app_database.dart';
 import '../../core/services/karma_service.dart';
+import '../onboarding/onboarding_providers.dart';
 import 'readiness_engine.dart';
 
-part 'readiness_provider.g.dart';
-
-@riverpod
-class ReadinessState extends _$ReadinessState {
+class ReadinessState extends AsyncNotifier<ReadinessLog?> {
   @override
-  FutureOr<ReadinessLog?> build() async {
+  Future<ReadinessLog?> build() async {
     final db = ref.watch(appDatabaseProvider);
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);
     
     // Fetch latest log logged today
     final log = await (db.select(db.readinessLogs)
-      ..where((t) => t.loggedAt.greaterOrEqualValue(startOfDay))
+      ..where((t) => t.loggedAt.isBiggerOrEqualValue(startOfDay))
       ..orderBy([(t) => OrderingTerm(expression: t.loggedAt, mode: OrderingMode.desc)])
       ..limit(1))
       .getSingleOrNull();
@@ -47,7 +45,7 @@ class ReadinessState extends _$ReadinessState {
 
     final now = DateTime.now();
     final companion = ReadinessLogsCompanion.insert(
-      id: Value(DateTime.now().toIso8601String()),
+      id: DateTime.now().toIso8601String(),
       userId: ref.read(authProvider).value?.$id ?? 'local',
       score: result.score,
       zone: result.zone.name,
@@ -66,7 +64,7 @@ class ReadinessState extends _$ReadinessState {
     
     // Also create matching daily mission for the user!
     final missionCompanion = DailyMissionsCompanion.insert(
-      id: Value(DateTime.now().toIso8601String()),
+      id: DateTime.now().toIso8601String(),
       userId: ref.read(authProvider).value?.$id ?? 'local',
       title: 'Daily Mission · ${result.zoneLabel}',
       description: result.recommendation,
@@ -90,24 +88,28 @@ class ReadinessState extends _$ReadinessState {
   }
 }
 
-@riverpod
-FutureOr<List<ReadinessLog>> readinessHistory(Ref ref) {
+// ─── Manual Providers ────────────────────────────────────────────────────────
+
+final readinessStateProvider = AsyncNotifierProvider<ReadinessState, ReadinessLog?>(() {
+  return ReadinessState();
+});
+
+final readinessHistoryProvider = FutureProvider<List<ReadinessLog>>((ref) {
   final db = ref.watch(appDatabaseProvider);
   return (db.select(db.readinessLogs)
     ..orderBy([(t) => OrderingTerm(expression: t.loggedAt, mode: OrderingMode.desc)])
     ..limit(7))
     .get();
-}
+});
 
-@riverpod
-FutureOr<DailyMission?> currentDailyMission(Ref ref) {
+final currentDailyMissionProvider = FutureProvider<DailyMission?>((ref) {
   final db = ref.watch(appDatabaseProvider);
   final now = DateTime.now();
   final startOfDay = DateTime(now.year, now.month, now.day);
   
   return (db.select(db.dailyMissions)
-    ..where((t) => t.missionDate.greaterOrEqualValue(startOfDay))
+    ..where((t) => t.missionDate.isBiggerOrEqualValue(startOfDay))
     ..orderBy([(t) => OrderingTerm(expression: t.missionDate, mode: OrderingMode.desc)])
     ..limit(1))
     .getSingleOrNull();
-}
+});

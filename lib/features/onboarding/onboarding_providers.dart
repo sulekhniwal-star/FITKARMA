@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/database/app_database.dart';
 import '../../core/providers/core_providers.dart';
+import '../../core/config/user_experience_stage.dart';
 import '../settings/settings_providers.dart';
 import 'models/dosha_quiz.dart';
 part 'onboarding_providers.freezed.dart';

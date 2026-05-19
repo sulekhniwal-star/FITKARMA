@@ -55,6 +55,8 @@ class UxStage extends _$UxStage {
         return UXStage.programSelectDone;
       case 'complete':
         return UXStage.complete;
+      default:
+        return UXStage.welcomeDone;
     }
   }
 
