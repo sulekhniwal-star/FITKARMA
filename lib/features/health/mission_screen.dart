@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
-import '../../core/database/app_database.dart';
 import 'readiness_provider.dart';
 
 class MissionScreen extends ConsumerWidget {
@@ -30,7 +29,7 @@ class MissionScreen extends ConsumerWidget {
       ),
       body: missionAsync.when(
         loading: () => const Center(child: CircularProgressIndicator(color: AppColorsDark.primary)),
-        error: (e, __) => Center(child: Text('Error: $e', style: AppTypography.bodyMd(color: AppColorsDark.error))),
+        error: (e, _) => Center(child: Text('Error: $e', style: AppTypography.bodyMd(color: AppColorsDark.error))),
         data: (mission) {
           if (mission == null) {
             return Center(

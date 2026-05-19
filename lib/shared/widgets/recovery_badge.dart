@@ -21,14 +21,6 @@ class RecoveryBadge extends StatelessWidget {
       orElse: () => ReadinessZone.moderate,
     );
 
-    final result = ReadinessEngine.calculate(
-      sleepMinutes: 480, // default dummy
-      sleepQuality: 8,
-      sorenessLevel: 2,
-      stressLevel: 2,
-      energyLevel: 8,
-    ); // We can just resolve color by matching ReadinessZone
-
     Color zoneColor;
     String label;
     switch (zoneEnum) {

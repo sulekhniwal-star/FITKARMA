@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
@@ -81,12 +80,6 @@ class DailyBriefingCard extends StatelessWidget {
     }
 
     final score = log!.score;
-    // Map log zone string to ReadinessZone enum
-    final zoneEnum = ReadinessZone.values.firstWhere(
-      (e) => e.name == log!.zone,
-      orElse: () => ReadinessZone.moderate,
-    );
-    
     final result = ReadinessEngine.calculate(
       sleepMinutes: log!.sleepMinutes ?? 420,
       sleepQuality: log!.sleepQuality ?? 7,

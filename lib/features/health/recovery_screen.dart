@@ -34,7 +34,7 @@ class RecoveryScreen extends ConsumerWidget {
       ),
       body: readinessAsync.when(
         loading: () => const Center(child: CircularProgressIndicator(color: AppColorsDark.primary)),
-        error: (e, __) => Center(child: Text('Error: $e', style: AppTypography.bodyMd(color: AppColorsDark.error))),
+        error: (e, _) => Center(child: Text('Error: $e', style: AppTypography.bodyMd(color: AppColorsDark.error))),
         data: (log) {
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenH),
@@ -45,25 +45,16 @@ class RecoveryScreen extends ConsumerWidget {
                 if (log != null) ...[
                   // If checked in, show readiness ring and recovery factors
                   Center(
-                    child: Builder(
-                      builder: (context) {
-                        final zoneEnum = ReadinessZone.values.firstWhere(
-                          (e) => e.name == log.zone,
-                          orElse: () => ReadinessZone.moderate,
-                        );
-                        final result = ReadinessEngine.calculate(
-                          sleepMinutes: log.sleepMinutes ?? 480,
-                          sleepQuality: log.sleepQuality ?? 7,
-                          sorenessLevel: log.sorenessLevel ?? 3,
-                          stressLevel: log.stressLevel ?? 3,
-                          energyLevel: log.energyLevel ?? 7,
-                        );
-                        return ReadinessRing(
-                          score: log.score,
-                          color: result.color,
-                          size: 160,
-                        );
-                      },
+                    child: ReadinessRing(
+                      score: log.score,
+                      color: ReadinessEngine.calculate(
+                        sleepMinutes: log.sleepMinutes ?? 480,
+                        sleepQuality: log.sleepQuality ?? 7,
+                        sorenessLevel: log.sorenessLevel ?? 3,
+                        stressLevel: log.stressLevel ?? 3,
+                        energyLevel: log.energyLevel ?? 7,
+                      ).color,
+                      size: 160,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -205,7 +196,7 @@ class RecoveryScreen extends ConsumerWidget {
   Widget _buildReadinessHistory(BuildContext context, AsyncValue<List<ReadinessLog>> historyAsync) {
     return historyAsync.when(
       loading: () => const SizedBox(),
-      error: (_, __) => const SizedBox(),
+      error: (_, _) => const SizedBox(),
       data: (history) {
         if (history.isEmpty) return const SizedBox();
         return Column(
