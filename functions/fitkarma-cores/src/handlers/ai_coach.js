@@ -2,7 +2,7 @@ import { Query } from 'node-appwrite';
 import axios from 'axios';
 
 export async function handleAiCoach(data, context, req, res) {
-  const { userId, message, stepsContext } = data;
+  const { userId, message, history = [], stepsToday } = data;
   const { databases, log, error } = context;
 
   if (!userId || !message) {
@@ -17,8 +17,9 @@ export async function handleAiCoach(data, context, req, res) {
   try {
     const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
 
-    // Fetch health context safely from Appwrite collections
-    const [bp, glucose, food, sleep] = await Promise.all([
+    // Fetch user profile and health context safely from Appwrite
+    const [userDoc, bp, glucose, food, sleep] = await Promise.all([
+      databases.getDocument('fitkarma-db', 'users', userId).catch(() => null),
       databases.listDocuments('fitkarma-db', 'bp_readings', [
         Query.equal('userId', userId),
         Query.greaterThanEqual('measuredAt', sevenDaysAgo),
@@ -46,8 +47,17 @@ export async function handleAiCoach(data, context, req, res) {
       glucose: glucose.documents.map(d => ({ value: d.valueMgDl, type: d.readingType, date: d.measuredAt })),
       recentMeals: food.documents.map(d => ({ name: d.foodName, calories: d.calories, date: d.loggedAt })),
       sleep: sleep.documents.map(d => ({ start: d.sleepStart, end: d.sleepEnd, quality: d.qualityScore })),
-      steps: stepsContext || [{ date: Date.now(), count: 7432 }]
+      steps: stepsToday !== undefined ? [{ date: Date.now(), count: stepsToday }] : [{ date: Date.now(), count: 7432 }]
     };
+
+    // Build user profile details for system prompt customization
+    const profileText = userDoc ? `
+- Name: ${userDoc.name}
+- Goals: ${userDoc.fitnessGoal || 'General Fitness'}
+- Dosha: ${userDoc.dominantDosha || 'Unknown'}
+- BMI: ${userDoc.bmi || 'Not computed'}
+- TDEE: ${userDoc.tdee || 2000} kcal/day
+- Conditions: ${userDoc.conditions || 'None'}` : '- No profile found';
 
     const systemPrompt = `You are FitKarma AI Coach, a warm, empathetic, and highly motivational health assistant tailored specifically for an Indian audience.
 Follow these critical behavioral guidelines:
@@ -55,17 +65,31 @@ Follow these critical behavioral guidelines:
 2. Structure: Keep your responses concise, limiting replies to 3–5 well-crafted sentences. Celebrate user streaks and logging consistency enthusiastically.
 3. Redirecting: If the user asks off-topic questions unrelated to wellness, health tracking, nutrition, or physical activity, politely redirect them back to their fitness goals.
 4. Critical Safety Rules: If the user's data exhibits Stage 2+ Hypertension (Systolic ≥ 140 mmHg or Diastolic ≥ 90 mmHg) or Glucose levels exceed 200 mg/dL, you MUST always explicitly recommend consulting a qualified doctor or healthcare professional.
-5. Medical Disclaimer: NEVER provide a formal medical diagnosis or prescribe specific medication regimens.`;
+5. Medical Disclaimer: NEVER provide a formal medical diagnosis or prescribe specific medication regimens.
 
-    const prompt = `User Message: ${message}\n\nUser Health Data (Last 7 Days):\n${JSON.stringify(healthContext, null, 2)}`;
+User Profile:${profileText}`;
+
+    // Format conversation history (up to 10 messages)
+    const messagesPayload = [
+      { role: 'system', content: systemPrompt }
+    ];
+
+    // Capped history: last 10 messages
+    const recentHistory = history.slice(-10);
+    for (const msg of recentHistory) {
+      messagesPayload.push({
+        role: msg.role === 'user' ? 'user' : 'assistant',
+        content: msg.content
+      });
+    }
+
+    const currentPrompt = `User Message: ${message}\n\nUser Health Data (Last 7 Days):\n${JSON.stringify(healthContext, null, 2)}`;
+    messagesPayload.push({ role: 'user', content: currentPrompt });
 
     const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
       model: 'llama3-70b-8192',
       max_tokens: 1024,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: prompt }
-      ]
+      messages: messagesPayload
     }, {
       headers: {
         'Authorization': `Bearer ${groqKey}`,

@@ -193,6 +193,28 @@ Stream<bool> hasDlqRecords(Ref ref) {
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    return Future.value(true);
+    try {
+      final db = AppDatabase();
+      final client = Client()
+        ..setEndpoint('https://sgp.cloud.appwrite.io/v1')
+        ..setProject('fitkarma')
+        ..setSelfSigned(status: true);
+      
+      final tablesDb = TablesDB(client);
+      final worker = SyncWorker(
+        tablesDb: tablesDb,
+        db: db,
+        isLowDataMode: false,
+      );
+      
+      await worker.syncAll();
+      return true;
+    } catch (e, stack) {
+      debugPrint('Background sync failed: $e');
+      try {
+        await Sentry.captureException(e, stackTrace: stack);
+      } catch (_) {}
+      return false;
+    }
   });
 }

@@ -216,9 +216,9 @@ class LabReportsNotifier extends Notifier<AsyncValue<List<LabReportItem>>> {
     try {
       final functions = ref.read(appwriteFunctionsProvider);
       
-      // Calls fitkarma-coress with action: 'generate_share_link'
+      // Calls fitkarma-cores with action: 'generate_share_link'
       final execution = await functions.createExecution(
-        functionId: 'fitkarma-coress',
+        functionId: 'fitkarma-cores',
         body: jsonEncode({
           'action': 'generate_share_link',
           'reportId': reportId,

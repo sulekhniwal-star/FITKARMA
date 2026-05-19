@@ -4,6 +4,10 @@ import { handleShareLink } from './handlers/share_link.js';
 import { handleAiCoach } from './handlers/ai_coach.js';
 import { handleFoodSearch } from './handlers/food_search.js';
 import { handleFeatureFlags } from './handlers/feature_flags.js';
+import { handleGenerateDietPlan } from './handlers/generate_diet_plan.js';
+import { handleGetReadiness } from './handlers/get_readiness.js';
+import { handleGenerateReport } from './handlers/generate_report.js';
+import { handleMealVision } from './handlers/meal_vision.js';
 
 export default async ({ req, res, log, error }) => {
   // Initialize Appwrite Client
@@ -39,6 +43,14 @@ export default async ({ req, res, log, error }) => {
       return handleFoodSearch(data, context, req, res);
     case "get_feature_flags":
       return handleFeatureFlags(data, context, req, res);
+    case "generate_diet_plan":
+      return handleGenerateDietPlan(data, context, req, res);
+    case "get_readiness":
+      return handleGetReadiness(data, context, req, res);
+    case "generate_report":
+      return handleGenerateReport(data, context, req, res);
+    case "meal_vision":
+      return handleMealVision(data, context, req, res);
     default:
       return res.json({ ok: false, error: `Unknown action: ${action}` }, 400);
   }

@@ -35,6 +35,8 @@ import '../../features/social/social_screen.dart';
 import '../../features/ai_coach/ai_coach_screen.dart';
 import '../../features/subscription/subscription_screen.dart';
 import '../../core/providers/core_providers.dart';
+import '../../features/health/recovery_screen.dart';
+import '../../features/health/mission_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -60,13 +62,12 @@ GoRouter appRouter(Ref ref) {
     initialLocation: '/splash',
     refreshListenable: notifier,
     debugLogDiagnostics: true,
-    redirect: (context, state) async {
-      final authState = ref.read(authProvider);
-      final user = authState.value;
-      final bool isAuthenticated = user != null;
-      final isSplash = state.matchedLocation == '/splash';
+redirect: (context, state) async {
+       final authState = ref.read(authProvider);
+       final user = authState.value;
+       final bool isAuthenticated = user != null;
 
-      debugPrint('Router: Redirect check - Location: ${state.matchedLocation}, Authenticated: $isAuthenticated');
+       debugPrint('Router: Redirect check - Location: ${state.matchedLocation}, Authenticated: $isAuthenticated');
 
       final isAuthScreen = state.matchedLocation == '/onboarding/welcome' ||
                            state.matchedLocation == '/onboarding/signup' ||
@@ -262,6 +263,8 @@ GoRouter appRouter(Ref ref) {
       GoRoute(path: '/festival', builder: (context, state) => const FestivalScreen()),
       GoRoute(path: '/wedding', builder: (context, state) => const WeddingScreen()),
       GoRoute(path: '/social', builder: (context, state) => const SocialScreen()),
+      GoRoute(path: '/recovery', builder: (context, state) => const RecoveryScreen()),
+      GoRoute(path: '/mission', builder: (context, state) => const MissionScreen()),
     ],
   );
 }

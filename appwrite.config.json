@@ -2477,7 +2477,12 @@
             "name": "FitKarma Vault",
             "enabled": true,
             "maximumFileSize": 50000000,
-            "allowedFileExtensions": [],
+            "allowedFileExtensions": [
+                "pdf",
+                "jpg",
+                "jpeg",
+                "png"
+            ],
             "compression": "none",
             "encryption": true,
             "antivirus": true

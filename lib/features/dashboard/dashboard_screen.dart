@@ -19,6 +19,9 @@ import '../health/steps_providers.dart';
 import '../../core/providers/core_providers.dart';
 import '../../core/database/app_database.dart';
 import '../../core/services/home_widget_service.dart';
+import '../health/readiness_provider.dart';
+import '../../shared/widgets/daily_briefing_card.dart';
+import '../health/morning_checkin_sheet.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -31,6 +34,7 @@ class DashboardScreen extends ConsumerWidget {
     final karmaState = ref.watch(karmaStateProvider);
     final stepsAsync = ref.watch(stepsDataProvider);
     final isProAsync = ref.watch(isProProvider);
+    final readinessAsync = ref.watch(readinessStateProvider);
 
     final stepsVal = stepsAsync.value?.totalSteps ?? 0;
     final stepGoalVal = stepsAsync.value?.dailyGoal ?? 10000;
@@ -55,6 +59,26 @@ class DashboardScreen extends ConsumerWidget {
           // Activity Rings Hero
           _buildActivityHero(context, ref),
           
+          const SizedBox(height: AppSpacing.lg),
+
+          // Daily Briefing Card
+          readinessAsync.when(
+            data: (log) => GestureDetector(
+              onTap: log != null ? () => context.push('/recovery') : null,
+              child: DailyBriefingCard(
+                log: log,
+                onCheckInTap: () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const MorningCheckInSheet(),
+                ),
+              ),
+            ),
+            loading: () => const SizedBox(),
+            error: (_, __) => const SizedBox(),
+          ),
+
           const SizedBox(height: AppSpacing.lg),
 
           // Primary Bento Grid
@@ -233,6 +257,7 @@ class DashboardScreen extends ConsumerWidget {
     final isProAsync = ref.watch(isProProvider);
     final isPro = isProAsync.value ?? false;
     final db = ref.watch(appDatabaseProvider);
+    final missionAsync = ref.watch(currentDailyMissionProvider);
 
     final diffXp = karmaState.nextLevelXp - karmaState.totalXp;
 
@@ -296,6 +321,27 @@ class DashboardScreen extends ConsumerWidget {
           color: AppColorsDark.accent,
           fullWidth: true,
           onTap: () => context.push('/karma'),
+        ),
+        missionAsync.when(
+          data: (mission) {
+            if (mission == null) return const SizedBox.shrink();
+            return Column(
+              children: [
+                const SizedBox(height: AppSpacing.bentoGap),
+                _BentoItem(
+                  title: 'Daily Coaching Mission',
+                  value: mission.title,
+                  subtitle: 'Tap to view adaptive targets & guide',
+                  icon: Icons.auto_awesome,
+                  color: AppColorsDark.primary,
+                  fullWidth: true,
+                  onTap: () => context.push('/mission'),
+                ),
+              ],
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
         ),
       ],
     );

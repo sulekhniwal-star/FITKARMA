@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
@@ -99,12 +100,45 @@ class FoodItems extends Table {
   Set<Column> get primaryKey => {id, source};
 }
 
+class WorkoutSets extends Table with SyncableColumns {
+  TextColumn get workoutId => text()();
+  TextColumn get exerciseName => text()();
+  IntColumn get reps => integer()();
+  RealColumn get weight => real()();
+  IntColumn get setOrder => integer()();
+}
+
+class KarmaEvents extends Table with SyncableColumns {
+  IntColumn get xp => integer()();
+  TextColumn get eventType => text()();
+  TextColumn get description => text().nullable()();
+  DateTimeColumn get occurredAt => dateTime()();
+}
+
+class DietPlans extends Table with SyncableColumns {
+  TextColumn get dayIndex => text()();
+  TextColumn get mealsJson => text()();
+  DateTimeColumn get expiresAt => dateTime().nullable()();
+}
+
+class RecoveryLogs extends Table with SyncableColumns {
+  IntColumn get score => integer()();
+  IntColumn get sleepQuality => integer().nullable()();
+  IntColumn get sorenessLevel => integer().nullable()();
+  IntColumn get stressLevel => integer().nullable()();
+  IntColumn get energyLevel => integer().nullable()();
+  IntColumn get restingHR => integer().nullable()();
+  IntColumn get hrv => integer().nullable()();
+  TextColumn get sorenessRegions => text().nullable()();
+  DateTimeColumn get loggedAt => dateTime()();
+}
+
 @DataClassName('LocalUser')
 class Users extends Table with SyncableColumns {
   TextColumn get email => text()();
   TextColumn get name => text()();
-  TextColumn get uxStage => text().withDefault(const Constant('onboarding'))(); // onboarding, firstWeek, established
-  
+  TextColumn get uxStage => text().withDefault(const Constant('welcomeDone'))();
+
   // Dosha Data
   TextColumn get dominantDosha => text().nullable()();
   RealColumn get vataPercentage => real().nullable()();
@@ -120,9 +154,98 @@ class Users extends Table with SyncableColumns {
   // Goals (Stored as comma-separated strings or JSON)
   TextColumn get goals => text().nullable()();
 
+  // Missing columns per B2a - Phase 0
+  TextColumn get workStyle => text().nullable()();
+  TextColumn get currentProgram => text().nullable()();
+  TextColumn get tone => text().nullable()();
+  RealColumn get bmi => real().nullable()();
+  TextColumn get activityLevel => text().nullable()();
+  IntColumn get tdee => integer().nullable()();
+  IntColumn get dailyStepsTarget => integer().nullable()();
+  IntColumn get dailyCalorieTarget => integer().nullable()();
+  IntColumn get dailyProteinTargetG => integer().nullable()();
+  IntColumn get dailyWaterTargetL => integer().nullable()();
+  TextColumn get region => text().nullable()();
+
   BoolColumn get onboardingCompleted => boolean().withDefault(const Constant(false))();
 
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+// ─── v10 New Tables ──────────────────────────────────────────────────────────
+
+class BodyMeasurements extends Table with SyncableColumns {
+  RealColumn get waistCm     => real().nullable()();
+  RealColumn get chestCm     => real().nullable()();
+  RealColumn get hipCm       => real().nullable()();
+  RealColumn get bicepCm     => real().nullable()();
+  RealColumn get neckCm      => real().nullable()();
+  RealColumn get thighCm     => real().nullable()();
+  RealColumn get weightKg    => real().nullable()();
+  RealColumn get bodyFatPct  => real().nullable()();
+  TextColumn  get photoFileId => text().nullable()();
+  DateTimeColumn get measuredAt => dateTime()();
+}
+
+class TransformationChecks extends Table with SyncableColumns {
+  IntColumn  get weekNumber   => integer()();
+  RealColumn get weightKg     => real().nullable()();
+  IntColumn  get moodScore    => integer().nullable()(); // 1-10
+  IntColumn  get energyScore  => integer().nullable()(); // 1-10
+  TextColumn get notes        => text().nullable()();
+  DateTimeColumn get checkedAt => dateTime()();
+}
+
+class SquadGroups extends Table with SyncableColumns {
+  TextColumn get name        => text()();
+  TextColumn get createdBy   => text()();  // userId
+  TextColumn get membersJson => text().withDefault(const Constant('[]'))();
+  TextColumn get groupType   => text().withDefault(const Constant('accountability'))();
+  TextColumn get description => text().nullable()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+class SquadMembers extends Table with SyncableColumns {
+  TextColumn get groupId => text()();
+  TextColumn get memberId => text()();  // userId
+  TextColumn get role    => text().withDefault(const Constant('member'))(); // admin/member
+  DateTimeColumn get joinedAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+class AiInsights extends Table with SyncableColumns {
+  TextColumn get title       => text()();
+  TextColumn get description => text()();
+  TextColumn get category    => text()(); // sleep_bp, hydration_steps, glucose, etc.
+  RealColumn get confidence  => real()();
+  BoolColumn get isActionable => boolean().withDefault(const Constant(true))();
+  BoolColumn get isDismissed  => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get generatedAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get expiresAt   => dateTime().nullable()();
+}
+
+class ReadinessLogs extends Table with SyncableColumns {
+  IntColumn  get score         => integer()();           // 0-100
+  TextColumn get zone          => text()();              // optimal/good/moderate/low/rest
+  IntColumn  get sleepMinutes  => integer().nullable()();
+  IntColumn  get sleepQuality  => integer().nullable()(); // 1-10
+  IntColumn  get sorenessLevel => integer().nullable()(); // 1-10
+  IntColumn  get stressLevel   => integer().nullable()(); // 1-10
+  IntColumn  get energyLevel   => integer().nullable()(); // 1-10
+  IntColumn  get restingHr     => integer().nullable()();
+  TextColumn get recommendation => text().nullable()();
+  DateTimeColumn get loggedAt  => dateTime().withDefault(currentDateAndTime)();
+}
+
+class DailyMissions extends Table with SyncableColumns {
+  TextColumn get title           => text()();
+  TextColumn get description     => text()();
+  TextColumn get workoutIntensity => text()(); // light/moderate/intense/rest
+  IntColumn  get waterTargetMl   => integer()();
+  IntColumn  get stepTarget      => integer()();
+  IntColumn  get calorieTarget   => integer()();
+  TextColumn get aiRecommendation => text().nullable()();
+  BoolColumn get isCompleted     => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get missionDate => dateTime()();
 }
 
 // ─── App Database ────────────────────────────────────────────────────────────
@@ -139,12 +262,24 @@ class Users extends Table with SyncableColumns {
   Medications,
   FoodItems,
   Users,
+  WorkoutSets,
+  KarmaEvents,
+  DietPlans,
+  RecoveryLogs,
+  // v10 additions
+  BodyMeasurements,
+  TransformationChecks,
+  SquadGroups,
+  SquadMembers,
+  AiInsights,
+  ReadinessLogs,
+  DailyMissions,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openDatabase());
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 10;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -152,13 +287,43 @@ class AppDatabase extends _$AppDatabase {
           await m.createAll();
         },
         onUpgrade: (m, from, to) async {
-          if (from < 8) {
-            // Re-create users table to ensure all columns exist for demographics
-            await m.drop(users);
-            await m.create(users);
+          // v10: First stable migration baseline.
+          // Versions 1–9 were experimental; all production installs upgrade to v10.
+          // Safe additive-only migrations — no tables are dropped.
+          if (from < 10) {
+            await _migrateToV10(m);
           }
         },
+        beforeOpen: (details) async {
+          await customStatement('PRAGMA foreign_keys = ON');
+        },
       );
+
+  /// v9 → v10: Add all new tables. Users/existing tables are preserved intact.
+  Future<void> _migrateToV10(Migrator m) async {
+    // Create the 5 new tables added in v10
+    await m.createTable(bodyMeasurements);
+    await m.createTable(transformationChecks);
+    await m.createTable(squadGroups);
+    await m.createTable(squadMembers);
+    await m.createTable(aiInsights);
+    await m.createTable(readinessLogs);
+    await m.createTable(dailyMissions);
+
+    // Safe column additions to existing tables (new nullable columns only)
+    // Users table: add missing columns that may not exist on older installs
+    try { await m.addColumn(users, users.workStyle); } catch (_) {}
+    try { await m.addColumn(users, users.currentProgram); } catch (_) {}
+    try { await m.addColumn(users, users.tone); } catch (_) {}
+    try { await m.addColumn(users, users.bmi); } catch (_) {}
+    try { await m.addColumn(users, users.activityLevel); } catch (_) {}
+    try { await m.addColumn(users, users.tdee); } catch (_) {}
+    try { await m.addColumn(users, users.dailyStepsTarget); } catch (_) {}
+    try { await m.addColumn(users, users.dailyCalorieTarget); } catch (_) {}
+    try { await m.addColumn(users, users.dailyProteinTargetG); } catch (_) {}
+    try { await m.addColumn(users, users.dailyWaterTargetL); } catch (_) {}
+    try { await m.addColumn(users, users.region); } catch (_) {}
+  }
 
   // ─── Convenience Queries ───────────────────────────────────────────────────
 
@@ -318,9 +483,13 @@ Future<String> _getOrCreateDbKey() async {
 
   String? key = await storage.read(key: 'fitkarma_db_key');
   if (key == null) {
-    // Generate a random 32-byte key
-    final random = Uint8List(32);
-    key = base64Url.encode(random); 
+    // Generate a cryptographically secure random 32-byte key (256-bit AES key).
+    // IMPORTANT: Uint8List(32) initialises to all-zeros — do NOT use it directly.
+    final rng = Random.secure();
+    final bytes = Uint8List.fromList(
+      List<int>.generate(32, (_) => rng.nextInt(256)),
+    );
+    key = base64Url.encode(bytes);
     await storage.write(key: 'fitkarma_db_key', value: key);
   }
   return key;

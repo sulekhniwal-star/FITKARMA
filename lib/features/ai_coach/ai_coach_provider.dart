@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/providers/core_providers.dart';
 import '../onboarding/onboarding_providers.dart';
+import '../health/steps_providers.dart';
 
 part 'ai_coach_provider.g.dart';
 
@@ -15,10 +16,18 @@ class AiCoach extends _$AiCoach {
   Future<void> sendMessage(String message) async {
     final functions = ref.read(appwriteFunctionsProvider);
     final user = ref.read(authProvider).value;
+    final stepsData = ref.read(stepsDataProvider).value;
 
     if (user == null) return;
 
     final currentMessages = state.value ?? [];
+    
+    // Prepare conversation history to send (last 10 turns)
+    final history = currentMessages.map((m) => {
+      'role': m['role'] == 'coach' ? 'assistant' : 'user',
+      'content': m['content'] ?? '',
+    }).toList();
+
     state = AsyncValue.data([...currentMessages, {'role': 'user', 'content': message}]);
 
     try {
@@ -28,6 +37,8 @@ class AiCoach extends _$AiCoach {
           'action': 'ai_coach',
           'userId': user.$id,
           'message': message,
+          'history': history,
+          'stepsToday': stepsData?.totalSteps ?? 0,
         }),
       );
 

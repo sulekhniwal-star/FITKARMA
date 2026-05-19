@@ -9,10 +9,19 @@ class GeneratedHelper implements SchemaInstantiationHelper {
   @override
   GeneratedDatabase databaseForVersion(QueryExecutor db, int version) {
     switch (version) {
+      case 9:
+        return AppDatabaseAtV9(db);
       default:
         throw MissingSchemaException(version, versions);
     }
   }
 
-  static const versions = const <int>[];
+  static const versions = const <int>[9];
+}
+
+class AppDatabaseAtV9 extends GeneratedDatabase {
+  AppDatabaseAtV9(QueryExecutor db) : super(db);
+
+  @override
+  Iterable<TableInfo> get allTables => const [];
 }

@@ -247,7 +247,7 @@ class Auth extends _$Auth {
               userId: user.$id,
               email: email,
               name: name,
-              uxStage: const Value('onboarding'),
+              uxStage: Value(UXStage.welcomeDone.name),
               onboardingCompleted: const Value(false),
             ),
             mode: InsertMode.insertOrReplace,
@@ -285,11 +285,10 @@ class Auth extends _$Auth {
         vataPercentage: Value(result.vataPercentage),
         pittaPercentage: Value(result.pittaPercentage),
         kaphaPercentage: Value(result.kaphaPercentage),
-        uxStage: const Value('dosha_completed'),
+        uxStage: Value(UXStage.doshaDone.name),
       ),
     );
 
-    // Sync to Appwrite with fallback creation
     final databases = ref.read(appwriteDatabasesProvider);
     final rowData = {
       'userId': user.$id,
@@ -330,15 +329,13 @@ class Auth extends _$Auth {
     if (user == null) return;
 
     final db = ref.read(appDatabaseProvider);
-    // Persist all goals + all metrics to local Drift DB
     await (db.update(db.users)..where((t) => t.id.equals(user.$id))).write(
       UsersCompanion(
         goals: Value(goals.join(',')),
-        uxStage: const Value('goals_completed'),
+        uxStage: Value(UXStage.goalsDone.name),
       ),
     );
 
-    // If step-based goal selected, update step goal in SystemSettings
     if (goals.contains('heart_health') || goals.contains('manage_bp_glucose')) {
       try {
         ref.read(systemSettingsProvider.notifier).updateStepGoal(dailyStepsGoal);
@@ -347,7 +344,6 @@ class Auth extends _$Auth {
       }
     }
 
-    // Sync ALL goals + ALL metrics to Appwrite
     final databases = ref.read(appwriteDatabasesProvider);
     final rowData = {
       'userId': user.$id,
@@ -442,7 +438,7 @@ class Auth extends _$Auth {
           heightCm: Value(height),
           weightKg: Value(weight),
           gender: Value(gender),
-          uxStage: const Value('demographics_completed'),
+          uxStage: Value(UXStage.demographicsDone.name),
         ),
       );
       debugPrint('AuthNotifier: Local save successful');
@@ -451,7 +447,6 @@ class Auth extends _$Auth {
       rethrow;
     }
 
-    // Update Appwrite
     debugPrint('AuthNotifier: Syncing demographics to Appwrite...');
     final databases = ref.read(appwriteDatabasesProvider);
     final rowData = {
@@ -494,7 +489,7 @@ class Auth extends _$Auth {
     await (db.update(db.users)..where((t) => t.id.equals(user.$id))).write(
       const UsersCompanion(
         onboardingCompleted: Value(true),
-        uxStage: Value('established'),
+        uxStage: Value('complete'),
       ),
     );
 
@@ -532,7 +527,6 @@ class Auth extends _$Auth {
     state = await AsyncValue.guard(() async {
       final account = ref.read(appwriteAccountProvider);
       
-      // Clear any existing session to avoid 401 "session already exists"
       try {
         await account.deleteSession(sessionId: 'current');
       } catch (_) {
@@ -542,7 +536,6 @@ class Auth extends _$Auth {
       await account.createAnonymousSession();
       final user = await account.get();
 
-      // Initialize user in local DB
       final db = ref.read(appDatabaseProvider);
       await db
           .into(db.users)
@@ -552,7 +545,7 @@ class Auth extends _$Auth {
               userId: user.$id,
               email: 'anonymous@fitkarma.in',
               name: 'Anonymous User',
-              uxStage: const Value('onboarding'),
+              uxStage: Value(UXStage.welcomeDone.name),
               onboardingCompleted: const Value(false),
             ),
             mode: InsertMode.insertOrReplace,

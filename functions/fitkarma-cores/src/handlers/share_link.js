@@ -10,8 +10,8 @@ export async function handleShareLink(data, context, req, res) {
   }
 
   try {
-    // Generate 64-byte token
-    const token = crypto.randomBytes(64).toString('hex');
+    // Generate 32-byte (64-char hex) token — matches share_tokens.token column size:64
+    const token = crypto.randomBytes(32).toString('hex');
     const expiresAt = Date.now() + (7 * 24 * 60 * 60 * 1000); // 7 days
 
     // Create share token record

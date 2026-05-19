@@ -5,16 +5,29 @@ import '../providers/core_providers.dart';
 
 part 'user_experience_stage.g.dart';
 
-/// UXStage — Represents the user's progress within the app lifecycle.
+/// UXStage — Represents the user's progress within the onboarding flow.
+/// Each value represents a completed step in the onboarding journey.
 enum UXStage {
-  /// User is still in the onboarding/registration flow.
-  onboarding,
-  
-  /// User has finished onboarding and is in their first 7 days.
-  firstWeek,
-  
-  /// User is a regular, established user.
-  established,
+  /// Initial state - user is at the welcome screen
+  welcomeDone,
+
+  /// User completed goals selection
+  goalsDone,
+
+  /// User completed dosha quiz
+  doshaDone,
+
+  /// User completed demographics entry
+  demographicsDone,
+
+  /// User viewed/accepted diet plan
+  dietPlanDone,
+
+  /// User selected their program
+  programSelectDone,
+
+  /// User completed all onboarding steps
+  complete,
 }
 
 @riverpod
@@ -22,19 +35,26 @@ class UxStage extends _$UxStage {
   @override
   Future<UXStage> build() async {
     final db = ref.watch(appDatabaseProvider);
-    
-    // Fetch the single user record (assuming local-first one-user app for now)
+
     final user = await (db.select(db.users)..limit(1)).getSingleOrNull();
-    
-    if (user == null) return UXStage.onboarding;
+
+    if (user == null) return UXStage.welcomeDone;
 
     switch (user.uxStage) {
-      case 'firstWeek':
-        return UXStage.firstWeek;
-      case 'established':
-        return UXStage.established;
-      default:
-        return UXStage.onboarding;
+      case 'welcomeDone':
+        return UXStage.welcomeDone;
+      case 'goalsDone':
+        return UXStage.goalsDone;
+      case 'doshaDone':
+        return UXStage.doshaDone;
+      case 'demographicsDone':
+        return UXStage.demographicsDone;
+      case 'dietPlanDone':
+        return UXStage.dietPlanDone;
+      case 'programSelectDone':
+        return UXStage.programSelectDone;
+      case 'complete':
+        return UXStage.complete;
     }
   }
 
